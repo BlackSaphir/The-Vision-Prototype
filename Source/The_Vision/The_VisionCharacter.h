@@ -14,6 +14,8 @@ class AThe_VisionCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
+// Component
+
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, Category=Mesh)
 	class USkeletalMeshComponent* Mesh1P;
@@ -30,15 +32,7 @@ class AThe_VisionCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FirstPersonCamera;
 
-	
-
-
-public:
-	AThe_VisionCharacter();
-
-protected:
-	virtual void BeginPlay();
-	virtual void Tick(float deltaTime);
+// Variable
 
 public:
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
@@ -71,9 +65,29 @@ public:
 	UPROPERTY(EditAnywhere, Category = Projectile)
 	TSubclassOf<class AActor> Bullet_Hole_Decal;
 
+	UPROPERTY(EditAnywhere, Category = Projectile)
+		float Force = 1000;
+
+private:
+
+	bool leftMousePressed;
+	float time;
+
+
+// Functions
+
+public:
+	AThe_VisionCharacter();
+
+	/** Returns Mesh1P subobject **/
+	FORCEINLINE class USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
+	/** Returns FirstPersonCameraComponent subobject **/
+	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCamera; }
 
 
 protected:
+	virtual void BeginPlay();
+	virtual void Tick(float deltaTime);
 	
 	/** Fires a projectile. */
 	void OnFirePressed();
@@ -112,7 +126,6 @@ protected:
 	void Activate();
 	TouchData	TouchItem;
 	
-protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 	// End of APawn interface
@@ -124,15 +137,8 @@ protected:
 	 * @returns true if touch controls were enabled.
 	 */
 	bool EnableTouchscreenMovement(UInputComponent* InputComponent);
-private:
-	bool leftMousePressed;
-	float time;
-	void Fire(float deltaTime);
-public:
-	/** Returns Mesh1P subobject **/
-	FORCEINLINE class USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
-	/** Returns FirstPersonCameraComponent subobject **/
-	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCamera; }
 
+private:	
+	void Fire(float deltaTime);	
 };
 
