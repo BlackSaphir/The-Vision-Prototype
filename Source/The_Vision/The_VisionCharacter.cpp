@@ -20,6 +20,7 @@
 #include "PhysicsEngine/DestructibleActor.h"
 #include "Components/DestructibleComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Components/PrimitiveComponent.h"
 
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
@@ -275,13 +276,18 @@ void AThe_VisionCharacter::Fire(float deltaTime)
 
 			Spawned_Decal->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(HitOut.Location, HitOut.Location + HitOut.Normal));
 
+			FVector Force_Vector = HitOut.TraceEnd - HitOut.TraceStart;
+			Force_Vector.Normalize();
+
+			UPrimitiveComponent* Hit_Component = HitOut.GetComponent();
+
+			Hit_Component->AddForce(Force_Vector * Force, NAME_None, true);
+
 				if (ADestructibleActor* HitActor = Cast<ADestructibleActor>(HitOut.GetActor()))
 				{
 					if (HitActor->ActorHasTag("Cube"))
 					{
-						FVector Force_Vector = HitOut.TraceEnd - HitOut.TraceStart;
-						Force_Vector.Normalize();
-						HitActor->GetDestructibleComponent()->AddForce(Force_Vector * Force, NAME_None, true);
+						HitActor->GetDestructibleComponent()->AddForce(Force_Vector * Force, NAME_None, false);
 						HitActor->GetDestructibleComponent()->ApplyDamage(10.0f, HitOut.Location, HitOut.Location, 50.0f);
 					}
 				}
