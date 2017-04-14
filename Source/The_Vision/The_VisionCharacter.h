@@ -66,7 +66,10 @@ public:
 	TSubclassOf<class AActor> Bullet_Hole_Decal;
 
 	UPROPERTY(EditAnywhere, Category = Projectile)
-		float Force = 1000;
+		float Destructible_Force = 1000;
+
+	UPROPERTY(EditAnywhere, Category = Projectile)
+		float Normal_Force = 1000;
 
 private:
 

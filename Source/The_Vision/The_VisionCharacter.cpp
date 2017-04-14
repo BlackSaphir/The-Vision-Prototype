@@ -280,14 +280,13 @@ void AThe_VisionCharacter::Fire(float deltaTime)
 			Force_Vector.Normalize();
 
 			UPrimitiveComponent* Hit_Component = HitOut.GetComponent();
-
-			Hit_Component->AddForce(Force_Vector * Force, NAME_None, true);
+			Hit_Component->AddImpulse(Force_Vector * Normal_Force, NAME_None, true);
 
 				if (ADestructibleActor* HitActor = Cast<ADestructibleActor>(HitOut.GetActor()))
 				{
 					if (HitActor->ActorHasTag("Cube"))
 					{
-						HitActor->GetDestructibleComponent()->AddForce(Force_Vector * Force, NAME_None, false);
+						HitActor->GetDestructibleComponent()->AddImpulse(Force_Vector * Destructible_Force, NAME_None, false);
 						HitActor->GetDestructibleComponent()->ApplyDamage(10.0f, HitOut.Location, HitOut.Location, 50.0f);
 					}
 				}
