@@ -16,6 +16,11 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/DecalComponent.h"
 #include "ActivationInterface.h"
+#include "GameFramework/DamageType.h"
+#include "PhysicsEngine/DestructibleActor.h"
+#include "Components/DestructibleComponent.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Components/PrimitiveComponent.h"
 
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
@@ -258,32 +263,35 @@ void AThe_VisionCharacter::Fire(float deltaTime)
 
 		bool ReturnPhysMat = false;
 
-		UStatic_Libary::LineTrace(GetWorld(), Start, End, HitOut, CollisionChannel, ReturnPhysMat);
+		if (UStatic_Libary::LineTrace(GetWorld(), Start, End, HitOut, CollisionChannel, ReturnPhysMat))
+		{
+			FVector Decal_Size = FVector(1, 1, 1);
 
-		FVector Decal_Size = FVector(1, 1, 1);
+			FVector Decal_Location = HitOut.Location;
 
-		//FVector Decal_Location = HitOut.GetActor()->GetActorLocation();
-		FVector Decal_Location = HitOut.Location;
+			FActorSpawnParameters Decal_Spawn_Params;
 
+			UWorld* TempWorld = GetWorld();
+			AActor* Spawned_Decal = TempWorld->SpawnActor<AActor>(Bullet_Hole_Decal, Decal_Location, FRotator(), Decal_Spawn_Params);
 
-		// InRoll/Z auf -90 für Cubeseiten		InRoll/Z auf 0 für Boden
-		FRotator Decal_Rotation =  HitOut.Normal.Rotation() - FRotator (-90, -90 ,0);
+			Spawned_Decal->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(HitOut.Location, HitOut.Location + HitOut.Normal));
 
+			FVector Force_Vector = HitOut.TraceEnd - HitOut.TraceStart;
+			Force_Vector.Normalize();
 
-		FActorSpawnParameters Decal_Spawn_Params;
+			UPrimitiveComponent* Hit_Component = HitOut.GetComponent();
+			Hit_Component->AddImpulse(Force_Vector * Normal_Force, NAME_None, true);
 
-		//UStatic_Libary::DanielLineTrace(this, Start, End, UCollisionProfile::Get()->ConvertToTraceType(CollisionChannel), HitOut);
-
-		//DrawDebugLine(GetWorld(), Start, End, FColor::Green, true, -2, 0, 2.f);
-
-		//UGameplayStatics::SpawnDecalAttached(Bullet_Hole_Decal, Decal_Size, HitOut.GetComponent(), HitOut.BoneName, Decal_Location, Decal_Rotation, EAttachLocation::KeepWorldPosition, 0);
-		
-		UWorld* TempWorld = GetWorld();
-		TempWorld->SpawnActor<AActor>(Bullet_Hole_Decal, Decal_Location, Decal_Rotation, Decal_Spawn_Params);
-
-		//Fade->FadeScreenSize = 5;
-
-		time = 0;
+				if (ADestructibleActor* HitActor = Cast<ADestructibleActor>(HitOut.GetActor()))
+				{
+					if (HitActor->ActorHasTag("Cube"))
+					{
+						HitActor->GetDestructibleComponent()->AddImpulse(Force_Vector * Destructible_Force, NAME_None, false);
+						HitActor->GetDestructibleComponent()->ApplyDamage(10.0f, HitOut.Location, HitOut.Location, 50.0f);
+					}
+				}
+			time = 0;
+		}
 	}
 }
 
