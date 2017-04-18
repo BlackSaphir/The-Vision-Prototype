@@ -21,6 +21,9 @@
 #include "Components/DestructibleComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/PrimitiveComponent.h"
+#include <AK/SoundEngine/Common/AkSoundEngine.h>
+#include <AK/IBytes.h>
+
 
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
@@ -278,6 +281,8 @@ void AThe_VisionCharacter::Fire(float deltaTime)
 
 			FVector Force_Vector = HitOut.TraceEnd - HitOut.TraceStart;
 			Force_Vector.Normalize();
+
+			
 
 			UPrimitiveComponent* Hit_Component = HitOut.GetComponent();
 			Hit_Component->AddImpulse(Force_Vector * Normal_Force, NAME_None, true);
