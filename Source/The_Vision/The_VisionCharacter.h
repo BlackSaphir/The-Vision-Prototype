@@ -1,9 +1,6 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 #pragma once
 #include "GameFramework/Character.h"
-
-
-
 #include "The_VisionCharacter.generated.h"
 
 
@@ -71,10 +68,26 @@ public:
 	UPROPERTY(EditAnywhere, Category = Projectile)
 		float Normal_Force = 1000;
 
+	UPROPERTY(BlueprintReadOnly)
+		class UAkAudioEvent* AkEventClass;
+
+	UPROPERTY(EditAnywhere, Category = Sound)
+		UAkAudioEvent* Shooting_Event;
+
+	UPROPERTY(VisibleAnywhere)
+		class AInventory_Manager* manager;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets")
+		TSubclassOf<class UUserWidget> W_Inventory;
+
 private:
 
-	bool leftMousePressed;
-	float time;
+	bool bLeftMousePressed;
+	float fire_time;
+	float inv_time;
+	bool bInvPressed;
+	UUserWidget* Inventory;
+
 
 
 // Functions
@@ -95,6 +108,10 @@ protected:
 	/** Fires a projectile. */
 	void OnFirePressed();
 	void OnFireReleased();
+
+	// Opens bInventory
+	void Open_Inventory_Pressed();
+	void Close_Inventory_Pressed();
 
 
 	/** Handles moving forward/backward */
@@ -126,6 +143,9 @@ protected:
 	void BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location);
+	void Fire(float deltaTime);
+	void FindInventoryManager();
+	void OpenInventory(float deltaTime);
 	void Activate();
 	TouchData	TouchItem;
 	
@@ -141,7 +161,8 @@ protected:
 	 */
 	bool EnableTouchscreenMovement(UInputComponent* InputComponent);
 
+
 private:	
-	void Fire(float deltaTime);	
+	
 };
 

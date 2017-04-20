@@ -17,7 +17,7 @@ public class The_Vision : ModuleRules
 
     public The_Vision(TargetInfo Target)
 	{
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "AkAudio", "UMG", "Slate", "SlateCore"});
 
         LoadWwise(Target);
 	}
@@ -48,6 +48,7 @@ public class The_Vision : ModuleRules
         {
             // Include path
             PublicIncludePaths.Add(Path.Combine(ThirdPartyPath, "Wwise", "Include"));
+            PublicIncludePaths.AddRange(new string[] { "AkAudio/Public", "AkAudio/Classes" });
         }
 
         Definitions.Add(string.Format("WITH_WWISE_BINDING={0}", isLibrarySupported ? 1 : 0));

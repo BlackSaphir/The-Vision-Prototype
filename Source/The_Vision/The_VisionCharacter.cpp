@@ -21,8 +21,10 @@
 #include "Components/DestructibleComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/PrimitiveComponent.h"
-#include <AK/SoundEngine/Common/AkSoundEngine.h>
-#include <AK/IBytes.h>
+#include "AkGameplayStatics.h"
+#include "Inventory_Manager.h"
+#include "EngineUtils.h"
+#include "Blueprint/UserWidget.h"
 
 
 
@@ -33,6 +35,7 @@ DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
 AThe_VisionCharacter::AThe_VisionCharacter()
 {
+
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
 
@@ -70,6 +73,7 @@ AThe_VisionCharacter::AThe_VisionCharacter()
 	// Default offset from the character location for projectiles to spawn
 	GunOffset = FVector(100.0f, 0.0f, 10.0f);
 
+
 	// Note: The ProjectileClass and the skeletal mesh/anim blueprints for Mesh1P, FP_Gun, and VR_Gun 
 	// are set in the derived blueprint asset named MyCharacter to avoid direct content references in C++.
 
@@ -83,15 +87,22 @@ void AThe_VisionCharacter::BeginPlay()
 	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
 	FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
 
+	FindInventoryManager();
 }
 
 void AThe_VisionCharacter::Tick(float deltaTime)
 {
 	Super::Tick(deltaTime);
-	if (leftMousePressed)
+	if (bLeftMousePressed)
 	{
-		time += deltaTime;
-		Fire(time);
+		fire_time += deltaTime;
+		Fire(fire_time);
+	}
+
+	if (bInvPressed)
+	{
+		inv_time += deltaTime;
+		OpenInventory(inv_time);
 	}
 }
 
@@ -107,6 +118,9 @@ void AThe_VisionCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	PlayerInputComponent->BindAction("Activation", IE_Pressed, this, &AThe_VisionCharacter::Activate);
+
+	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &AThe_VisionCharacter::Open_Inventory_Pressed);
+	PlayerInputComponent->BindAction("Inventory", IE_Released, this, &AThe_VisionCharacter::Close_Inventory_Pressed);
 
 
 	//InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AThe_VisionCharacter::TouchStarted);
@@ -239,17 +253,39 @@ bool AThe_VisionCharacter::EnableTouchscreenMovement(class UInputComponent* Play
 
 void AThe_VisionCharacter::OnFirePressed()
 {
-	leftMousePressed = true;
+	bLeftMousePressed = true;
 }
 
 void AThe_VisionCharacter::OnFireReleased()
 {
-	leftMousePressed = false;
+	bLeftMousePressed = false;
+}
+
+void AThe_VisionCharacter::Open_Inventory_Pressed()
+{
+	//bInvPressed = true;
+	if (W_Inventory)
+	{
+		if (!Inventory)
+		{
+			Inventory = CreateWidget<UUserWidget>(GetWorld(), W_Inventory);
+		}
+		else
+		{
+			Inventory->AddToViewport();
+		}
+	}
+	UE_LOG(LogTemp, Warning, TEXT("AD"));
+}
+
+void AThe_VisionCharacter::Close_Inventory_Pressed()
+{
+	Inventory->RemoveFromParent();
 }
 
 void AThe_VisionCharacter::Fire(float deltaTime)
 {
-	if (deltaTime > .001f)
+	if (deltaTime > 0.001f)
 	{
 		float LineTraceLenght = 3000;
 
@@ -282,20 +318,21 @@ void AThe_VisionCharacter::Fire(float deltaTime)
 			FVector Force_Vector = HitOut.TraceEnd - HitOut.TraceStart;
 			Force_Vector.Normalize();
 
-			
+			FString Shooting;
+			UAkGameplayStatics::SpawnAkComponentAtLocation(this, Shooting_Event, HitOut.TraceStart, FRotator(0, 0, 0), false, Shooting);
 
 			UPrimitiveComponent* Hit_Component = HitOut.GetComponent();
 			Hit_Component->AddImpulse(Force_Vector * Normal_Force, NAME_None, true);
 
-				if (ADestructibleActor* HitActor = Cast<ADestructibleActor>(HitOut.GetActor()))
+			if (ADestructibleActor* HitActor = Cast<ADestructibleActor>(HitOut.GetActor()))
+			{
+				if (HitActor->ActorHasTag("Cube"))
 				{
-					if (HitActor->ActorHasTag("Cube"))
-					{
-						HitActor->GetDestructibleComponent()->AddImpulse(Force_Vector * Destructible_Force, NAME_None, false);
-						HitActor->GetDestructibleComponent()->ApplyDamage(10.0f, HitOut.Location, HitOut.Location, 50.0f);
-					}
+					HitActor->GetDestructibleComponent()->AddImpulse(Force_Vector * Destructible_Force, NAME_None, false);
+					HitActor->GetDestructibleComponent()->ApplyDamage(10.0f, HitOut.Location, HitOut.Location, 50.0f);
 				}
-			time = 0;
+			}
+			fire_time = 0;
 		}
 	}
 }
@@ -311,22 +348,42 @@ void AThe_VisionCharacter::Activate()
 	const FVector End = Start + (FirstPersonCamera->GetForwardVector() * LineTraceLenght);
 
 	//The trace data is stored here
-	FHitResult HitOut;
+	FHitResult Item_HitOut;
 
 	ECollisionChannel CollisionChannel = ECC_WorldDynamic;
 
 	bool ReturnPhysMat = false;
 	if (UWorld* world = GetWorld())
 	{
-		DrawDebugLine(world, Start, End, FColor::Green, true, 2, 0, 2.f);
-		if (UStatic_Libary::LineTrace(world, Start, End, HitOut, CollisionChannel, ReturnPhysMat))
+		DrawDebugLine(world, Start, End, FColor::Green, true, 10, 0, 2.f);
+		if (UStatic_Libary::LineTrace(world, Start, End, Item_HitOut, CollisionChannel, ReturnPhysMat))
 		{
-			if (HitOut.Actor->GetClass()->ImplementsInterface(UActivationInterface::StaticClass()))
+			if (Item_HitOut.Actor->GetClass()->ImplementsInterface(UActivationInterface::StaticClass()))
 			{
-				IActivationInterface* ActivationObject = dynamic_cast<IActivationInterface*, AActor>(&*HitOut.Actor);
+				IActivationInterface* ActivationObject = dynamic_cast<IActivationInterface*, AActor>(&*Item_HitOut.Actor);
 
 				ActivationObject->Activate();
 			}
 		}
+		if (UStatic_Libary::LineTrace(world, Start, End, Item_HitOut, CollisionChannel, ReturnPhysMat))
+		{
+			if (Item_HitOut.GetActor()->ActorHasTag("Item"))
+			{
+				manager->AddItemtoList(Item_HitOut.GetActor());
+				Item_HitOut.GetActor()->Destroy();
+			}
+		}
 	}
+}
+
+void AThe_VisionCharacter::FindInventoryManager()
+{
+	for (TActorIterator<AInventory_Manager> ActorIt(GetWorld()); ActorIt; ++ActorIt)
+	{
+		manager = *ActorIt;
+	}
+}
+
+void AThe_VisionCharacter::OpenInventory(float deltatime)
+{
 }
