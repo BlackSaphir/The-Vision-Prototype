@@ -98,12 +98,6 @@ void AThe_VisionCharacter::Tick(float deltaTime)
 		fire_time += deltaTime;
 		Fire(fire_time);
 	}
-
-	if (bInvPressed)
-	{
-		inv_time += deltaTime;
-		OpenInventory(inv_time);
-	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -119,8 +113,8 @@ void AThe_VisionCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 
 	PlayerInputComponent->BindAction("Activation", IE_Pressed, this, &AThe_VisionCharacter::Activate);
 
-	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &AThe_VisionCharacter::Open_Inventory_Pressed);
-	PlayerInputComponent->BindAction("Inventory", IE_Released, this, &AThe_VisionCharacter::Close_Inventory_Pressed);
+	PlayerInputComponent->BindAction("Open Inventory", IE_Pressed, this, &AThe_VisionCharacter::Open_Inventory);
+	PlayerInputComponent->BindAction("Open Inventory", IE_Released, this, &AThe_VisionCharacter::Close_Inventory);
 
 
 	//InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AThe_VisionCharacter::TouchStarted);
@@ -261,24 +255,22 @@ void AThe_VisionCharacter::OnFireReleased()
 	bLeftMousePressed = false;
 }
 
-void AThe_VisionCharacter::Open_Inventory_Pressed()
+void AThe_VisionCharacter::Open_Inventory()
 {
 	//bInvPressed = true;
 	if (W_Inventory)
 	{
-		if (!Inventory)
-		{
+		
 			Inventory = CreateWidget<UUserWidget>(GetWorld(), W_Inventory);
-		}
-		else
-		{
-			Inventory->AddToViewport();
-		}
+			if (Inventory)
+			{
+				Inventory->AddToViewport();
+			}	
 	}
 	UE_LOG(LogTemp, Warning, TEXT("AD"));
 }
 
-void AThe_VisionCharacter::Close_Inventory_Pressed()
+void AThe_VisionCharacter::Close_Inventory()
 {
 	Inventory->RemoveFromParent();
 }
@@ -382,8 +374,4 @@ void AThe_VisionCharacter::FindInventoryManager()
 	{
 		manager = *ActorIt;
 	}
-}
-
-void AThe_VisionCharacter::OpenInventory(float deltatime)
-{
 }

@@ -84,8 +84,6 @@ private:
 
 	bool bLeftMousePressed;
 	float fire_time;
-	float inv_time;
-	bool bInvPressed;
 	UUserWidget* Inventory;
 
 
@@ -110,8 +108,8 @@ protected:
 	void OnFireReleased();
 
 	// Opens bInventory
-	void Open_Inventory_Pressed();
-	void Close_Inventory_Pressed();
+	void Open_Inventory();
+	void Close_Inventory();
 
 
 	/** Handles moving forward/backward */
@@ -145,7 +143,6 @@ protected:
 	void TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void Fire(float deltaTime);
 	void FindInventoryManager();
-	void OpenInventory(float deltaTime);
 	void Activate();
 	TouchData	TouchItem;
 	

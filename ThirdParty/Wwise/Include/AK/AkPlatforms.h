@@ -36,9 +36,9 @@ the specific language governing permissions and limitations under the License.
 
 	#include <AK/SoundEngine/Platforms/3DS/AkTypes.h>
 
-#elif _XBOX_VER >= 200 // Check Xbox before WIN32 because WIN32 might also be defined in some cases in Xbox 360 projects
- 
-	#include <AK/SoundEngine/Platforms/XBox360/AkTypes.h>
+//#elif _XBOX_VER >= 200 // Check Xbox before WIN32 because WIN32 might also be defined in some cases in Xbox 360 projects
+// 
+//	#include <AK/SoundEngine/Platforms/XBox360/AkTypes.h>
 
 #elif defined( _XBOX_ONE )
 
