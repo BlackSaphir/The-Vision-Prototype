@@ -68,17 +68,22 @@ public:
 	UPROPERTY(EditAnywhere, Category = Projectile)
 		float Normal_Force = 1000;
 
-	UPROPERTY(BlueprintReadOnly)
+	/*UPROPERTY(BlueprintReadOnly)
 		class UAkAudioEvent* AkEventClass;
 
 	UPROPERTY(EditAnywhere, Category = Sound)
-		UAkAudioEvent* Shooting_Event;
+		UAkAudioEvent* Shooting_Event;*/
 
 	UPROPERTY(VisibleAnywhere)
 		class AInventory_Manager* manager;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets")
 		TSubclassOf<class UUserWidget> W_Inventory;
+
+	UPROPERTY(EditAnywhere)
+		UAudioComponent* Shooting;
+
+	
 
 private:
 

@@ -311,8 +311,10 @@ void AThe_VisionCharacter::Fire(float deltaTime)
 			FVector Force_Vector = HitOut.TraceEnd - HitOut.TraceStart;
 			Force_Vector.Normalize();
 
-			FString Shooting;
-			UAkGameplayStatics::SpawnAkComponentAtLocation(this, Shooting_Event, HitOut.TraceStart, FRotator(0, 0, 0), false, Shooting);
+			/*FString Shooting;
+			UAkGameplayStatics::SpawnAkComponentAtLocation(this, Shooting_Event, HitOut.TraceStart, FRotator(0, 0, 0), false, Shooting);*/
+
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, HitOut.TraceStart);
 
 			UPrimitiveComponent* Hit_Component = HitOut.GetComponent();
 			Hit_Component->AddImpulse(Force_Vector * Normal_Force, NAME_None, true);
