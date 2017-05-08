@@ -90,7 +90,7 @@ private:
 	bool bLeftMousePressed;
 	float fire_time;
 	UUserWidget* Inventory;
-	bool bZoomPressed;
+	float CameraZoom;
 
 
 
@@ -118,6 +118,8 @@ protected:
 	void Close_Inventory();
 
 	// Zoom
+	void Start_Zooming();
+	void Stop_Zooming();
 
 
 	/** Handles moving forward/backward */

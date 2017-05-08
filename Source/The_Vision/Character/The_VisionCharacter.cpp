@@ -89,6 +89,8 @@ void AThe_VisionCharacter::BeginPlay()
 	FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
 
 	FindInventoryManager();
+
+	CameraZoom = FirstPersonCamera->FieldOfView;
 }
 
 void AThe_VisionCharacter::Tick(float deltaTime)
@@ -98,8 +100,7 @@ void AThe_VisionCharacter::Tick(float deltaTime)
 	{
 		fire_time += deltaTime;
 		Fire(fire_time);
-	}
-	if
+	}	
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -118,7 +119,8 @@ void AThe_VisionCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAction("Open Inventory", IE_Pressed, this, &AThe_VisionCharacter::Open_Inventory);
 	PlayerInputComponent->BindAction("Open Inventory", IE_Released, this, &AThe_VisionCharacter::Close_Inventory);
 
-	PlayerInputComponent->BindAction("Zoom", IE_Pressed, this, &)
+	PlayerInputComponent->BindAction("Zoom", IE_Pressed, this, &AThe_VisionCharacter::Start_Zooming);
+	PlayerInputComponent->BindAction("Zoom", IE_Released, this, &AThe_VisionCharacter::Stop_Zooming);
 
 
 	//InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AThe_VisionCharacter::TouchStarted);
@@ -259,6 +261,20 @@ void AThe_VisionCharacter::OnFireReleased()
 	bLeftMousePressed = false;
 }
 
+void AThe_VisionCharacter::Start_Zooming()
+{
+	float Current_Zoom = FirstPersonCamera->FieldOfView;
+
+	float InFieldOfView = UKismetMathLibrary::FInterpTo(Current_Zoom, 60, 10, 0.1);
+
+	FirstPersonCamera->SetFieldOfView(InFieldOfView);
+}
+
+void AThe_VisionCharacter::Stop_Zooming()
+{
+	FirstPersonCamera->SetFieldOfView(CameraZoom);
+}
+
 void AThe_VisionCharacter::Open_Inventory()
 {
 	//bInvPressed = true;
@@ -279,6 +295,8 @@ void AThe_VisionCharacter::Close_Inventory()
 	Inventory->RemoveFromParent();
 }
 
+
+// Fire Raycast(Decal, Sound, Apply Damage)
 void AThe_VisionCharacter::Fire(float deltaTime)
 {
 	if (deltaTime > 0.001f)
@@ -317,7 +335,7 @@ void AThe_VisionCharacter::Fire(float deltaTime)
 			/*FString Shooting;
 			UAkGameplayStatics::SpawnAkComponentAtLocation(this, Shooting_Event, HitOut.TraceStart, FRotator(0, 0, 0), false, Shooting);*/
 
-			UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, HitOut.TraceStart);
+			//UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, HitOut.TraceStart);
 
 			UPrimitiveComponent* Hit_Component = HitOut.GetComponent();
 			Hit_Component->AddImpulse(Force_Vector * Normal_Force, NAME_None, true);
@@ -336,6 +354,7 @@ void AThe_VisionCharacter::Fire(float deltaTime)
 	}
 }
 
+// Open Door
 void AThe_VisionCharacter::Activate()
 {
 	float LineTraceLenght = 200;
