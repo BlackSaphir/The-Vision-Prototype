@@ -99,6 +99,7 @@ void AThe_VisionCharacter::Tick(float deltaTime)
 		fire_time += deltaTime;
 		Fire(fire_time);
 	}
+	if
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -116,6 +117,8 @@ void AThe_VisionCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 
 	PlayerInputComponent->BindAction("Open Inventory", IE_Pressed, this, &AThe_VisionCharacter::Open_Inventory);
 	PlayerInputComponent->BindAction("Open Inventory", IE_Released, this, &AThe_VisionCharacter::Close_Inventory);
+
+	PlayerInputComponent->BindAction("Zoom", IE_Pressed, this, &)
 
 
 	//InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AThe_VisionCharacter::TouchStarted);
