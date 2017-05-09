@@ -89,8 +89,10 @@ private:
 
 	bool bLeftMousePressed;
 	float fire_time;
-	UUserWidget* Inventory;
-	float CameraZoom;
+	UUserWidget* inventory_widget;
+	float camera_zoom;
+	float run_speed = 1200;
+	float walk_speed = 600;
 
 
 
@@ -120,6 +122,10 @@ protected:
 	// Zoom
 	void Start_Zooming();
 	void Stop_Zooming();
+
+	// Sprint
+	void Start_Sprint();
+	void Stop_Sprint();
 
 
 	/** Handles moving forward/backward */

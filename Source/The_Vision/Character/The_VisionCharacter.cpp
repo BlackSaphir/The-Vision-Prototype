@@ -90,7 +90,7 @@ void AThe_VisionCharacter::BeginPlay()
 
 	FindInventoryManager();
 
-	CameraZoom = FirstPersonCamera->FieldOfView;
+	camera_zoom = FirstPersonCamera->FieldOfView;
 }
 
 void AThe_VisionCharacter::Tick(float deltaTime)
@@ -121,6 +121,9 @@ void AThe_VisionCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 
 	PlayerInputComponent->BindAction("Zoom", IE_Pressed, this, &AThe_VisionCharacter::Start_Zooming);
 	PlayerInputComponent->BindAction("Zoom", IE_Released, this, &AThe_VisionCharacter::Stop_Zooming);
+
+	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AThe_VisionCharacter::Start_Sprint);
+	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AThe_VisionCharacter::Stop_Sprint);
 
 
 	//InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AThe_VisionCharacter::TouchStarted);
@@ -272,7 +275,17 @@ void AThe_VisionCharacter::Start_Zooming()
 
 void AThe_VisionCharacter::Stop_Zooming()
 {
-	FirstPersonCamera->SetFieldOfView(CameraZoom);
+	FirstPersonCamera->SetFieldOfView(camera_zoom);
+}
+
+void AThe_VisionCharacter::Start_Sprint()
+{
+	GetCharacterMovement()->MaxWalkSpeed = run_speed;
+}
+
+void AThe_VisionCharacter::Stop_Sprint()
+{
+	GetCharacterMovement()->MaxWalkSpeed = walk_speed;
 }
 
 void AThe_VisionCharacter::Open_Inventory()
@@ -281,10 +294,10 @@ void AThe_VisionCharacter::Open_Inventory()
 	if (W_Inventory)
 	{
 		
-			Inventory = CreateWidget<UUserWidget>(GetWorld(), W_Inventory);
-			if (Inventory)
+			inventory_widget = CreateWidget<UUserWidget>(GetWorld(), W_Inventory);
+			if (inventory_widget)
 			{
-				Inventory->AddToViewport();
+				inventory_widget->AddToViewport();
 			}	
 	}
 	UE_LOG(LogTemp, Warning, TEXT("AD"));
@@ -292,7 +305,7 @@ void AThe_VisionCharacter::Open_Inventory()
 
 void AThe_VisionCharacter::Close_Inventory()
 {
-	Inventory->RemoveFromParent();
+	inventory_widget->RemoveFromParent();
 }
 
 
