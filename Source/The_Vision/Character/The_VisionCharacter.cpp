@@ -98,7 +98,7 @@ void AThe_VisionCharacter::Tick(float deltaTime)
 	Super::Tick(deltaTime);
 	if (bLeftMousePressed)
 	{
-		//Fire(float LineTraceLenght = 3000, ECollisionChannel CollisionChannel = ECC_WorldDynamic);
+		Fire();
 	}
 }
 
@@ -308,7 +308,7 @@ void AThe_VisionCharacter::Close_Inventory()
 }
 
 // Fire Raycast
-void AThe_VisionCharacter::Fire(float LineTraceLenght = 3000, ECollisionChannel CollisionChannel = ECC_WorldDynamic)
+void AThe_VisionCharacter::Fire(float LineTraceLenght, ECollisionChannel CollisionChannel)
 {
 		//location the PC is focused on
 		const FVector Start = FirstPersonCamera->GetComponentLocation();

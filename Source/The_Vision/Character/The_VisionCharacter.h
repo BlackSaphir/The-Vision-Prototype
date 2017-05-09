@@ -157,7 +157,7 @@ protected:
 	void BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location);
-	void Fire(float, ECollisionChannel);
+	void Fire(float LineTraceLenght = 3000, ECollisionChannel CollisionChannel = ECC_WorldDynamic);
 	void SpawnBulletHole(FHitResult const&);
 	void DoDamage(FHitResult const&);
 	void Play_ShootingSound(FHitResult const&);
