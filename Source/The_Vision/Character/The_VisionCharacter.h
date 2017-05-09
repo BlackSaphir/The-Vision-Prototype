@@ -6,67 +6,69 @@
 
 class UInputComponent;
 
-UCLASS(config=Game)
+UCLASS(config = Game)
 class AThe_VisionCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-// Component
+		// Component
+
+public:
 
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
-	UPROPERTY(VisibleDefaultsOnly, Category=Mesh)
-	class USkeletalMeshComponent* Mesh1P;
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+		class USkeletalMeshComponent* Mesh1P;
 
 	/** Gun mesh: 1st person view (seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	class USkeletalMeshComponent* FP_Gun;
+		class USkeletalMeshComponent* FP_Gun;
 
 	/** Location on gun mesh where projectiles should spawn. */
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	class USceneComponent* FP_MuzzleLocation;
+		class USceneComponent* FP_MuzzleLocation;
 
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* FirstPersonCamera;
+		class UCameraComponent* FirstPersonCamera;
 
-// Variable
+	// Variable
 
 public:
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
-	float BaseTurnRate;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+		float BaseTurnRate;
 
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
-	float BaseLookUpRate;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+		float BaseLookUpRate;
 
 	/** Gun muzzle's offset from the characters location */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
-	FVector GunOffset;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		FVector GunOffset;
 
 	/** Projectile class to spawn */
-	UPROPERTY(EditDefaultsOnly, Category=Projectile)
-	TSubclassOf<class AThe_VisionProjectile> ProjectileClass;
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+		TSubclassOf<class AThe_VisionProjectile> ProjectileClass;
 
 	/** Sound to play each time we fire */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
-	class USoundBase* FireSound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		class USoundBase* FireSound;
 
 	/** AnimMontage to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	class UAnimMontage* FireAnimation;
+		class UAnimMontage* FireAnimation;
 
 	UPROPERTY(EditAnyWhere)
-	UDecalComponent* Fade;
+		UDecalComponent* Fade;
 
 	UPROPERTY(EditAnywhere, Category = Projectile)
-	TSubclassOf<class AActor> Bullet_Hole_Decal;
+		TSubclassOf<class AActor> Bullet_Hole_Decal;
 
 	UPROPERTY(EditAnywhere, Category = Projectile)
-		float Destructible_Force = 1000;
+		 float Destructible_Force = 1000;
 
 	UPROPERTY(EditAnywhere, Category = Projectile)
-		float Normal_Force = 1000;
+		 float Normal_Force = 1000;
 
 	/*UPROPERTY(BlueprintReadOnly)
 		class UAkAudioEvent* AkEventClass;
@@ -83,12 +85,10 @@ public:
 	UPROPERTY(EditAnywhere)
 		UAudioComponent* Shooting;
 
-	
 
 private:
 
 	bool bLeftMousePressed;
-	float fire_time;
 	UUserWidget* inventory_widget;
 	float camera_zoom;
 	float run_speed = 1200;
@@ -96,7 +96,7 @@ private:
 
 
 
-// Functions
+	// Functions
 
 public:
 	AThe_VisionCharacter();
@@ -110,7 +110,7 @@ public:
 protected:
 	virtual void BeginPlay();
 	virtual void Tick(float deltaTime);
-	
+
 	/** Fires a projectile. */
 	void OnFirePressed();
 	void OnFireReleased();
@@ -148,7 +148,7 @@ protected:
 
 	struct TouchData
 	{
-		TouchData() { bIsPressed = false;Location=FVector::ZeroVector;}
+		TouchData() { bIsPressed = false; Location = FVector::ZeroVector; }
 		bool bIsPressed;
 		ETouchIndex::Type FingerIndex;
 		FVector Location;
@@ -157,17 +157,20 @@ protected:
 	void BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location);
-	void Fire(float deltaTime);
+	void Fire(float, ECollisionChannel);
+	void SpawnBulletHole(FHitResult const&);
+	void DoDamage(FHitResult const&);
+	void Play_ShootingSound(FHitResult const&);
 	void FindInventoryManager();
 	void Activate();
 	TouchData	TouchItem;
-	
+
 	// APawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 	// End of APawn interface
 
-	/* 
-	 * Configures input for touchscreen devices if there is a valid touch interface for doing so 
+	/*
+	 * Configures input for touchscreen devices if there is a valid touch interface for doing so
 	 *
 	 * @param	InputComponent	The input component pointer to bind controls to
 	 * @returns true if touch controls were enabled.
@@ -175,7 +178,7 @@ protected:
 	bool EnableTouchscreenMovement(UInputComponent* InputComponent);
 
 
-private:	
-	
+private:
+
 };
 

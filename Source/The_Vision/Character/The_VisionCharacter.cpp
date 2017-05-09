@@ -98,9 +98,8 @@ void AThe_VisionCharacter::Tick(float deltaTime)
 	Super::Tick(deltaTime);
 	if (bLeftMousePressed)
 	{
-		fire_time += deltaTime;
-		Fire(fire_time);
-	}	
+		//Fire(float LineTraceLenght = 3000, ECollisionChannel CollisionChannel = ECC_WorldDynamic);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -293,12 +292,12 @@ void AThe_VisionCharacter::Open_Inventory()
 	//bInvPressed = true;
 	if (W_Inventory)
 	{
-		
-			inventory_widget = CreateWidget<UUserWidget>(GetWorld(), W_Inventory);
-			if (inventory_widget)
-			{
-				inventory_widget->AddToViewport();
-			}	
+
+		inventory_widget = CreateWidget<UUserWidget>(GetWorld(), W_Inventory);
+		if (inventory_widget)
+		{
+			inventory_widget->AddToViewport();
+		}
 	}
 	UE_LOG(LogTemp, Warning, TEXT("AD"));
 }
@@ -308,14 +307,9 @@ void AThe_VisionCharacter::Close_Inventory()
 	inventory_widget->RemoveFromParent();
 }
 
-
-// Fire Raycast(Decal, Sound, Apply Damage)
-void AThe_VisionCharacter::Fire(float deltaTime)
+// Fire Raycast
+void AThe_VisionCharacter::Fire(float LineTraceLenght = 3000, ECollisionChannel CollisionChannel = ECC_WorldDynamic)
 {
-	if (deltaTime > 0.001f)
-	{
-		float LineTraceLenght = 3000;
-
 		//location the PC is focused on
 		const FVector Start = FirstPersonCamera->GetComponentLocation();
 
@@ -325,44 +319,54 @@ void AThe_VisionCharacter::Fire(float deltaTime)
 		//The trace data is stored here
 		FHitResult HitOut;
 
-		ECollisionChannel CollisionChannel = ECC_WorldDynamic;
-
 		bool ReturnPhysMat = false;
 
 		if (UStatic_Libary::LineTrace(GetWorld(), Start, End, HitOut, CollisionChannel, ReturnPhysMat))
 		{
-			FVector Decal_Size = FVector(1, 1, 1);
+			DoDamage(HitOut);
+			SpawnBulletHole(HitOut);
+			Play_ShootingSound(HitOut);
+		}
+}
 
-			FVector Decal_Location = HitOut.Location;
+void AThe_VisionCharacter::SpawnBulletHole(FHitResult const& HitOut)
+{
+	FVector Decal_Size = FVector(1, 1, 1);
 
-			FActorSpawnParameters Decal_Spawn_Params;
+	FVector Decal_Location = HitOut.Location;
 
-			UWorld* TempWorld = GetWorld();
-			AActor* Spawned_Decal = TempWorld->SpawnActor<AActor>(Bullet_Hole_Decal, Decal_Location, FRotator(), Decal_Spawn_Params);
+	FActorSpawnParameters Decal_Spawn_Params;
 
-			Spawned_Decal->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(HitOut.Location, HitOut.Location + HitOut.Normal));
+	UWorld* TempWorld = GetWorld();
+	AActor* Spawned_Decal = TempWorld->SpawnActor<AActor>(Bullet_Hole_Decal, Decal_Location, FRotator(), Decal_Spawn_Params);
 
-			FVector Force_Vector = HitOut.TraceEnd - HitOut.TraceStart;
-			Force_Vector.Normalize();
+	Spawned_Decal->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(HitOut.Location, HitOut.Location + HitOut.Normal));
 
-			/*FString Shooting;
-			UAkGameplayStatics::SpawnAkComponentAtLocation(this, Shooting_Event, HitOut.TraceStart, FRotator(0, 0, 0), false, Shooting);*/
+}
 
-			//UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, HitOut.TraceStart);
+void AThe_VisionCharacter::Play_ShootingSound(FHitResult const& HitOut)
+{
+	/*FString Shooting;
+	UAkGameplayStatics::SpawnAkComponentAtLocation(this, Shooting_Event, HitOut.TraceStart, FRotator(0, 0, 0), false, Shooting);*/
 
-			UPrimitiveComponent* Hit_Component = HitOut.GetComponent();
-			Hit_Component->AddImpulse(Force_Vector * Normal_Force, NAME_None, true);
+	//UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, HitOut.TraceStart);
+}
 
-			if (ADestructibleActor* HitActor = Cast<ADestructibleActor>(HitOut.GetActor()))
-			{
-				if (HitActor->ActorHasTag("Cube"))
-				{
-					//HitActor->GetDestructibleComponent()->AddImpulse(Force_Vector * Destructible_Force, NAME_None, false);
-					UGameplayStatics::ApplyRadialDamage(GetWorld(), 30.0f, HitOut.Location, 15.0f, UDestructible_DamageType::StaticClass(), TArray<AActor*>(), this);
-					//HitActor->GetDestructibleComponent()->ApplyDamage(10.0f, HitOut.Location, HitOut.Location, 50.0f);
-				}
-			}
-			fire_time = 0;
+void AThe_VisionCharacter::DoDamage(FHitResult const& HitOut)
+{
+	FVector Force_Vector = HitOut.TraceEnd - HitOut.TraceStart;
+	Force_Vector.Normalize();
+
+	UPrimitiveComponent* Hit_Component = HitOut.GetComponent();
+	Hit_Component->AddImpulse(Force_Vector * Normal_Force, NAME_None, true);
+
+	if (ADestructibleActor* HitActor = Cast<ADestructibleActor>(HitOut.GetActor()))
+	{
+		if (HitActor->ActorHasTag("Cube"))
+		{
+			//HitActor->GetDestructibleComponent()->AddImpulse(Force_Vector * Destructible_Force, NAME_None, false);
+			UGameplayStatics::ApplyRadialDamage(GetWorld(), 30.0f, HitOut.Location, 15.0f, UDestructible_DamageType::StaticClass(), TArray<AActor*>(), this);
+			//HitActor->GetDestructibleComponent()->ApplyDamage(10.0f, HitOut.Location, HitOut.Location, 50.0f);
 		}
 	}
 }
