@@ -404,7 +404,7 @@ void AThe_VisionCharacter::Activate()
 		{
 			if (Item_HitOut.GetActor()->ActorHasTag("Item"))
 			{
-				manager->AddItemtoList(Item_HitOut.GetActor());
+				Inventory_Manager->AddItemtoList(Item_HitOut.GetActor());
 				Item_HitOut.GetActor()->Destroy();
 			}
 		}
@@ -415,6 +415,6 @@ void AThe_VisionCharacter::FindInventoryManager()
 {
 	for (TActorIterator<AInventory_Manager> ActorIt(GetWorld()); ActorIt; ++ActorIt)
 	{
-		manager = *ActorIt;
+		Inventory_Manager = *ActorIt;
 	}
 }

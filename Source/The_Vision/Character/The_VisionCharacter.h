@@ -64,11 +64,23 @@ public:
 	UPROPERTY(EditAnywhere, Category = Projectile)
 		TSubclassOf<class AActor> Bullet_Hole_Decal;
 
+	UPROPERTY(EditAnywhere, Category = Widgets)
+		TSubclassOf<class UUserWidget> Lose_Screen_Widget;
+
+	UPROPERTY(EditAnywhere, Category = Widgets)
+		TSubclassOf<class UUserWidget> Win_Screen_Widget;
+
 	UPROPERTY(EditAnywhere, Category = Projectile)
 		 float Destructible_Force = 1000;
 
 	UPROPERTY(EditAnywhere, Category = Projectile)
 		 float Normal_Force = 1000;
+
+	/*UPROPERTY(EditAnywhere, Category = Projectile)
+		static constexpr float Rifle_Ammo = 30;*/
+
+	UPROPERTY(EditAnywhere)
+		float Character_Health = 100;
 
 	/*UPROPERTY(BlueprintReadOnly)
 		class UAkAudioEvent* AkEventClass;
@@ -77,9 +89,9 @@ public:
 		UAkAudioEvent* Shooting_Event;*/
 
 	UPROPERTY(VisibleAnywhere)
-		class AInventory_Manager* manager;
+		class AInventory_Manager* Inventory_Manager;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widgets)
 		TSubclassOf<class UUserWidget> W_Inventory;
 
 	UPROPERTY(EditAnywhere)
