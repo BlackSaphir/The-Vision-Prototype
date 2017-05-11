@@ -9,10 +9,10 @@ void UPlayer_Widget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	FindPlayer();
-	//AThe_VisionCharacter* character = FindPlayer();//Cast<AThe_VisionCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
-	/*AmmoRifle = character->Rifle_Ammo;
-	CharacterHealth = character->Character_Health;*/
+	//FindPlayer();
+	
+	character = Cast<AThe_VisionCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	
 }
 
 void UPlayer_Widget::NativeTick(const FGeometry& MyGeometry, float DeltaTime)
@@ -23,9 +23,16 @@ void UPlayer_Widget::NativeTick(const FGeometry& MyGeometry, float DeltaTime)
 
 float UPlayer_Widget::GetAmmo()
 {
-	AmmoRifle = character->Rifle_Ammo;
-	return AmmoRifle;
+	Widget_AmmoRifle = character->Rifle_Ammo;
+	return Widget_AmmoRifle;
 }
+
+float UPlayer_Widget::GetHealth()
+{
+	Widget_CharacterHealth = character->Character_Health;
+	return Widget_CharacterHealth;
+}
+
 void UPlayer_Widget::FindPlayer()
 {
 	if (UWorld* world = GetWorld())
@@ -35,8 +42,8 @@ void UPlayer_Widget::FindPlayer()
 			if (AThe_VisionCharacter* visioncharacter = *ActorIter)
 			{
 				character = visioncharacter;
-				AmmoRifle = visioncharacter->Rifle_Ammo;
-				CharacterHealth = visioncharacter->Character_Health;
+				Widget_AmmoRifle = visioncharacter->Rifle_Ammo;
+				Widget_CharacterHealth = visioncharacter->Character_Health;
 			}
 		}
 	}

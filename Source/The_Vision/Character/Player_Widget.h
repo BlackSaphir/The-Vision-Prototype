@@ -17,13 +17,17 @@ class THE_VISION_API UPlayer_Widget : public UUserWidget
 
 
 public:
-	UPROPERTY(EditAnywhere,Category = "Bullet")
-	float AmmoRifle;
-	UPROPERTY(EditAnywhere, Category = "Character")
-	float CharacterHealth;
+	UPROPERTY(EditAnywhere,Category = Bullet)
+	float Widget_AmmoRifle;
+	
+	UPROPERTY(EditAnywhere, Category = Character)
+	float Widget_CharacterHealth;
 
-	UFUNCTION(BlueprintCallable, Category = "Bullet")
+	UFUNCTION(BlueprintCallable, Category = Bullet)
 		float GetAmmo();
+
+	UFUNCTION(BlueprintCallable, Category = Character)
+		float GetHealth();
 	
 private:
 	void FindPlayer();
