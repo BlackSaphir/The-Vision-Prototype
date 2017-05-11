@@ -71,22 +71,22 @@ public:
 		TSubclassOf<class UUserWidget> Win_Screen_Widget;
 
 	UPROPERTY(EditAnywhere, Category = Projectile)
-		 float Destructible_Force = 1000;
+		float Destructible_Force = 1000;
 
 	UPROPERTY(EditAnywhere, Category = Projectile)
-		 float Normal_Force = 1000;
+		float Normal_Force = 1000;
 
-	/*UPROPERTY(EditAnywhere, Category = Projectile)
-		static constexpr float Rifle_Ammo = 30;*/
+	UPROPERTY(EditAnywhere, Category = Projectile)
+		float Rifle_Ammo = 30;
 
 	UPROPERTY(EditAnywhere)
 		float Character_Health = 100;
 
-	/*UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly)
 		class UAkAudioEvent* AkEventClass;
 
 	UPROPERTY(EditAnywhere, Category = Sound)
-		UAkAudioEvent* Shooting_Event;*/
+		UAkAudioEvent* Shooting_Event;
 
 	UPROPERTY(VisibleAnywhere)
 		class AInventory_Manager* Inventory_Manager;
@@ -169,7 +169,7 @@ protected:
 	void BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location);
-	void Fire(float LineTraceLenght = 3000, ECollisionChannel CollisionChannel = ECC_WorldDynamic );
+	void Fire(float LineTraceLenght = 3000, ECollisionChannel CollisionChannel = ECC_WorldDynamic);
 	void SpawnBulletHole(FHitResult const&);
 	void DoDamage(FHitResult const&);
 	void Play_ShootingSound(FHitResult const&);

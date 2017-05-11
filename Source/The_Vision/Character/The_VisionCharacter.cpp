@@ -310,6 +310,8 @@ void AThe_VisionCharacter::Close_Inventory()
 // Fire Raycast
 void AThe_VisionCharacter::Fire(float LineTraceLenght, ECollisionChannel CollisionChannel)
 {
+	if (Rifle_Ammo > 0)
+	{
 		//location the PC is focused on
 		const FVector Start = FirstPersonCamera->GetComponentLocation();
 
@@ -327,6 +329,13 @@ void AThe_VisionCharacter::Fire(float LineTraceLenght, ECollisionChannel Collisi
 			SpawnBulletHole(HitOut);
 			Play_ShootingSound(HitOut);
 		}
+		Rifle_Ammo--;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("LEER"));
+	}
+
 }
 
 void AThe_VisionCharacter::SpawnBulletHole(FHitResult const& HitOut)
@@ -341,6 +350,8 @@ void AThe_VisionCharacter::SpawnBulletHole(FHitResult const& HitOut)
 	AActor* Spawned_Decal = TempWorld->SpawnActor<AActor>(Bullet_Hole_Decal, Decal_Location, FRotator(), Decal_Spawn_Params);
 
 	Spawned_Decal->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(HitOut.Location, HitOut.Location + HitOut.Normal));
+
+
 
 }
 
