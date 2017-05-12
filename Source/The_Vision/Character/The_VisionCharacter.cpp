@@ -7,12 +7,13 @@
 #include "GameFramework/InputSettings.h"
 #include "Kismet/HeadMountedDisplayFunctionLibrary.h"
 #include "MotionControllerComponent.h"
+
 #include "Static_Libary.h"
 #include "DrawDebugHelpers.h"
 #include "Color.h"
-#include <EngineGlobals.h>
+//#include <EngineGlobals.h>
 #include <Runtime/Engine/Classes/Engine/Engine.h>
-#include "Engine/CollisionProfile.h"
+//#include "Engine/CollisionProfile.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/DecalComponent.h"
 #include "ActivationInterface.h"
@@ -20,7 +21,7 @@
 #include "PhysicsEngine/DestructibleActor.h"
 #include "Components/DestructibleComponent.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Components/PrimitiveComponent.h"
+//#include "Components/PrimitiveComponent.h"
 #include "AkGameplayStatics.h"
 #include "Inventory/Inventory_Manager.h"
 #include "EngineUtils.h"
@@ -91,6 +92,11 @@ void AThe_VisionCharacter::BeginPlay()
 	FindInventoryManager();
 
 	camera_zoom = FirstPersonCamera->FieldOfView;
+
+	float LineTraceLenght = 3000;
+	ECollisionChannel CollisionChannel = ECC_WorldDynamic;
+
+	time_del_fire.BindUFunction(this, FName("Fire"), LineTraceLenght, CollisionChannel);
 }
 
 void AThe_VisionCharacter::Tick(float deltaTime)
@@ -98,7 +104,23 @@ void AThe_VisionCharacter::Tick(float deltaTime)
 	Super::Tick(deltaTime);
 	if (bLeftMousePressed)
 	{
-		Fire();
+		delayTimer += deltaTime;
+		if (delayTimer > Delay )
+		{
+			Fire();
+			delayTimer = 0;
+		}
+		//GetWorldTimerManager().SetTimer(timeHandle, time_del_fire, Delay, false);
+	}
+
+	if (bReloadPressed)
+	{
+		reloadTimer += deltaTime;
+		if (reloadTimer > ReloadTime)
+		{
+			Reload();
+			reloadTimer = 0;
+		}
 	}
 }
 
@@ -123,6 +145,8 @@ void AThe_VisionCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 
 	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AThe_VisionCharacter::Start_Sprint);
 	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AThe_VisionCharacter::Stop_Sprint);
+
+	PlayerInputComponent->BindAction("Reload", IE_Released, this, &AThe_VisionCharacter::Reload_Pressed);
 
 
 	//InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AThe_VisionCharacter::TouchStarted);
@@ -287,6 +311,16 @@ void AThe_VisionCharacter::Stop_Sprint()
 	GetCharacterMovement()->MaxWalkSpeed = walk_speed;
 }
 
+void AThe_VisionCharacter::Reload_Pressed()
+{
+	bReloadPressed = true;
+}
+
+void AThe_VisionCharacter::Reload()
+{
+	Rifle_Ammo = 30;
+}
+
 void AThe_VisionCharacter::Open_Inventory()
 {
 	//bInvPressed = true;
@@ -350,9 +384,6 @@ void AThe_VisionCharacter::SpawnBulletHole(FHitResult const& HitOut)
 	AActor* Spawned_Decal = TempWorld->SpawnActor<AActor>(Bullet_Hole_Decal, Decal_Location, FRotator(), Decal_Spawn_Params);
 
 	Spawned_Decal->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(HitOut.Location, HitOut.Location + HitOut.Normal));
-
-
-
 }
 
 void AThe_VisionCharacter::Play_ShootingSound(FHitResult const& HitOut)

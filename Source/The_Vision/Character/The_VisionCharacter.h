@@ -97,14 +97,28 @@ public:
 	UPROPERTY(EditAnywhere)
 		UAudioComponent* Shooting;
 
+	UPROPERTY(EditAnywhere, Category = Projectile)
+		float Delay = 0.1f;
+
+	UPROPERTY(EditAnywhere, Category = Projectile)
+		float ReloadTime = 0.2f;
+
+	
+
 
 private:
 
 	bool bLeftMousePressed;
+	bool bReloadPressed;
 	UUserWidget* inventory_widget;
 	float camera_zoom;
 	float run_speed = 1200;
 	float walk_speed = 600;
+	FTimerHandle timeHandle;
+	float inRate = 10;
+	FTimerDelegate time_del_fire;
+	float delayTimer = 0;
+	float reloadTimer = 0;
 
 
 
@@ -117,6 +131,10 @@ public:
 	FORCEINLINE class USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCamera; }
+
+	UFUNCTION()
+		void Fire(float LineTraceLenght = 3000, ECollisionChannel CollisionChannel = ECC_WorldDynamic);
+
 
 
 protected:
@@ -166,16 +184,23 @@ protected:
 		FVector Location;
 		bool bMoved;
 	};
+
 	void BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
+
 	void TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location);
-	void Fire(float LineTraceLenght = 3000, ECollisionChannel CollisionChannel = ECC_WorldDynamic);
+
 	void SpawnBulletHole(FHitResult const&);
 	void DoDamage(FHitResult const&);
 	void Play_ShootingSound(FHitResult const&);
+
 	void FindInventoryManager();
+
 	void Activate();
 	TouchData	TouchItem;
+
+	void Reload_Pressed();
+	void Reload();
 
 	// APawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
