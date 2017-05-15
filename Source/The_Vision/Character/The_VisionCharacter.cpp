@@ -92,11 +92,6 @@ void AThe_VisionCharacter::BeginPlay()
 	FindInventoryManager();
 
 	camera_zoom = FirstPersonCamera->FieldOfView;
-
-	float LineTraceLenght = 3000;
-	ECollisionChannel CollisionChannel = ECC_WorldDynamic;
-
-	time_del_fire.BindUFunction(this, FName("Fire"), LineTraceLenght, CollisionChannel);
 }
 
 void AThe_VisionCharacter::Tick(float deltaTime)
@@ -105,21 +100,10 @@ void AThe_VisionCharacter::Tick(float deltaTime)
 	if (bLeftMousePressed)
 	{
 		delayTimer += deltaTime;
-		if (delayTimer > Delay )
+		if (delayTimer > Fire_Delay )
 		{
 			Fire();
 			delayTimer = 0;
-		}
-		//GetWorldTimerManager().SetTimer(timeHandle, time_del_fire, Delay, false);
-	}
-
-	if (bReloadPressed)
-	{
-		reloadTimer += deltaTime;
-		if (reloadTimer > ReloadTime)
-		{
-			Reload();
-			reloadTimer = 0;
 		}
 	}
 }
@@ -147,7 +131,6 @@ void AThe_VisionCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AThe_VisionCharacter::Stop_Sprint);
 
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AThe_VisionCharacter::Reload_Pressed);
-	//PlayerInputComponen->BindAction("Reload", IE_)
 
 
 	//InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AThe_VisionCharacter::TouchStarted);
@@ -314,14 +297,14 @@ void AThe_VisionCharacter::Stop_Sprint()
 
 void AThe_VisionCharacter::Reload_Pressed()
 {
-	//bReloadPressed = true;
-	Rifle_Ammo = 30;
-
+	FTimerHandle TimeHandle;
+	GetWorldTimerManager().SetTimer(TimeHandle, this, &AThe_VisionCharacter::Reload, Reload_Delay);
 }
 
 void AThe_VisionCharacter::Reload()
 {
 	Rifle_Ammo = 30;
+
 }
 
 void AThe_VisionCharacter::Open_Inventory()
