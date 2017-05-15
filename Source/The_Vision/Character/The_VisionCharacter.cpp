@@ -146,7 +146,8 @@ void AThe_VisionCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AThe_VisionCharacter::Start_Sprint);
 	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AThe_VisionCharacter::Stop_Sprint);
 
-	PlayerInputComponent->BindAction("Reload", IE_Released, this, &AThe_VisionCharacter::Reload_Pressed);
+	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AThe_VisionCharacter::Reload_Pressed);
+	//PlayerInputComponen->BindAction("Reload", IE_)
 
 
 	//InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AThe_VisionCharacter::TouchStarted);
@@ -313,7 +314,9 @@ void AThe_VisionCharacter::Stop_Sprint()
 
 void AThe_VisionCharacter::Reload_Pressed()
 {
-	bReloadPressed = true;
+	//bReloadPressed = true;
+	Rifle_Ammo = 30;
+
 }
 
 void AThe_VisionCharacter::Reload()
