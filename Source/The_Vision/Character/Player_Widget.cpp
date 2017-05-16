@@ -33,20 +33,20 @@ float UPlayer_Widget::GetHealth()
 	return Widget_CharacterHealth;
 }
 
-void UPlayer_Widget::FindPlayer()
-{
-	if (UWorld* world = GetWorld())
-	{
-		for (TActorIterator<AThe_VisionCharacter> ActorIter(world);ActorIter;++ActorIter)
-		{
-			if (AThe_VisionCharacter* visioncharacter = *ActorIter)
-			{
-				character = visioncharacter;
-				Widget_AmmoRifle = visioncharacter->Rifle_Ammo;
-				Widget_CharacterHealth = visioncharacter->Character_Health;
-			}
-		}
-	}
-}
+//void UPlayer_Widget::FindPlayer()
+//{
+//	if (UWorld* world = GetWorld())
+//	{
+//		for (TActorIterator<AThe_VisionCharacter> ActorIter(world);ActorIter;++ActorIter)
+//		{
+//			if (AThe_VisionCharacter* visioncharacter = *ActorIter)
+//			{
+//				character = visioncharacter;
+//				Widget_AmmoRifle = visioncharacter->Rifle_Ammo;
+//				Widget_CharacterHealth = visioncharacter->Character_Health;
+//			}
+//		}
+//	}
+//}
 
 
