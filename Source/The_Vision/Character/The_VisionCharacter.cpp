@@ -349,6 +349,7 @@ void AThe_VisionCharacter::Fire(float LineTraceLenght, ECollisionChannel Collisi
 			SpawnBulletHole(HitOut);
 			Play_ShootingSound(HitOut);
 		}
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, HitOut.TraceStart);
 		Rifle_Ammo--;
 	}
 	else
@@ -377,7 +378,6 @@ void AThe_VisionCharacter::Play_ShootingSound(FHitResult const& HitOut)
 	/*FString Shooting;
 	UAkGameplayStatics::SpawnAkComponentAtLocation(this, Shooting_Event, HitOut.TraceStart, FRotator(0, 0, 0), false, Shooting);*/
 
-	//UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, HitOut.TraceStart);
 }
 
 void AThe_VisionCharacter::DoDamage(FHitResult const& HitOut)
