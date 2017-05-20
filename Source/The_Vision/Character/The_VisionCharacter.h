@@ -51,8 +51,11 @@ public:
 		TSubclassOf<class AThe_VisionProjectile> ProjectileClass;
 
 	/** Sound to play each time we fire */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Sounds)
 		class USoundBase* FireSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Sounds)
+		class USoundBase* Monitor_BreakGlass_Sound;
 
 	/** AnimMontage to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
@@ -64,26 +67,38 @@ public:
 	UPROPERTY(EditAnywhere, Category = Projectile)
 		TSubclassOf<class AActor> Bullet_Hole_Decal;
 
-	UPROPERTY(EditAnywhere, Category = Projectile)
-		 float Destructible_Force = 1000;
+	UPROPERTY(EditAnywhere, Category = Widgets)
+		TSubclassOf<class UUserWidget> Lose_Screen_Widget;
+
+	UPROPERTY(EditAnywhere, Category = Widgets)
+		TSubclassOf<class UUserWidget> Win_Screen_Widget;
 
 	UPROPERTY(EditAnywhere, Category = Projectile)
-		 float Normal_Force = 1000;
+		float Destructible_Force = 1000;
 
-	/*UPROPERTY(BlueprintReadOnly)
-		class UAkAudioEvent* AkEventClass;
+	UPROPERTY(EditAnywhere, Category = Projectile)
+		float Normal_Force = 1000;
 
-	UPROPERTY(EditAnywhere, Category = Sound)
-		UAkAudioEvent* Shooting_Event;*/
-
-	UPROPERTY(VisibleAnywhere)
-		class AInventory_Manager* manager;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets")
-		TSubclassOf<class UUserWidget> W_Inventory;
+	UPROPERTY(EditAnywhere, Category = Projectile)
+		float Rifle_Ammo = 30;
 
 	UPROPERTY(EditAnywhere)
-		UAudioComponent* Shooting;
+		float Character_Health = 100;
+
+	UPROPERTY(VisibleAnywhere)
+		class AInventory_Manager* Inventory_Manager;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widgets)
+		TSubclassOf<class UUserWidget> W_Inventory;
+
+
+	UPROPERTY(EditAnywhere, Category = Projectile)
+		float Fire_Delay = 0.1f;
+
+	UPROPERTY(EditAnywhere, Category = Projectile)
+		float Reload_Delay = 1;
+
+	
 
 
 private:
@@ -93,7 +108,8 @@ private:
 	float camera_zoom;
 	float run_speed = 1200;
 	float walk_speed = 600;
-
+	float delayTimer = 0;
+	
 
 
 	// Functions
@@ -105,6 +121,10 @@ public:
 	FORCEINLINE class USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCamera; }
+
+	UFUNCTION()
+		void Fire(float LineTraceLenght = 3000, ECollisionChannel CollisionChannel = ECC_WorldDynamic);
+
 
 
 protected:
@@ -154,16 +174,22 @@ protected:
 		FVector Location;
 		bool bMoved;
 	};
+
 	void BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
+
 	void TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location);
-	void Fire(float LineTraceLenght = 3000, ECollisionChannel CollisionChannel = ECC_WorldDynamic);
+
 	void SpawnBulletHole(FHitResult const&);
 	void DoDamage(FHitResult const&);
-	void Play_ShootingSound(FHitResult const&);
+
 	void FindInventoryManager();
+
 	void Activate();
 	TouchData	TouchItem;
+
+	void Reload_Pressed();
+	void Reload();
 
 	// APawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;

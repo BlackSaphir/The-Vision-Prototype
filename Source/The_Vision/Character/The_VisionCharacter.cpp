@@ -7,12 +7,13 @@
 #include "GameFramework/InputSettings.h"
 #include "Kismet/HeadMountedDisplayFunctionLibrary.h"
 #include "MotionControllerComponent.h"
+
 #include "Static_Libary.h"
 #include "DrawDebugHelpers.h"
 #include "Color.h"
-#include <EngineGlobals.h>
+//#include <EngineGlobals.h>
 #include <Runtime/Engine/Classes/Engine/Engine.h>
-#include "Engine/CollisionProfile.h"
+//#include "Engine/CollisionProfile.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/DecalComponent.h"
 #include "ActivationInterface.h"
@@ -20,8 +21,7 @@
 #include "PhysicsEngine/DestructibleActor.h"
 #include "Components/DestructibleComponent.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Components/PrimitiveComponent.h"
-#include "AkGameplayStatics.h"
+//#include "Components/PrimitiveComponent.h"
 #include "Inventory/Inventory_Manager.h"
 #include "EngineUtils.h"
 #include "Blueprint/UserWidget.h"
@@ -98,7 +98,12 @@ void AThe_VisionCharacter::Tick(float deltaTime)
 	Super::Tick(deltaTime);
 	if (bLeftMousePressed)
 	{
-		Fire();
+		delayTimer += deltaTime;
+		if (delayTimer > Fire_Delay )
+		{
+			Fire();
+			delayTimer = 0;
+		}
 	}
 }
 
@@ -123,6 +128,8 @@ void AThe_VisionCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 
 	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AThe_VisionCharacter::Start_Sprint);
 	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AThe_VisionCharacter::Stop_Sprint);
+
+	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AThe_VisionCharacter::Reload_Pressed);
 
 
 	//InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AThe_VisionCharacter::TouchStarted);
@@ -287,6 +294,18 @@ void AThe_VisionCharacter::Stop_Sprint()
 	GetCharacterMovement()->MaxWalkSpeed = walk_speed;
 }
 
+void AThe_VisionCharacter::Reload_Pressed()
+{
+	FTimerHandle TimeHandle;
+	GetWorldTimerManager().SetTimer(TimeHandle, this, &AThe_VisionCharacter::Reload, Reload_Delay);
+}
+
+void AThe_VisionCharacter::Reload()
+{
+	Rifle_Ammo = 30;
+
+}
+
 void AThe_VisionCharacter::Open_Inventory()
 {
 	//bInvPressed = true;
@@ -310,6 +329,8 @@ void AThe_VisionCharacter::Close_Inventory()
 // Fire Raycast
 void AThe_VisionCharacter::Fire(float LineTraceLenght, ECollisionChannel CollisionChannel)
 {
+	if (Rifle_Ammo > 0)
+	{
 		//location the PC is focused on
 		const FVector Start = FirstPersonCamera->GetComponentLocation();
 
@@ -325,8 +346,15 @@ void AThe_VisionCharacter::Fire(float LineTraceLenght, ECollisionChannel Collisi
 		{
 			DoDamage(HitOut);
 			SpawnBulletHole(HitOut);
-			Play_ShootingSound(HitOut);
 		}
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, HitOut.TraceStart);
+		Rifle_Ammo--;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("LEER"));
+	}
+
 }
 
 void AThe_VisionCharacter::SpawnBulletHole(FHitResult const& HitOut)
@@ -341,21 +369,17 @@ void AThe_VisionCharacter::SpawnBulletHole(FHitResult const& HitOut)
 	AActor* Spawned_Decal = TempWorld->SpawnActor<AActor>(Bullet_Hole_Decal, Decal_Location, FRotator(), Decal_Spawn_Params);
 
 	Spawned_Decal->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(HitOut.Location, HitOut.Location + HitOut.Normal));
-
-}
-
-void AThe_VisionCharacter::Play_ShootingSound(FHitResult const& HitOut)
-{
-	/*FString Shooting;
-	UAkGameplayStatics::SpawnAkComponentAtLocation(this, Shooting_Event, HitOut.TraceStart, FRotator(0, 0, 0), false, Shooting);*/
-
-	//UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, HitOut.TraceStart);
 }
 
 void AThe_VisionCharacter::DoDamage(FHitResult const& HitOut)
 {
 	FVector Force_Vector = HitOut.TraceEnd - HitOut.TraceStart;
 	Force_Vector.Normalize();
+
+	if (HitOut.GetActor()->ActorHasTag("Monitor"))
+	{
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), Monitor_BreakGlass_Sound, HitOut.Location);
+	}
 
 	UPrimitiveComponent* Hit_Component = HitOut.GetComponent();
 	Hit_Component->AddImpulse(Force_Vector * Normal_Force, NAME_None, true);
@@ -404,7 +428,7 @@ void AThe_VisionCharacter::Activate()
 		{
 			if (Item_HitOut.GetActor()->ActorHasTag("Item"))
 			{
-				manager->AddItemtoList(Item_HitOut.GetActor());
+				Inventory_Manager->AddItemtoList(Item_HitOut.GetActor());
 				Item_HitOut.GetActor()->Destroy();
 			}
 		}
@@ -415,6 +439,6 @@ void AThe_VisionCharacter::FindInventoryManager()
 {
 	for (TActorIterator<AInventory_Manager> ActorIt(GetWorld()); ActorIt; ++ActorIt)
 	{
-		manager = *ActorIt;
+		Inventory_Manager = *ActorIt;
 	}
 }

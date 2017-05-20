@@ -2,6 +2,7 @@
 
 #include "The_Vision.h"
 #include "SlideDoor.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -30,6 +31,7 @@ void ASlideDoor::Activate()
 {	
 	if (!b_Open)
 	{		
+		//UGameplayStatics::PlaySoundAtLocation(GetWorld(), Door_Open_Sound, ASlideDoor.GetLocation());
 		SM_SlideDoor->SetPlayRate(1);
 		SM_SlideDoor->Play(false);		
 		b_Open = true;
