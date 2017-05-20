@@ -19,6 +19,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = Mesh)
 		UAnimationAsset* Anim_Forward_SlideDoor;	
 
+	UPROPERTY(EditAnywhere, Category = Sound)
+		class USoundBase* Door_Open_Sound;
+
 	bool b_Open = false;
 
 public:

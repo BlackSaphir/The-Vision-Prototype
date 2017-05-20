@@ -22,7 +22,6 @@
 #include "Components/DestructibleComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 //#include "Components/PrimitiveComponent.h"
-#include "AkGameplayStatics.h"
 #include "Inventory/Inventory_Manager.h"
 #include "EngineUtils.h"
 #include "Blueprint/UserWidget.h"
@@ -347,7 +346,6 @@ void AThe_VisionCharacter::Fire(float LineTraceLenght, ECollisionChannel Collisi
 		{
 			DoDamage(HitOut);
 			SpawnBulletHole(HitOut);
-			Play_ShootingSound(HitOut);
 		}
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, HitOut.TraceStart);
 		Rifle_Ammo--;
@@ -373,17 +371,15 @@ void AThe_VisionCharacter::SpawnBulletHole(FHitResult const& HitOut)
 	Spawned_Decal->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(HitOut.Location, HitOut.Location + HitOut.Normal));
 }
 
-void AThe_VisionCharacter::Play_ShootingSound(FHitResult const& HitOut)
-{
-	/*FString Shooting;
-	UAkGameplayStatics::SpawnAkComponentAtLocation(this, Shooting_Event, HitOut.TraceStart, FRotator(0, 0, 0), false, Shooting);*/
-
-}
-
 void AThe_VisionCharacter::DoDamage(FHitResult const& HitOut)
 {
 	FVector Force_Vector = HitOut.TraceEnd - HitOut.TraceStart;
 	Force_Vector.Normalize();
+
+	if (HitOut.GetActor()->ActorHasTag("Monitor"))
+	{
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), Monitor_BreakGlass_Sound, HitOut.Location);
+	}
 
 	UPrimitiveComponent* Hit_Component = HitOut.GetComponent();
 	Hit_Component->AddImpulse(Force_Vector * Normal_Force, NAME_None, true);

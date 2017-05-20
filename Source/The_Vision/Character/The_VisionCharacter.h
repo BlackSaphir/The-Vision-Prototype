@@ -51,8 +51,11 @@ public:
 		TSubclassOf<class AThe_VisionProjectile> ProjectileClass;
 
 	/** Sound to play each time we fire */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Sounds)
 		class USoundBase* FireSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Sounds)
+		class USoundBase* Monitor_BreakGlass_Sound;
 
 	/** AnimMontage to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
@@ -82,20 +85,12 @@ public:
 	UPROPERTY(EditAnywhere)
 		float Character_Health = 100;
 
-	UPROPERTY(BlueprintReadOnly)
-		class UAkAudioEvent* AkEventClass;
-
-	UPROPERTY(EditAnywhere, Category = Sound)
-		UAkAudioEvent* Shooting_Event;
-
 	UPROPERTY(VisibleAnywhere)
 		class AInventory_Manager* Inventory_Manager;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widgets)
 		TSubclassOf<class UUserWidget> W_Inventory;
 
-	UPROPERTY(EditAnywhere)
-		UAudioComponent* Shooting;
 
 	UPROPERTY(EditAnywhere, Category = Projectile)
 		float Fire_Delay = 0.1f;
@@ -187,7 +182,6 @@ protected:
 
 	void SpawnBulletHole(FHitResult const&);
 	void DoDamage(FHitResult const&);
-	void Play_ShootingSound(FHitResult const&);
 
 	void FindInventoryManager();
 
