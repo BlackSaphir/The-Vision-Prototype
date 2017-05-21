@@ -16,5 +16,11 @@
 				"UMGEditor"
 			]
 		}
+	],
+	"Plugins": [
+		{
+			"Name": "Wwise",
+			"Enabled": false
+		}
 	]
 }

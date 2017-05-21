@@ -368,7 +368,7 @@ void AThe_VisionCharacter::SpawnBulletHole(FHitResult const& HitOut)
 	UWorld* TempWorld = GetWorld();
 	AActor* Spawned_Decal = TempWorld->SpawnActor<AActor>(Bullet_Hole_Decal, Decal_Location, FRotator(), Decal_Spawn_Params);
 
-	//Spawned_Decal->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(HitOut.Location, HitOut.Location + HitOut.Normal));
+	Spawned_Decal->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(HitOut.Location, HitOut.Location + HitOut.Normal));
 }
 
 void AThe_VisionCharacter::DoDamage(FHitResult const& HitOut)
