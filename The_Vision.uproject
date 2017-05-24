@@ -13,7 +13,8 @@
 				"UMG",
 				"Slate",
 				"SlateCore",
-				"UMGEditor"
+				"UMGEditor",
+				"AIModule"
 			]
 		}
 	],
