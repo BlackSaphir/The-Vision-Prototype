@@ -31,6 +31,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UCameraComponent* FirstPersonCamera;
 
+
 	// Variable
 
 public:
@@ -127,8 +128,8 @@ public:
 	UFUNCTION()
 		void Fire(float LineTraceLenght = 3000, ECollisionChannel CollisionChannel = ECC_WorldDynamic);
 
-	UFUNCTION()
-		void SetLife();
+	/*UFUNCTION()
+		void SetLife();*/
 
 	UFUNCTION(BlueprintCallable, Category = AI)
 		void ReportNoise(USoundBase* SoundToPlay, float Volume);
