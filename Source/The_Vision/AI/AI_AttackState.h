@@ -15,7 +15,7 @@ class THE_VISION_API UAI_AttackState : public UAI_BaseState
 	
 public:
 
-	virtual void Do(AEnemy_Character* Char);
+	virtual void Do(AEnemy_Character* Char) override;
 	
 	
 };

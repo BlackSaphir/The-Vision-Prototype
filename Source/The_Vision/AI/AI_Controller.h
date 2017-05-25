@@ -3,6 +3,9 @@
 #pragma once
 
 #include "AIController.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "AI_Controller.generated.h"
 
 /**
@@ -21,8 +24,8 @@ public:
 
 protected:
 
-	/*UBehaviorTreeComponent* BehaviorTreeComp;
-	UBlackboardComponent* BlackboardComp;*/
+	UBehaviorTreeComponent* BehaviorTreeComp;
+	UBlackboardComponent* BlackboardComp;
 
 	UPROPERTY(EditDefaultsOnly)
 		FName TargetKey = "SensedPawn";

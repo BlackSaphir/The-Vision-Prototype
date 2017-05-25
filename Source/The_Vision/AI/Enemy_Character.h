@@ -3,6 +3,9 @@
 #pragma once
 
 #include "GameFramework/Character.h"
+#include "Perception/PawnSensingComponent.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
 #include "Enemy_Character.generated.h"
 
 class UAI_AttackState;

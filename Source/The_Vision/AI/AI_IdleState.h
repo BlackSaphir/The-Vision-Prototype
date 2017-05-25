@@ -13,7 +13,11 @@ class THE_VISION_API UAI_IdleState : public UAI_BaseState
 {
 	GENERATED_BODY()
 	
-	
+public:
+
+	virtual void Do(AEnemy_Character* Char) override;
+
+	UAI_BaseState* Cache;
 	
 	
 };

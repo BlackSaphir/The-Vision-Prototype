@@ -13,6 +13,8 @@ class THE_VISION_API UAI_MoveToState : public UAI_BaseState
 {
 	GENERATED_BODY()
 	
+public:
+	virtual void Do(AEnemy_Character* Char) override;
 	
 	
 	

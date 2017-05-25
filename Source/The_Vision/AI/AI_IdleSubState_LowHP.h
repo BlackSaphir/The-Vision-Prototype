@@ -3,6 +3,7 @@
 #pragma once
 
 #include "AI/AI_BaseState.h"
+#include "Waypoint.h"
 #include "AI_IdleSubState_LowHP.generated.h"
 
 /**
@@ -19,8 +20,6 @@ public:
 	UPROPERTY()
 		APawn*Pawn;
 
-	/*UPROPERTY()
-		TArray<APoint*> Points;*/
-	
-	
+	UPROPERTY()
+		TArray<AWaypoint*> Points;
 };

@@ -7,15 +7,15 @@
 
 void UAI_IdleSubState_HighHP::Do(AEnemy_Character* Char)
 {
-	/*if (Char->life < 50)
+	if (Char->Life < 50)
 	{
-		Char->currentState = (UAI_BaseState*)Char->idleState;
+		Char->CurrentState = (UAI_BaseState*)Char->IdleState;
 	}
 
-	if (Char->distance < 1000)
+	if (Char->Distance < 1000)
 	{
-		Char->currentState = (UAI_BaseState*)Char->moveState;
-	}*/
+		Char->CurrentState = (UAI_BaseState*)Char->MoveState;
+	}
 }
 
 

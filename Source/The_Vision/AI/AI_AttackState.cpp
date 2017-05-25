@@ -9,7 +9,7 @@
 
 void::UAI_AttackState::Do(AEnemy_Character* Char)
 {
-	/*GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("AttackState"));
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("AttackState"));
 
 	FVector currentTargetLocation = Char->CurrentTarget->GetActorLocation();
 	FRotator lookAtRotation = UKismetMathLibrary::FindLookAtRotation(Char->GetActorLocation(), currentTargetLocation);
@@ -27,11 +27,11 @@ void::UAI_AttackState::Do(AEnemy_Character* Char)
 		{
 			Char->AddActorWorldRotation(FRotator(0, -(Char->RoatationSpeed*Char->GetWorld()->DeltaTimeSeconds), 0));
 		}
-		if (Char->distance > 100)
+		if (Char->Distance > 100)
 		{
-			Char->currentState = (U_AI_BaseState*)Char->moveState;
+			Char->CurrentState = (UAI_BaseState*)Char->MoveState;
 		}
-	}*/
+	}
 }
 
 

@@ -91,13 +91,13 @@ void AEnemy_Character::MoveTo()
 	this->AddActorWorldOffset(MoveDirection * Speed * GetWorld()->DeltaTimeSeconds);
 	if (AimAtAngle > 1)
 	{
-		if (SelfRotation.Yaw - LookAtRotation <=0)
+		if (SelfRotation.Yaw - LookAtRotation.Yaw <=0)
 		{
 			this->AddActorWorldRotation(FRotator(0, RoatationSpeed * GetWorld()->DeltaTimeSeconds, 0));
 		}
 		else if (SelfRotation.Yaw - LookAtRotation.Yaw > 0)
 		{
-			this->AddActorWorldRotation(FRotator(0, -(RoatationSpeed * GetWorld()->DeltaTimeSeconds), 0)));
+			this->AddActorWorldRotation(FRotator(0, -(RoatationSpeed * GetWorld()->DeltaTimeSeconds), 0));
 		}
 	}
 }
