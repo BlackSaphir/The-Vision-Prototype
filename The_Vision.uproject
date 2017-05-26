@@ -17,11 +17,5 @@
 				"AIModule"
 			]
 		}
-	],
-	"Plugins": [
-		{
-			"Name": "Wwise",
-			"Enabled": false
-		}
 	]
 }
