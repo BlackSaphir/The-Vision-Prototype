@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "4.15",
+	"EngineAssociation": "4.16",
 	"Category": "",
 	"Description": "",
 	"Modules": [
@@ -13,14 +13,9 @@
 				"UMG",
 				"Slate",
 				"SlateCore",
-				"UMGEditor"
+				"UMGEditor",
+				"AIModule"
 			]
-		}
-	],
-	"Plugins": [
-		{
-			"Name": "Wwise",
-			"Enabled": false
 		}
 	]
 }

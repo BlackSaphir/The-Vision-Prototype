@@ -31,6 +31,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UCameraComponent* FirstPersonCamera;
 
+
 	// Variable
 
 public:
@@ -98,6 +99,8 @@ public:
 	UPROPERTY(EditAnywhere, Category = Projectile)
 		float Reload_Delay = 1;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		UPawnNoiseEmitterComponent* PawnNoiseEmitterComp;
 	
 
 
@@ -125,6 +128,11 @@ public:
 	UFUNCTION()
 		void Fire(float LineTraceLenght = 3000, ECollisionChannel CollisionChannel = ECC_WorldDynamic);
 
+	/*UFUNCTION()
+		void SetLife();*/
+
+	UFUNCTION(BlueprintCallable, Category = AI)
+		void ReportNoise(USoundBase* SoundToPlay, float Volume);
 
 
 protected:
@@ -190,6 +198,8 @@ protected:
 
 	void Reload_Pressed();
 	void Reload();
+
+	
 
 	// APawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;

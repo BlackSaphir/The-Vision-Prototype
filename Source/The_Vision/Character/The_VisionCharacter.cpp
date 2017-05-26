@@ -7,7 +7,6 @@
 #include "GameFramework/InputSettings.h"
 #include "Kismet/HeadMountedDisplayFunctionLibrary.h"
 #include "MotionControllerComponent.h"
-
 #include "Static_Libary.h"
 #include "DrawDebugHelpers.h"
 #include "Color.h"
@@ -26,8 +25,9 @@
 #include "EngineUtils.h"
 #include "Blueprint/UserWidget.h"
 #include "DamageTypes/Destructible_DamageType.h"
-
-
+#include "Perception/PawnSensingComponent.h"
+#include "Runtime/Engine/Classes/Components/PawnNoiseEmitterComponent.h"
+#include "Enemy_Character.generated.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -78,6 +78,8 @@ AThe_VisionCharacter::AThe_VisionCharacter()
 	// Note: The ProjectileClass and the skeletal mesh/anim blueprints for Mesh1P, FP_Gun, and VR_Gun 
 	// are set in the derived blueprint asset named MyCharacter to avoid direct content references in C++.
 
+
+	PawnNoiseEmitterComp = CreateDefaultSubobject<UPawnNoiseEmitterComponent>(TEXT("PawnNoiseEmitter_Component"));
 }
 
 void AThe_VisionCharacter::BeginPlay()
@@ -326,6 +328,29 @@ void AThe_VisionCharacter::Close_Inventory()
 	inventory_widget->RemoveFromParent();
 }
 
+//void AThe_VisionCharacter::SetLife()
+//{
+//	if (UWorld* World = GetWorld())
+//	{
+//		for (TActorIterator<AEnemy_Character> ActorItr(World); ActorItr; ++ActorItr)
+//		{
+//			AEnemy_Character *Pawn = *ActorItr;
+//			Pawn->SetLife();
+//			break;
+//		}
+//	}
+//}
+
+void AThe_VisionCharacter::ReportNoise(USoundBase * SoundToPlay, float Volume)
+{
+	if (SoundToPlay)
+	{
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), SoundToPlay, GetActorLocation(), Volume);
+
+		MakeNoise(Volume, this, GetActorLocation());
+	}
+}
+
 // Fire Raycast
 void AThe_VisionCharacter::Fire(float LineTraceLenght, ECollisionChannel CollisionChannel)
 {
@@ -356,6 +381,7 @@ void AThe_VisionCharacter::Fire(float LineTraceLenght, ECollisionChannel Collisi
 	}
 
 }
+
 
 void AThe_VisionCharacter::SpawnBulletHole(FHitResult const& HitOut)
 {

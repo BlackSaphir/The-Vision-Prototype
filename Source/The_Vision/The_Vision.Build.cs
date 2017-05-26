@@ -10,16 +10,13 @@ public class The_Vision : ModuleRules
         get { return ModuleDirectory; }
     }
 
-    private string ThirdPartyPath
-    {
-        get { return Path.GetFullPath(Path.Combine(ModulePath, "../../ThirdParty/")); }
-    }
+    
 
     public The_Vision(TargetInfo Target)
 	{
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "AkAudio", "UMG", "Slate", "SlateCore"});
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay",  "UMG", "Slate", "SlateCore"});
 
-        LoadWwise(Target);
+     
 	}
 
 
@@ -47,11 +44,10 @@ public class The_Vision : ModuleRules
         if (isLibrarySupported)
         {
             // Include path
-            PublicIncludePaths.Add(Path.Combine(ThirdPartyPath, "Wwise", "Include"));
-            PublicIncludePaths.AddRange(new string[] { "AkAudio/Public", "AkAudio/Classes" });
+            
         }
 
-        Definitions.Add(string.Format("WITH_WWISE_BINDING={0}", isLibrarySupported ? 1 : 0));
+       
 
         return isLibrarySupported;
     }
