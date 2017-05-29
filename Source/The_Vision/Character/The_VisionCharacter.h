@@ -129,7 +129,7 @@ public:
 		void Fire(float LineTraceLenght = 3000, ECollisionChannel CollisionChannel = ECC_WorldDynamic);
 
 	/*UFUNCTION()
-		void SetLife();*/
+		void SetLife();*/	
 
 	UFUNCTION(BlueprintCallable, Category = AI)
 		void ReportNoise(USoundBase* SoundToPlay, float Volume);

@@ -79,7 +79,7 @@ void AEnemy_Character::OnSeePawn(APawn * PawnInstigator)
 
 void AEnemy_Character::MoveTo()
 {
-	FVector CurrentTargetLocation = CurrentTarget->GetActorLocation();
+	/*FVector CurrentTargetLocation = CurrentTarget->GetActorLocation();
 	FVector MoveDirection = CurrentTargetLocation - this->GetActorLocation();
 	MoveDirection.Normalize();
 
@@ -99,7 +99,7 @@ void AEnemy_Character::MoveTo()
 		{
 			this->AddActorWorldRotation(FRotator(0, -(RoatationSpeed * GetWorld()->DeltaTimeSeconds), 0));
 		}
-	}
+	}*/
 }
 
 void AEnemy_Character::BeginMove(APawn * NewTarget)

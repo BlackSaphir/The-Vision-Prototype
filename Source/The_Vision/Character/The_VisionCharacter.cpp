@@ -10,6 +10,9 @@
 #include "Static_Libary.h"
 #include "DrawDebugHelpers.h"
 #include "Color.h"
+
+#include "Enemy_Character.generated.h"
+
 //#include <EngineGlobals.h>
 #include <Runtime/Engine/Classes/Engine/Engine.h>
 //#include "Engine/CollisionProfile.h"
@@ -27,7 +30,6 @@
 #include "DamageTypes/Destructible_DamageType.h"
 #include "Perception/PawnSensingComponent.h"
 #include "Runtime/Engine/Classes/Components/PawnNoiseEmitterComponent.h"
-#include "Enemy_Character.generated.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
