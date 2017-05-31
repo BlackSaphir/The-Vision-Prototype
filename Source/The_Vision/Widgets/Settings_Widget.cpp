@@ -42,6 +42,7 @@ bool USettings_Widget::RemapActionKey(FInputActionKeyMapping newActionMapping)
 
 FText USettings_Widget::GetFireActionKeyName()
 {
+		FText text= FText();
 	if (UInputSettings* InputSettings = const_cast<UInputSettings*>(GetDefault<UInputSettings>()))
 	{
 		TArray< FInputActionKeyMapping>& Actions = InputSettings->ActionMappings;
@@ -53,9 +54,10 @@ FText USettings_Widget::GetFireActionKeyName()
 				return Action.Key.GetDisplayName();
 			}
 		}
+		return text;
 	}
 	else
 	{
-		return false;
+		return text;
 	}
 }

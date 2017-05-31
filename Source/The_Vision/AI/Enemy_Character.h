@@ -50,12 +50,6 @@ public:
 		void OnSeePawn(APawn *PawnInstigator);
 
 	UFUNCTION()
-		void MoveTo();
-
-	UFUNCTION()
-		void BeginMove(APawn* NewTarget);
-
-	UFUNCTION()
 		void SetLife();
 
 	
@@ -67,44 +61,12 @@ public:
 	UPROPERTY(VisibleAnyWhere)
  		UPawnSensingComponent* PawnSensingComp;
 	
-	UPROPERTY(VisibleAnyWhere)
+	UPROPERTY(EditDefaultsOnly)
 		UBehaviorTree* BehaviorTree;
 
 	UPROPERTY(VisibleAnywhere)
 		AActor* CurrentTarget;
 
-	UPROPERTY()
-		bool bMove = false;
-
-	UPROPERTY(EditAnyWhere)
-		float Speed = 200;
-
-	UPROPERTY(EditAnyWhere)
-		float RoatationSpeed = 200;
-
 	UPROPERTY(EditAnyWhere)
 		int Life = 100;
-
-	UPROPERTY(EditAnyWhere)
-		float Distance = 99999999999.9f;
-
-	UPROPERTY()
-		UAI_AttackState* AttackState;
-
-	UPROPERTY(VisibleAnyWhere)
-		UAI_BaseState* CurrentState;
-
-	UPROPERTY()
-		UAI_IdleState* IdleState;
-
-	UPROPERTY()
-		UAI_IdleSubState_HighHP* IdleSubState_HighHP;
-
-	UPROPERTY()
-		UAI_IdleSubState_LowHP* IdleSubState_LowHP;
-
-	UPROPERTY()
-		UAI_MoveToState* MoveState;
-
-
 };

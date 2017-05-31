@@ -27,12 +27,8 @@ void AAI_Controller::Possess(APawn* InPawn)
 
 void AAI_Controller::SetSensedTarget(APawn* NewTarget)
 {
-	/*if (BlackboardComp)
+	if (BlackboardComp)
 	{
 		BlackboardComp->SetValueAsObject(TargetKey, NewTarget);
-	}*/
-
-	APawn* MyPawn = GetPawn();
-	AEnemy_Character* Char = Cast<AEnemy_Character>(MyPawn);
-	Char->BeginMove(NewTarget);
+	}
 }
