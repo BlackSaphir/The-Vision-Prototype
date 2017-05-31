@@ -28,4 +28,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Nice")
 		bool RemapActionKey(FInputActionKeyMapping newActionMapping);
+
+	UFUNCTION(BlueprintPure, Category = "Very Nice")
+		FText GetFireActionKeyName();
 };
