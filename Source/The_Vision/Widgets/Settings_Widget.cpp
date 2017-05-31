@@ -3,6 +3,7 @@
 #include "The_Vision.h"
 #include "Settings_Widget.h"
 
+// Set Mapping new
 FInputActionKeyMapping FVisionInputActionKeyMapping::Convert(FVisionInputActionKeyMapping const & VisionInputActionKeyMapping)
 {
 	FInputActionKeyMapping mapping;
@@ -23,7 +24,7 @@ bool USettings_Widget::RemapActionKey(const FVisionInputActionKeyMapping& newAct
 
 		bool bFound = false;
 		for (auto& Action : Actions)
-		{
+		{ 
 			if (Action.ActionName == newActionMapping.ActionName)
 			{
 				Action = FVisionInputActionKeyMapping::Convert(newActionMapping);
@@ -52,14 +53,20 @@ bool USettings_Widget::RemapActionKey(const FVisionInputActionKeyMapping& newAct
 	}
 }
 
+
 FText USettings_Widget::GetFireActionKeyName()
 {
 	return GetActionKeyName(TEXT("Fire"));
 }
 
-FText USettings_Widget::GetTestActionKeyName()
+FText USettings_Widget::GetZoomActionKeyName()
 {
-	return GetActionKeyName(TEXT("Test"));
+	return GetActionKeyName(TEXT("Zoom"));
+}
+
+FText USettings_Widget::GetReloadActionKeyName()
+{
+	return GetActionKeyName(TEXT("Reload"));
 }
 
 FText USettings_Widget::GetActionKeyName(FName const& ActionName)
@@ -77,5 +84,5 @@ FText USettings_Widget::GetActionKeyName(FName const& ActionName)
 		}
 	}
 
-	return FText::FromString("Penis");
+	return FText::FromString("Could not change Key");
 }

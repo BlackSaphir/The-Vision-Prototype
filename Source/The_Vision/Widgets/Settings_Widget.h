@@ -79,11 +79,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Nice")
 		bool RemapActionKey(const FVisionInputActionKeyMapping& newActionMapping);
 
-	UFUNCTION(BlueprintPure, Category = "Very Nice")
+	UFUNCTION(BlueprintPure, Category = Key)
 		FText GetFireActionKeyName();
 
-	UFUNCTION(BlueprintPure, Category = "Very Nice")
-		FText GetTestActionKeyName();
+	UFUNCTION(BlueprintPure, Category = Key)
+		FText GetZoomActionKeyName();
+
+	UFUNCTION(BlueprintPure, Category = Key)
+		FText GetReloadActionKeyName();
+
+
 
 private:
 
