@@ -10,18 +10,12 @@ public class The_Vision : ModuleRules
         get { return ModuleDirectory; }
     }
 
-    
-
-    public The_Vision(TargetInfo Target)
+    public The_Vision(ReadOnlyTargetRules Target)
 	{
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay",  "UMG", "Slate", "SlateCore"});
-
-     
 	}
 
-
-
-   public bool LoadWwise(TargetInfo Target)
+   public bool LoadWwise(ReadOnlyTargetRules Target)
     {
         bool isLibrarySupported = false;
 
@@ -46,8 +40,6 @@ public class The_Vision : ModuleRules
             // Include path
             
         }
-
-       
 
         return isLibrarySupported;
     }

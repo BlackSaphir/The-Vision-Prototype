@@ -32,7 +32,7 @@ void AAI_Controller::SetSensedTarget(APawn* NewTarget)
 		BlackboardComp->SetValueAsObject(TargetKey, NewTarget);
 	}*/
 
-	APawn* Pawn = GetPawn();
-	AEnemy_Character* Char = Cast<AEnemy_Character>(Pawn);
+	APawn* MyPawn = GetPawn();
+	AEnemy_Character* Char = Cast<AEnemy_Character>(MyPawn);
 	Char->BeginMove(NewTarget);
 }
