@@ -5,18 +5,17 @@
 
 FInputActionKeyMapping FVisionInputActionKeyMapping::Convert(FVisionInputActionKeyMapping const & VisionInputActionKeyMapping)
 {
-	return FInputActionKeyMapping() =
-	{ 
-		VisionInputActionKeyMapping.ActionName ,
-		VisionInputActionKeyMapping.Key,
-		VisionInputActionKeyMapping.bShift,
-		VisionInputActionKeyMapping.bCtrl ,
-		VisionInputActionKeyMapping.bAlt,
-		VisionInputActionKeyMapping.bCmd 
-	};
+	FInputActionKeyMapping mapping;
+	mapping.ActionName = VisionInputActionKeyMapping.ActionName;
+	mapping.Key = VisionInputActionKeyMapping.Key;
+	mapping.bShift = VisionInputActionKeyMapping.bShift;
+	mapping.bCtrl = VisionInputActionKeyMapping.bCtrl;
+	mapping.bAlt = VisionInputActionKeyMapping.bAlt;
+	mapping.bCmd = VisionInputActionKeyMapping.bCmd;
+	return mapping;
 }
 
-bool USettings_Widget::RemapActionKey(const FInputActionKeyMapping& newActionMapping)
+bool USettings_Widget::RemapActionKey(const FVisionInputActionKeyMapping& newActionMapping)
 {
 	if (UInputSettings* InputSettings = const_cast<UInputSettings*>(GetDefault<UInputSettings>()))
 	{
@@ -27,7 +26,7 @@ bool USettings_Widget::RemapActionKey(const FInputActionKeyMapping& newActionMap
 		{
 			if (Action.ActionName == newActionMapping.ActionName)
 			{
-				Action = newActionMapping;
+				Action = FVisionInputActionKeyMapping::Convert(newActionMapping);
 				bFound = true;
 				break;
 			}

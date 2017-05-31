@@ -59,7 +59,7 @@ public:
 	}
 
 	static FInputActionKeyMapping Convert(FVisionInputActionKeyMapping const& VisionInputActionKeyMapping);
-}
+};
 
 /**
  *
