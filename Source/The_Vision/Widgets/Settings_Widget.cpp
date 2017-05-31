@@ -39,3 +39,23 @@ bool USettings_Widget::RemapActionKey(FInputActionKeyMapping newActionMapping)
 		return false;
 	}
 }
+
+FText USettings_Widget::GetFireActionKeyName()
+{
+	if (UInputSettings* InputSettings = const_cast<UInputSettings*>(GetDefault<UInputSettings>()))
+	{
+		TArray< FInputActionKeyMapping>& Actions = InputSettings->ActionMappings;
+
+		for (auto& Action : Actions)
+		{
+			if (Action.ActionName == TEXT("Fire"))
+			{
+				return Action.Key.GetDisplayName();
+			}
+		}
+	}
+	else
+	{
+		return false;
+	}
+}
