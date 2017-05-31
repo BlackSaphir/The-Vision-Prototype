@@ -10,6 +10,9 @@
 #include "Static_Libary.h"
 #include "DrawDebugHelpers.h"
 #include "Color.h"
+
+#include "The_Vision/AI/Enemy_Character.h"
+
 //#include <EngineGlobals.h>
 #include <Runtime/Engine/Classes/Engine/Engine.h>
 //#include "Engine/CollisionProfile.h"
@@ -27,7 +30,6 @@
 #include "DamageTypes/Destructible_DamageType.h"
 #include "Perception/PawnSensingComponent.h"
 #include "Runtime/Engine/Classes/Components/PawnNoiseEmitterComponent.h"
-#include "Enemy_Character.generated.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -101,7 +103,7 @@ void AThe_VisionCharacter::Tick(float deltaTime)
 	if (bLeftMousePressed)
 	{
 		delayTimer += deltaTime;
-		if (delayTimer > Fire_Delay )
+		if (delayTimer > Fire_Delay)
 		{
 			Fire();
 			delayTimer = 0;
@@ -328,18 +330,18 @@ void AThe_VisionCharacter::Close_Inventory()
 	inventory_widget->RemoveFromParent();
 }
 
-//void AThe_VisionCharacter::SetLife()
-//{
-//	if (UWorld* World = GetWorld())
-//	{
-//		for (TActorIterator<AEnemy_Character> ActorItr(World); ActorItr; ++ActorItr)
-//		{
-//			AEnemy_Character *Pawn = *ActorItr;
-//			Pawn->SetLife();
-//			break;
-//		}
-//	}
-//}
+void AThe_VisionCharacter::SetLife()
+{
+	if (UWorld* World = GetWorld())
+	{
+		for (TActorIterator<AEnemy_Character> ActorItr(World); ActorItr; ++ActorItr)
+		{
+			AEnemy_Character *Pawn = *ActorItr;
+			Pawn->SetLife();
+			break;
+		}
+	}
+}
 
 void AThe_VisionCharacter::ReportNoise(USoundBase * SoundToPlay, float Volume)
 {
@@ -367,13 +369,18 @@ void AThe_VisionCharacter::Fire(float LineTraceLenght, ECollisionChannel Collisi
 
 		bool ReturnPhysMat = false;
 
-		if (UStatic_Libary::LineTrace(GetWorld(), Start, End, HitOut, CollisionChannel, ReturnPhysMat))
+		if (UWorld* World = GetWorld())
 		{
-			DoDamage(HitOut);
-			SpawnBulletHole(HitOut);
+			if (UStatic_Libary::LineTrace(World, Start, End, HitOut, CollisionChannel, ReturnPhysMat))
+			{
+				DoDamage(HitOut);
+				SpawnBulletHole(HitOut);
+			}
+			UGameplayStatics::PlaySoundAtLocation(World, FireSound, HitOut.TraceStart);
+			Rifle_Ammo--;
 		}
-		UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, HitOut.TraceStart);
-		Rifle_Ammo--;
+
+
 	}
 	else
 	{
