@@ -3,7 +3,19 @@
 #include "The_Vision.h"
 #include "Settings_Widget.h"
 
-bool USettings_Widget::RemapActionKey(FInputActionKeyMapping newActionMapping)
+FInputActionKeyMapping FVisionInputActionKeyMapping::Convert(FVisionInputActionKeyMapping const & VisionInputActionKeyMapping)
+{
+	FInputActionKeyMapping mapping;
+	mapping.ActionName = VisionInputActionKeyMapping.ActionName;
+	mapping.Key = VisionInputActionKeyMapping.Key;
+	mapping.bShift = VisionInputActionKeyMapping.bShift;
+	mapping.bCtrl = VisionInputActionKeyMapping.bCtrl;
+	mapping.bAlt = VisionInputActionKeyMapping.bAlt;
+	mapping.bCmd = VisionInputActionKeyMapping.bCmd;
+	return mapping;
+}
+
+bool USettings_Widget::RemapActionKey(const FVisionInputActionKeyMapping& newActionMapping)
 {
 	if (UInputSettings* InputSettings = const_cast<UInputSettings*>(GetDefault<UInputSettings>()))
 	{
@@ -14,7 +26,7 @@ bool USettings_Widget::RemapActionKey(FInputActionKeyMapping newActionMapping)
 		{
 			if (Action.ActionName == newActionMapping.ActionName)
 			{
-				Action = newActionMapping;
+				Action = FVisionInputActionKeyMapping::Convert(newActionMapping);
 				bFound = true;
 				break;
 			}
@@ -42,22 +54,28 @@ bool USettings_Widget::RemapActionKey(FInputActionKeyMapping newActionMapping)
 
 FText USettings_Widget::GetFireActionKeyName()
 {
-		FText text= FText();
+	return GetActionKeyName(TEXT("Fire"));
+}
+
+FText USettings_Widget::GetTestActionKeyName()
+{
+	return GetActionKeyName(TEXT("Test"));
+}
+
+FText USettings_Widget::GetActionKeyName(FName const& ActionName)
+{
 	if (UInputSettings* InputSettings = const_cast<UInputSettings*>(GetDefault<UInputSettings>()))
 	{
 		TArray< FInputActionKeyMapping>& Actions = InputSettings->ActionMappings;
 
 		for (auto& Action : Actions)
 		{
-			if (Action.ActionName == TEXT("Fire"))
+			if (Action.ActionName == ActionName)
 			{
 				return Action.Key.GetDisplayName();
 			}
 		}
-		return text;
 	}
-	else
-	{
-		return text;
-	}
+
+	return FText::FromString("Penis");
 }
