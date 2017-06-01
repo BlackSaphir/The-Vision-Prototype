@@ -17,11 +17,11 @@ void AAI_Controller::Possess(APawn* InPawn)
 {
 	Super::Possess(InPawn);
 
-	AEnemy_Character* Char = Cast<AEnemy_Character>(InPawn);
-	if (Char && Char->BehaviorTree->BlackboardAsset)
+	AEnemy_Character* PossesedPawn = Cast<AEnemy_Character>(InPawn);
+	if (PossesedPawn && PossesedPawn->BehaviorTree->BlackboardAsset)
 	{
-		BlackboardComp->InitializeBlackboard(*Char->BehaviorTree->BlackboardAsset);
-		BehaviorTreeComp->StartTree(*Char->BehaviorTree);
+		BlackboardComp->InitializeBlackboard(*PossesedPawn->BehaviorTree->BlackboardAsset);
+		BehaviorTreeComp->StartTree(*PossesedPawn->BehaviorTree);
 	}
 }
 
