@@ -84,5 +84,5 @@ FText USettings_Widget::GetActionKeyName(FName const& ActionName)
 		}
 	}
 
-	return FText::FromString("Could not change Key");
+	return FText::FromString("Unassigned");
 }
