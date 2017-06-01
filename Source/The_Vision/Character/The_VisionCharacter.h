@@ -193,7 +193,7 @@ protected:
 
 	void FindInventoryManager();
 
-	void Activate();
+	void Interact();
 	TouchData	TouchItem;
 
 	void Reload_Pressed();

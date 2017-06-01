@@ -122,7 +122,7 @@ void AThe_VisionCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
-	PlayerInputComponent->BindAction("Activation", IE_Pressed, this, &AThe_VisionCharacter::Activate);
+	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AThe_VisionCharacter::Interact);
 
 	PlayerInputComponent->BindAction("Open Inventory", IE_Pressed, this, &AThe_VisionCharacter::Open_Inventory);
 	PlayerInputComponent->BindAction("Open Inventory", IE_Released, this, &AThe_VisionCharacter::Close_Inventory);
@@ -392,7 +392,7 @@ void AThe_VisionCharacter::DoDamage(FHitResult const& HitOut)
 }
 
 // Open Door
-void AThe_VisionCharacter::Activate()
+void AThe_VisionCharacter::Interact()
 {
 	float LineTraceLenght = 200;
 
