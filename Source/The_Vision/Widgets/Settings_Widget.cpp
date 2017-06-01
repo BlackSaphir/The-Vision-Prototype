@@ -66,7 +66,7 @@ bool USettings_Widget::RemapActionKey(const FVisionInputActionKeyMapping& newAct
 }
 
 
-bool USettings_Widget::RemapAxisKey(const FInputAxisKeyMapping & newAxisMapping)
+bool USettings_Widget::RemapAxisKey(const FVisionInputAxisKeyMapping & newAxisMapping)
 {
 	if (UInputSettings* InputSettings = const_cast<UInputSettings*>(GetDefault<UInputSettings>()))
 	{
@@ -103,6 +103,7 @@ bool USettings_Widget::RemapAxisKey(const FInputAxisKeyMapping & newAxisMapping)
 	}
 }
 
+
 FText USettings_Widget::GetFireActionKeyName()
 {
 	return GetActionKeyName(TEXT("Fire"));
@@ -136,6 +137,11 @@ FText USettings_Widget::GetSprintActionKeyName()
 FText USettings_Widget::GetOpenPauseActionKeyName()
 {
 	return GetActionKeyName(TEXT("Open Pause Menu"));
+}
+
+FText USettings_Widget::MoveForwardKeyName()
+{
+	return GetAxisKeyName(TEXT("MoveForward"));
 }
 
 

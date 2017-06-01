@@ -114,7 +114,7 @@ public:
 		bool RemapActionKey(const FVisionInputActionKeyMapping& newActionMapping);
 
 	UFUNCTION(BlueprintCallable, Category = Key)
-		bool RemapAxisKey(const FInputAxisKeyMapping& newAxisMapping);
+		bool RemapAxisKey(const FVisionInputAxisKeyMapping & newAxisMapping);
 
 
 	UFUNCTION(BlueprintPure, Category = Key)
@@ -137,6 +137,9 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = Key)
 		FText GetOpenPauseActionKeyName();
+
+	UFUNCTION(BlueprintPure, Category = Key)
+		FText MoveForwardKeyName();
 
 
 

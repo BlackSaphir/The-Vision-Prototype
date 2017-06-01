@@ -135,6 +135,8 @@ void AThe_VisionCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AThe_VisionCharacter::Reload_Pressed);
 
+	PlayerInputComponent->BindAction("SetLife", IE_Pressed, this, &AThe_VisionCharacter::SetLife);
+
 
 	//InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AThe_VisionCharacter::TouchStarted);
 	if (!EnableTouchscreenMovement(PlayerInputComponent))
@@ -153,7 +155,6 @@ void AThe_VisionCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAxis("TurnRate", this, &AThe_VisionCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AThe_VisionCharacter::LookUpAtRate);
-	PlayerInputComponent->BindAction("SetLife", IE_Pressed, this, &AThe_VisionCharacter::SetLife);
 }
 
 
