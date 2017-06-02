@@ -139,7 +139,16 @@ public:
 		FText GetOpenPauseActionKeyName();
 
 	UFUNCTION(BlueprintPure, Category = Key)
-		FText MoveForwardKeyName();
+		FText GetMoveForwardActionKeyName();
+
+	UFUNCTION(BlueprintPure, Category = Key)
+		FText GetMoveBackwardActionKeyName();
+
+	UFUNCTION(BlueprintPure, Category = Key)
+		FText GetMoveRightActionKeyName();
+
+	UFUNCTION(BlueprintPure, Category = Key)
+		FText GetMoveLeftActionKeyName();
 
 
 

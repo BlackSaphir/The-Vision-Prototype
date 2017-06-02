@@ -139,9 +139,24 @@ FText USettings_Widget::GetOpenPauseActionKeyName()
 	return GetActionKeyName(TEXT("Open Pause Menu"));
 }
 
-FText USettings_Widget::MoveForwardKeyName()
+FText USettings_Widget::GetMoveForwardActionKeyName()
 {
-	return GetAxisKeyName(TEXT("MoveForward"));
+	return GetActionKeyName(TEXT("Move_Forwards"));
+}
+
+FText USettings_Widget::GetMoveBackwardActionKeyName()
+{
+	return GetActionKeyName(TEXT("Move_Backwards"));
+}
+
+FText USettings_Widget::GetMoveRightActionKeyName()
+{
+	return GetActionKeyName(TEXT("Move_Right"));
+}
+
+FText USettings_Widget::GetMoveLeftActionKeyName()
+{
+	return GetActionKeyName(TEXT("Move_Left"));
 }
 
 
