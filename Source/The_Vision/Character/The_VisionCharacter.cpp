@@ -109,6 +109,26 @@ void AThe_VisionCharacter::Tick(float deltaTime)
 			delayTimer = 0;
 		}
 	}
+
+	if (bMoveForwardPressed)
+	{
+		Move_Forward();
+	}
+
+	if (bMoveBackwardPressed)
+	{
+		Move_Backward();
+	}
+
+	if (bMoveRightPressed)
+	{
+		Move_Right();
+	}
+
+	if (bMoveLeftPressed)
+	{
+		Move_Left();
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -122,7 +142,7 @@ void AThe_VisionCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
-	PlayerInputComponent->BindAction("Activation", IE_Pressed, this, &AThe_VisionCharacter::Activate);
+	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AThe_VisionCharacter::Interact);
 
 	PlayerInputComponent->BindAction("Open Inventory", IE_Pressed, this, &AThe_VisionCharacter::Open_Inventory);
 	PlayerInputComponent->BindAction("Open Inventory", IE_Released, this, &AThe_VisionCharacter::Close_Inventory);
@@ -135,6 +155,16 @@ void AThe_VisionCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AThe_VisionCharacter::Reload_Pressed);
 
+	PlayerInputComponent->BindAction("SetLife", IE_Pressed, this, &AThe_VisionCharacter::SetLife);
+
+	PlayerInputComponent->BindAction("Move_Forwards", IE_Pressed, this, &AThe_VisionCharacter::Move_ForwardPressed);
+	PlayerInputComponent->BindAction("Move_Forwards", IE_Released, this, &AThe_VisionCharacter::Move_ForwardReleased);
+	PlayerInputComponent->BindAction("Move_Backwards", IE_Pressed, this, &AThe_VisionCharacter::Move_BackwardPressed);
+	PlayerInputComponent->BindAction("Move_Backwards", IE_Released, this, &AThe_VisionCharacter::Move_BackwardReleased);
+	PlayerInputComponent->BindAction("Move_Right", IE_Pressed, this, &AThe_VisionCharacter::Move_RightPressed);
+	PlayerInputComponent->BindAction("Move_Right", IE_Released, this, &AThe_VisionCharacter::Move_RightReleased);
+	PlayerInputComponent->BindAction("Move_Left", IE_Pressed, this, &AThe_VisionCharacter::Move_LeftPressed);
+	PlayerInputComponent->BindAction("Move_Left", IE_Released, this, &AThe_VisionCharacter::Move_LeftReleased);
 
 	//InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AThe_VisionCharacter::TouchStarted);
 	if (!EnableTouchscreenMovement(PlayerInputComponent))
@@ -143,8 +173,8 @@ void AThe_VisionCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 		PlayerInputComponent->BindAction("Fire", IE_Released, this, &AThe_VisionCharacter::OnFireReleased);
 	}
 
-	PlayerInputComponent->BindAxis("MoveForward", this, &AThe_VisionCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &AThe_VisionCharacter::MoveRight);
+	/*PlayerInputComponent->BindAxis("MoveForward", this, &AThe_VisionCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &AThe_VisionCharacter::MoveRight);*/
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
@@ -153,7 +183,6 @@ void AThe_VisionCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAxis("TurnRate", this, &AThe_VisionCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AThe_VisionCharacter::LookUpAtRate);
-	PlayerInputComponent->BindAction("SetLife", IE_Pressed, this, &AThe_VisionCharacter::SetLife);
 }
 
 
@@ -271,6 +300,71 @@ void AThe_VisionCharacter::Reload()
 {
 	Rifle_Ammo = 30;
 
+}
+
+void AThe_VisionCharacter::Move_Forward()
+{
+	float Value = 1.0f;
+	AddMovementInput(GetActorForwardVector(), Value);
+}
+
+void AThe_VisionCharacter::Move_Backward()
+{
+	float Value = -1.0f;
+	AddMovementInput(GetActorForwardVector(), Value);
+
+}
+
+void AThe_VisionCharacter::Move_Left()
+{
+	float Value = -1.0f;
+	AddMovementInput(GetActorRightVector(), Value);
+}
+
+void AThe_VisionCharacter::Move_Right()
+{
+	float Value = 1.0f;
+	AddMovementInput(GetActorRightVector(), Value);
+}
+
+void AThe_VisionCharacter::Move_ForwardPressed()
+{
+	bMoveForwardPressed = true;
+}
+
+void AThe_VisionCharacter::Move_ForwardReleased()
+{
+	bMoveForwardPressed = false;
+}
+
+void AThe_VisionCharacter::Move_BackwardPressed()
+{
+	bMoveBackwardPressed = true;
+}
+
+void AThe_VisionCharacter::Move_BackwardReleased()
+{
+	bMoveBackwardPressed = false;
+}
+
+void AThe_VisionCharacter::Move_LeftPressed()
+{
+	bMoveLeftPressed = true;
+}
+
+void AThe_VisionCharacter::Move_LeftReleased()
+{
+	bMoveLeftPressed = false;
+}
+
+void AThe_VisionCharacter::Move_RightPressed()
+{
+	bMoveRightPressed = true;
+}
+
+void AThe_VisionCharacter::Move_RightReleased()
+{
+	bMoveRightPressed = false;
 }
 
 void AThe_VisionCharacter::Open_Inventory()
@@ -392,7 +486,7 @@ void AThe_VisionCharacter::DoDamage(FHitResult const& HitOut)
 }
 
 // Open Door
-void AThe_VisionCharacter::Activate()
+void AThe_VisionCharacter::Interact()
 {
 	float LineTraceLenght = 200;
 
