@@ -69,4 +69,5 @@ public:
 
 	UPROPERTY(EditAnyWhere)
 		int Life = 100;
+
 };
