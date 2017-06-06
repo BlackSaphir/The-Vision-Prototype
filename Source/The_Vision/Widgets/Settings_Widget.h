@@ -58,7 +58,41 @@ public:
 		bCmd = InputActionKeyMapping.bCmd;
 	}
 
-	static FInputActionKeyMapping Convert(FVisionInputActionKeyMapping const& VisionInputActionKeyMapping);
+	static FInputActionKeyMapping ConvertActionMapping(FVisionInputActionKeyMapping const& VisionInputActionKeyMapping);
+};
+
+USTRUCT(BlueprintType)
+struct FVisionInputAxisKeyMapping
+{
+	GENERATED_BODY()
+
+public:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
+		FName AxisName = "";
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
+		FKey Key;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
+		float Scale = 1;
+
+public:
+
+	FVisionInputAxisKeyMapping()
+	{
+	}
+
+	FVisionInputAxisKeyMapping(FInputAxisKeyMapping const& InputAxisKeyMapping)
+	{
+		AxisName = InputAxisKeyMapping.AxisName;
+		Key = InputAxisKeyMapping.Key;
+		Scale = InputAxisKeyMapping.Scale;
+	}
+
+
+	static FInputAxisKeyMapping ConvertAxisMapping(FVisionInputAxisKeyMapping const& VisionInputAxisKeyMapping);
+
 };
 
 /**
@@ -76,8 +110,12 @@ class THE_VISION_API USettings_Widget : public UUserWidget
 
 public:
 
-	UFUNCTION(BlueprintCallable, Category = "Nice")
+	UFUNCTION(BlueprintCallable, Category = Key)
 		bool RemapActionKey(const FVisionInputActionKeyMapping& newActionMapping);
+
+	UFUNCTION(BlueprintCallable, Category = Key)
+		bool RemapAxisKey(const FVisionInputAxisKeyMapping & newAxisMapping);
+
 
 	UFUNCTION(BlueprintPure, Category = Key)
 		FText GetFireActionKeyName();
@@ -88,9 +126,35 @@ public:
 	UFUNCTION(BlueprintPure, Category = Key)
 		FText GetReloadActionKeyName();
 
+	UFUNCTION(BlueprintPure, Category = Key)
+		FText GetInteractActionKeyName();
+
+	UFUNCTION(BlueprintPure, Category = Key)
+		FText GetOpenInventoryActionKeyName();
+
+	UFUNCTION(BlueprintPure, Category = Key)
+		FText GetSprintActionKeyName();
+
+	UFUNCTION(BlueprintPure, Category = Key)
+		FText GetOpenPauseActionKeyName();
+
+	UFUNCTION(BlueprintPure, Category = Key)
+		FText GetMoveForwardActionKeyName();
+
+	UFUNCTION(BlueprintPure, Category = Key)
+		FText GetMoveBackwardActionKeyName();
+
+	UFUNCTION(BlueprintPure, Category = Key)
+		FText GetMoveRightActionKeyName();
+
+	UFUNCTION(BlueprintPure, Category = Key)
+		FText GetMoveLeftActionKeyName();
+
 
 
 private:
 
 	FText GetActionKeyName(FName const& ActionName);
+
+	FText GetAxisKeyName(FName const& AxisName);
 };

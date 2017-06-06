@@ -112,6 +112,10 @@ private:
 	float run_speed = 1200;
 	float walk_speed = 600;
 	float delayTimer = 0;
+	bool bMoveForwardPressed;
+	bool bMoveBackwardPressed;
+	bool bMoveRightPressed;
+	bool bMoveLeftPressed;
 	
 
 
@@ -193,13 +197,27 @@ protected:
 
 	void FindInventoryManager();
 
-	void Activate();
+	void Interact();
 	TouchData	TouchItem;
 
 	void Reload_Pressed();
 	void Reload();
 
+	void Move_Forward();
+	void Move_Backward();
+	void Move_Left();
+	void Move_Right();
+
 	
+	void Move_ForwardPressed();
+	void Move_ForwardReleased();
+	void Move_BackwardPressed();
+	void Move_BackwardReleased();
+	void Move_LeftPressed();
+	void Move_LeftReleased();
+	void Move_RightPressed();
+	void Move_RightReleased();
+
 
 	// APawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
