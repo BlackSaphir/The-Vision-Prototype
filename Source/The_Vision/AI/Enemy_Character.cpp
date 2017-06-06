@@ -9,6 +9,7 @@
 
 #include <Runtime/Engine/Classes/Engine/Engine.h>
 #include "Kismet/KismetMathLibrary.h"
+#include "Static_Libary.h"
 #include "Enemy_Character.h"
 
 
@@ -50,15 +51,35 @@ void AEnemy_Character::OnHearNoise(APawn * PawnInstigator, const FVector & Locat
 	{
 		Con->SetSensedTarget(PawnInstigator);
 	}
+	if (GetDistanceTo(PawnInstigator)>1100)
+	{
+		Con->SetSensedTarget(NULL);
+	}
 }
 
 void AEnemy_Character::OnSeePawn(APawn * PawnInstigator)
 {
+	FHitResult hitout;
+	ECollisionChannel Collisionchannel;
+	Collisionchannel = ECC_Pawn;
+	float lenght = 1100.0f;
 	AAI_Controller* Con = Cast<AAI_Controller>(GetController());
 
 	if (Con && PawnInstigator != this)
 	{
 		Con->SetSensedTarget(PawnInstigator);
+	}
+	if (GetDistanceTo(PawnInstigator)>1100)
+	{
+		Con->SetSensedTarget(NULL);
+	}
+	if (PawnInstigator)
+	{
+		UStatic_Libary::LineTrace(GetWorld(), GetActorLocation(), FVector::ForwardVector*lenght, hitout, Collisionchannel, false);
+		if (hitout.Actor != PawnInstigator)
+		{
+		Con->SetSensedTarget(NULL);
+		}
 	}
 }
 

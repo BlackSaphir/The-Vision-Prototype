@@ -29,6 +29,4 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly)
 		FName TargetKey = "SensedPawn";
-	
-	
 };
