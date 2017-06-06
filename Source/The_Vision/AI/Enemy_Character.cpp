@@ -6,8 +6,10 @@
 #include "Perception/PawnSensingComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
+#include "DrawDebugHelpers.h"
 
 #include <Runtime/Engine/Classes/Engine/Engine.h>
+#include "The_Vision/Character/The_VisionCharacter.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Static_Libary.h"
 #include "Enemy_Character.h"
@@ -22,6 +24,10 @@ AEnemy_Character::AEnemy_Character()
 	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensingComp"));
 	PawnSensingComp->OnSeePawn.AddDynamic(this, &AEnemy_Character::OnSeePawn);
 	PawnSensingComp->OnHearNoise.AddDynamic(this, &AEnemy_Character::OnHearNoise);
+	FirstPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
+	FirstPersonCamera->SetupAttachment(GetCapsuleComponent());
+	FirstPersonCamera->RelativeLocation = FVector(0, 0, 70.0f); // Position the camera
+	FirstPersonCamera->bUsePawnControlRotation = true;
 }
 
 // Called when the game starts or when spawned
@@ -61,8 +67,12 @@ void AEnemy_Character::OnSeePawn(APawn * PawnInstigator)
 {
 	FHitResult hitout;
 	ECollisionChannel Collisionchannel;
-	Collisionchannel = ECC_Pawn;
 	float lenght = 1100.0f;
+	const FVector Start = FirstPersonCamera->GetComponentLocation();
+	const FVector End = Start + (FirstPersonCamera->GetForwardVector() * lenght);
+	FVector player = PawnInstigator->GetTargetLocation();
+	
+	Collisionchannel = ECC_Pawn;
 	AAI_Controller* Con = Cast<AAI_Controller>(GetController());
 
 	if (Con && PawnInstigator != this)
@@ -75,10 +85,11 @@ void AEnemy_Character::OnSeePawn(APawn * PawnInstigator)
 	}
 	if (PawnInstigator)
 	{
-		UStatic_Libary::LineTrace(GetWorld(), GetActorLocation(), FVector::ForwardVector*lenght, hitout, Collisionchannel, false);
+		UStatic_Libary::LineTrace(GetWorld(), Start,player, hitout, Collisionchannel, false);
+		DrawDebugLine(GetWorld(), Start,player, FColor::Green, true, 10, 0, 2.f);
 		if (hitout.Actor != PawnInstigator)
 		{
-		Con->SetSensedTarget(NULL);
+		//Con->SetSensedTarget(NULL);
 		}
 	}
 }

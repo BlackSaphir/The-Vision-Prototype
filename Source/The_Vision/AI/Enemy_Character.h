@@ -70,4 +70,6 @@ public:
 	UPROPERTY(EditAnyWhere)
 		int Life = 100;
 
+	UPROPERTY(EditAnyWhere)
+		class UCameraComponent* FirstPersonCamera;
 };
