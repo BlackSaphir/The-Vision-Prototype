@@ -30,7 +30,7 @@ bool UStatic_Libary::LineTrace(UWorld* World,  const FVector& Start, const FVect
 	return (HitOut.GetActor() != NULL);
 }
 
-//bool UStatic_Libary::DanielLineTrace(UObject* WorldContextObject, FVector Start, FVector End, ETraceTypeQuery TraceChannel,  FHitResult& Hit)
-//{
-//	return UKismetSystemLibrary::LineTraceSingle(WorldContextObject, Start, End, TraceChannel, false, TArray<AActor*>(), EDrawDebugTrace::ForDuration, Hit, true);
-//}
+bool UStatic_Libary::SecondLineTrace(UObject* WorldContextObject, FVector Start, FVector End, ETraceTypeQuery TraceChannel,  FHitResult& Hit)
+{
+	return UKismetSystemLibrary::LineTraceSingle(WorldContextObject, Start, End, TraceChannel, false, TArray<AActor*>(), EDrawDebugTrace::ForDuration, Hit, true);
+}

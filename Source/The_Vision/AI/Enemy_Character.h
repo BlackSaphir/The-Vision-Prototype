@@ -14,6 +14,7 @@ class UAI_IdleState;
 class UAI_IdleSubState_HighHP;
 class UAI_IdleSubState_LowHP;
 class UAI_MoveToState;
+class AThe_VisionCharacter;
 
 
 UCLASS()
@@ -71,5 +72,8 @@ public:
 		int Life = 100;
 
 	UPROPERTY(EditAnyWhere)
-		class UCameraComponent* FirstPersonCamera;
+		class UCameraComponent* EnemyCamera;
+
+	UPROPERTY(EditAnyWhere)
+		class AThe_VisionCharacter* Char;
 };

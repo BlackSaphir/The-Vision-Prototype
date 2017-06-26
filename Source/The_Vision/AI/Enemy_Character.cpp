@@ -24,10 +24,10 @@ AEnemy_Character::AEnemy_Character()
 	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensingComp"));
 	PawnSensingComp->OnSeePawn.AddDynamic(this, &AEnemy_Character::OnSeePawn);
 	PawnSensingComp->OnHearNoise.AddDynamic(this, &AEnemy_Character::OnHearNoise);
-	FirstPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
-	FirstPersonCamera->SetupAttachment(GetCapsuleComponent());
-	FirstPersonCamera->RelativeLocation = FVector(0, 0, 70.0f); // Position the camera
-	FirstPersonCamera->bUsePawnControlRotation = true;
+	EnemyCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
+	EnemyCamera->SetupAttachment(GetCapsuleComponent());
+	EnemyCamera->RelativeLocation = FVector(0, 0, 70.0f); // Position the camera
+	EnemyCamera->bUsePawnControlRotation = true;
 }
 
 // Called when the game starts or when spawned
@@ -66,29 +66,31 @@ void AEnemy_Character::OnHearNoise(APawn * PawnInstigator, const FVector & Locat
 void AEnemy_Character::OnSeePawn(APawn * PawnInstigator)
 {
 	FHitResult hitout;
-	ECollisionChannel Collisionchannel;
-	float lenght = 1100.0f;
-	const FVector Start = FirstPersonCamera->GetComponentLocation();
-	const FVector End = Start + (FirstPersonCamera->GetForwardVector() * lenght);
-	FVector player = PawnInstigator->GetTargetLocation();
+	ETraceTypeQuery TraceChannel;
+	TraceChannel = TraceTypeQuery1;
+	float lenght = 10.0f;
+	const FVector Start = EnemyCamera->GetComponentLocation();
+	const FVector End = Start + (EnemyCamera->GetForwardVector() * lenght);
+	Char = dynamic_cast<AThe_VisionCharacter*>(PawnInstigator);
+	FVector player = Char->FirstPersonCamera->GetComponentLocation();
 	
-	Collisionchannel = ECC_Pawn;
 	AAI_Controller* Con = Cast<AAI_Controller>(GetController());
 
 	if (Con && PawnInstigator != this)
 	{
 		Con->SetSensedTarget(PawnInstigator);
 	}
-	if (GetDistanceTo(PawnInstigator)>1100)
+	if (GetDistanceTo(PawnInstigator)>1500)
 	{
 		Con->SetSensedTarget(NULL);
 	}
 	if (PawnInstigator)
 	{
-		UStatic_Libary::LineTrace(GetWorld(), Start,player, hitout, Collisionchannel, false);
+		UStatic_Libary::SecondLineTrace(GetWorld(), Start,player,TraceChannel, hitout);
 		DrawDebugLine(GetWorld(), Start,player, FColor::Green, true, 10, 0, 2.f);
-		if (hitout.Actor != PawnInstigator)
+		if (hitout.Actor != Char)
 		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("%s"),*hitout.GetActor()->GetName);
 		//Con->SetSensedTarget(NULL);
 		}
 	}
