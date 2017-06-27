@@ -66,11 +66,8 @@ void AEnemy_Character::OnHearNoise(APawn * PawnInstigator, const FVector & Locat
 void AEnemy_Character::OnSeePawn(APawn * PawnInstigator)
 {
 	FHitResult hitout;
-	ETraceTypeQuery TraceChannel;
-	TraceChannel = TraceTypeQuery1;
-	float lenght = 10.0f;
+	ECollisionChannel collision_channel = ECollisionChannel::ECC_Vehicle;
 	const FVector Start = EnemyCamera->GetComponentLocation();
-	const FVector End = Start + (EnemyCamera->GetForwardVector() * lenght);
 	Char = dynamic_cast<AThe_VisionCharacter*>(PawnInstigator);
 	FVector player = Char->FirstPersonCamera->GetComponentLocation();
 	
@@ -86,11 +83,12 @@ void AEnemy_Character::OnSeePawn(APawn * PawnInstigator)
 	}
 	if (PawnInstigator)
 	{
-		UStatic_Libary::SecondLineTrace(GetWorld(), Start,player,TraceChannel, hitout);
+		UStatic_Libary::UStatic_Libary::LineTrace(GetWorld(), Start, player, hitout, collision_channel, false);
 		DrawDebugLine(GetWorld(), Start,player, FColor::Green, true, 10, 0, 2.f);
 		if (hitout.Actor != Char)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("%s"),*hitout.GetActor()->GetName);
+			FString name = hitout.Actor->GetDebugName(hitout.GetActor());
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("%s"+name));
 		//Con->SetSensedTarget(NULL);
 		}
 	}
