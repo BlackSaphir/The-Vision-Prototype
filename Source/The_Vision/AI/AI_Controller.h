@@ -22,25 +22,34 @@ public:
 	virtual void Possess(APawn* InPawn) override;
 	void SetSensedTarget(APawn* NewTarget);
 	void SetDistanceToPlayer(APawn *Player);
+	void GetDistanceToWaypoint();
 	void GetAllWaypoints();
-	void SetPatrol();
-
-protected:
+	void SetWaypoint();
+	void SetNextWaypoint();
 
 	UBehaviorTreeComponent* BehaviorTreeComp;
 	UBlackboardComponent* BlackboardComp;
 
 	UPROPERTY(EditDefaultsOnly)
-		FName TargetKey = "SensedPawn";
-
-	UPROPERTY(EditDefaultsOnly)
-		FName DistanceKey = "DistanceKey";
-
-	UPROPERTY(EditDefaultsOnly)
 		FName WaypointKey = "WaypointKey";
 
 	UPROPERTY(EditDefaultsOnly)
-		TArray<AWaypoint*> Waypoints;
+		FName DistanceToWaypointKey = "DistanceToWaypointKey";
+
+protected:
+
+
+	UPROPERTY(EditDefaultsOnly)
+		FName TargetKey = "SensedPawn";
+
+	UPROPERTY(EditDefaultsOnly)
+		FName DistanceToPlayerKey = "DistanceToPlayerKey";
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<AActor*> Waypoints;
+
+	UPROPERTY(EditDefaultsOnly)
+	TArray<float> Waypointdistance;
 
 	UPROPERTY(EditDefaultsOnly)
 		int WaypointIndex=0;

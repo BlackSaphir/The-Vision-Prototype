@@ -40,7 +40,19 @@ void AAI_Controller::SetDistanceToPlayer(APawn *Player)
 	if (BlackboardComp)
 	{
 		float distance = GetPawn()->GetDistanceTo(Player);
-		BlackboardComp->SetValueAsFloat(DistanceKey, distance);
+		BlackboardComp->SetValueAsFloat(DistanceToPlayerKey, distance);
+		FString name = FString::FromInt((int)distance);
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("%s" + name));
+	}
+}
+
+void AAI_Controller::GetDistanceToWaypoint()
+{
+	if (BlackboardComp)
+	{
+		AActor* Waypoint = Cast<AActor>(BlackboardComp->GetValueAsObject(WaypointKey));
+		float distance = GetPawn()->GetDistanceTo(Waypoint);
+		BlackboardComp->SetValueAsFloat(DistanceToWaypointKey, distance);
 		FString name = FString::FromInt((int)distance);
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("%s" + name));
 	}
@@ -48,6 +60,7 @@ void AAI_Controller::SetDistanceToPlayer(APawn *Player)
 
 void AAI_Controller::GetAllWaypoints()
 {
+	//get all Waypoints
 	for (TActorIterator<AWaypoint> ActorItr(GetWorld()); ActorItr; ++ActorItr)
 	{
 		AWaypoint* Waypoint = *ActorItr;
@@ -55,31 +68,44 @@ void AAI_Controller::GetAllWaypoints()
 	}
 }
 
-void AAI_Controller::SetPatrol()
+void AAI_Controller::SetWaypoint()
 {
-	TArray<float> Waypiontdistance;
-	//get all Waypoints
+	
+	//get all Waypointsdistances
 	if (BlackboardComp)
 	{
-		if (BlackboardComp->GetKeyRawData(TargetKey) == nullptr)
+		if (BlackboardComp->GetValueAsObject(TargetKey) == nullptr)
 		{
-			for (size_t i = 0; i < sizeof(Waypoints); i++)
+			for (size_t i = 0; i < Waypoints.Num(); i++)
 			{
-				Waypiontdistance.Add(GetPawn()->GetDistanceTo(Waypoints[i]));
+				Waypointdistance.Add(GetPawn()->GetDistanceTo(Waypoints[i]));
 			}
 		}
 	}
 
 	//get closest Waypoint through index
-	for (size_t i = 0; i < sizeof(Waypiontdistance); i++)
+	for (size_t i = 0; i < Waypointdistance.Num(); i++)
 	{
-		if (IteratorSaver>Waypiontdistance[i])
+		if (IteratorSaver>Waypointdistance[i])
 		{
-			IteratorSaver = Waypiontdistance[i];
+			IteratorSaver = Waypointdistance[i];
 			WaypointIndex = i;
 		}
 	}
 	//set closest Waypoint in Blackboard
 	BlackboardComp->SetValueAsObject(WaypointKey,Waypoints[WaypointIndex]);
+}
+
+void AAI_Controller::SetNextWaypoint()
+{
+	if (WaypointIndex<Waypoints.Num()-1)
+	{
+		WaypointIndex++;
+	}
+	else
+	{
+		WaypointIndex=0;
+	}
+	BlackboardComp->SetValueAsObject(WaypointKey, Waypoints[WaypointIndex]);
 }
 

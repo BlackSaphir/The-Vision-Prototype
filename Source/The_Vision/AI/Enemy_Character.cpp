@@ -35,15 +35,26 @@ void AEnemy_Character::BeginPlay()
 {
 	Super::BeginPlay();
 	Con = Cast<AAI_Controller>(GetController());
+	Con->GetAllWaypoints();
 }
 
 // Called every frame
 void AEnemy_Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (Con->GetBlackboardComponent())
+	if (Con && Con->BlackboardComp->GetValueAsObject(Con->WaypointKey) == nullptr)
 	{
-		Con->SetPatrol();
+		Con->SetWaypoint();
+	}
+
+	if (Con && Con->BlackboardComp->GetValueAsObject(Con->WaypointKey) != nullptr)
+	{
+		Con->GetDistanceToWaypoint();
+	}
+
+	if (Con->BlackboardComp->GetValueAsFloat(Con->DistanceToWaypointKey)<150.0f)
+	{
+		Con->SetNextWaypoint();
 	}
 }
 
