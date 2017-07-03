@@ -5,7 +5,7 @@
 #include "GameFramework/Character.h"
 #include "Perception/PawnSensingComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
-#include "BehaviorTree/BehaviorTreeComponent.h"
+#include "AI_Controller.h"
 #include "Enemy_Character.generated.h"
 
 class UAI_AttackState;
@@ -76,4 +76,7 @@ public:
 
 	UPROPERTY(EditAnyWhere)
 		class AThe_VisionCharacter* Char;
+
+	UPROPERTY(EditAnyWhere)
+		class AAI_Controller* Con;
 };

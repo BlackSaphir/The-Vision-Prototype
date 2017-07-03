@@ -34,12 +34,17 @@ AEnemy_Character::AEnemy_Character()
 void AEnemy_Character::BeginPlay()
 {
 	Super::BeginPlay();
+	Con = Cast<AAI_Controller>(GetController());
 }
 
 // Called every frame
 void AEnemy_Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (Con->GetBlackboardComponent())
+	{
+		Con->SetPatrol();
+	}
 }
 
 // Called to bind functionality to input
@@ -51,8 +56,6 @@ void AEnemy_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void AEnemy_Character::OnHearNoise(APawn * PawnInstigator, const FVector & Location, float Volume)
 {
-	AAI_Controller* Con = Cast<AAI_Controller>(GetController());
-
 	if (Con && PawnInstigator != this)
 	{
 		Con->SetSensedTarget(PawnInstigator);
@@ -71,7 +74,7 @@ void AEnemy_Character::OnSeePawn(APawn * PawnInstigator)
 	Char = dynamic_cast<AThe_VisionCharacter*>(PawnInstigator);
 	FVector player = Char->FirstPersonCamera->GetComponentLocation();
 	
-	AAI_Controller* Con = Cast<AAI_Controller>(GetController());
+
 
 	if (Con && PawnInstigator != this)
 	{
@@ -87,9 +90,9 @@ void AEnemy_Character::OnSeePawn(APawn * PawnInstigator)
 		DrawDebugLine(GetWorld(), Start,player, FColor::Green, true, 10, 0, 2.f);
 		if (hitout.Actor != Char)
 		{
-			FString name = hitout.Actor->GetDebugName(hitout.GetActor());
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("%s"+name));
-		//Con->SetSensedTarget(NULL);
+			//FString name = hitout.Actor->GetDebugName(hitout.GetActor());
+			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("%s"+name));
+			Con->SetDistanceToPlayer(PawnInstigator);
 		}
 	}
 }
