@@ -5,7 +5,7 @@
 #include "GameFramework/Character.h"
 #include "Perception/PawnSensingComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
-#include "BehaviorTree/BehaviorTreeComponent.h"
+#include "AI_Controller.h"
 #include "Enemy_Character.generated.h"
 
 class UAI_AttackState;
@@ -14,6 +14,7 @@ class UAI_IdleState;
 class UAI_IdleSubState_HighHP;
 class UAI_IdleSubState_LowHP;
 class UAI_MoveToState;
+class AThe_VisionCharacter;
 
 
 UCLASS()
@@ -70,4 +71,12 @@ public:
 	UPROPERTY(EditAnyWhere)
 		int Life = 100;
 
+	UPROPERTY(EditAnyWhere)
+		class UCameraComponent* EnemyCamera;
+
+	UPROPERTY(EditAnyWhere)
+		class AThe_VisionCharacter* Char;
+
+	UPROPERTY(EditAnyWhere)
+		class AAI_Controller* Con;
 };

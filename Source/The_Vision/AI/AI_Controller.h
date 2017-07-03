@@ -3,7 +3,7 @@
 #pragma once
 
 #include "AIController.h"
-#include "BehaviorTree/BehaviorTree.h"
+#include "AI/Waypoint.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "AI_Controller.generated.h"
@@ -21,6 +21,9 @@ public:
 	
 	virtual void Possess(APawn* InPawn) override;
 	void SetSensedTarget(APawn* NewTarget);
+	void SetDistanceToPlayer(APawn *Player);
+	void GetAllWaypoints();
+	void SetPatrol();
 
 protected:
 
@@ -29,4 +32,19 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly)
 		FName TargetKey = "SensedPawn";
+
+	UPROPERTY(EditDefaultsOnly)
+		FName DistanceKey = "DistanceKey";
+
+	UPROPERTY(EditDefaultsOnly)
+		FName WaypointKey = "WaypointKey";
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<AWaypoint*> Waypoints;
+
+	UPROPERTY(EditDefaultsOnly)
+		int WaypointIndex=0;
+
+	UPROPERTY(EditDefaultsOnly)
+		float IteratorSaver = 99999999999999999.9f;
 };
