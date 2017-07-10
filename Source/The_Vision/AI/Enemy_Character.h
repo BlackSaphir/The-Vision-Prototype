@@ -72,6 +72,9 @@ public:
 		int Life = 100;
 
 	UPROPERTY(EditAnyWhere)
+		float LineTraceLenght = 1500.0f;
+
+	UPROPERTY(EditAnyWhere)
 		class UCameraComponent* EnemyCamera;
 
 	UPROPERTY(EditAnyWhere)
