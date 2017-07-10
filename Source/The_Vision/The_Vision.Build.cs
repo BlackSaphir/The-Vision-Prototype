@@ -12,7 +12,7 @@ public class The_Vision : ModuleRules
 
     public The_Vision(ReadOnlyTargetRules Target)
 	{
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay",  "UMG", "Slate", "SlateCore"});
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay",  "UMG", "Slate", "SlateCore", "AIModule", "GameplayTasks"});
 	}
 
    public bool LoadWwise(ReadOnlyTargetRules Target)

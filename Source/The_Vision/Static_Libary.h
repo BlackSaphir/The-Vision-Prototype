@@ -15,7 +15,7 @@ public :
 	
 	static bool LineTrace(UWorld* ,  const FVector& , const FVector& , FHitResult& , ECollisionChannel , bool);
 
-	//static bool DanielLineTrace(UObject* WorldContextObject, FVector Start, FVector End, ETraceTypeQuery TraceChannel, FHitResult& Hit);
+	static bool SecondLineTrace(UObject* WorldContextObject, FVector Start, FVector End, ETraceTypeQuery TraceChannel, FHitResult& Hit);
 
 
 };	
