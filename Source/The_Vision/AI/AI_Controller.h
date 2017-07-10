@@ -4,6 +4,7 @@
 
 #include "AIController.h"
 #include "AI/Waypoint.h"
+#include "AI/SpawnPoint.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "AI_Controller.generated.h"
@@ -26,6 +27,7 @@ public:
 	void GetAllWaypoints();
 	void SetWaypoint();
 	void SetNextWaypoint();
+	int32 GetSpawnPointIndex();
 
 	UBehaviorTreeComponent* BehaviorTreeComp;
 	UBlackboardComponent* BlackboardComp;
@@ -49,11 +51,26 @@ protected:
 		TArray<AActor*> Waypoints;
 
 	UPROPERTY(EditDefaultsOnly)
+		TArray<ASpawnPoint*> SpawnPoints_Array;
+
+	UPROPERTY(EditDefaultsOnly)
 	TArray<float> Waypointdistance;
 
 	UPROPERTY(EditDefaultsOnly)
-		int WaypointIndex=0;
+		TArray<float> SpawnPointdistance;
+
+	UPROPERTY(EditDefaultsOnly)
+		int WaypointArrayIndex=0;
+
+	UPROPERTY(EditDefaultsOnly)
+		int SpawnPointArrayIndex = 0;
+
+	UPROPERTY(EditDefaultsOnly)
+		int SpawnPointIndex;
 
 	UPROPERTY(EditDefaultsOnly)
 		float IteratorSaver = 99999999999999999.9f;
+
+	UPROPERTY(EditDefaultsOnly)
+		float SpawnIteratorSaver = 99999999999999999.9f;
 };

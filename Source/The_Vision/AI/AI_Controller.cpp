@@ -25,6 +25,8 @@ void AAI_Controller::Possess(APawn* InPawn)
 		BlackboardComp->InitializeBlackboard(*PossesedPawn->BehaviorTree->BlackboardAsset);
 		BehaviorTreeComp->StartTree(*PossesedPawn->BehaviorTree);
 	}
+
+	SpawnPointIndex = GetSpawnPointIndex();
 }
 
 void AAI_Controller::SetSensedTarget(APawn* NewTarget)
@@ -54,7 +56,7 @@ void AAI_Controller::GetDistanceToWaypoint()
 		float distance = GetPawn()->GetDistanceTo(Waypoint);
 		BlackboardComp->SetValueAsFloat(DistanceToWaypointKey, distance);
 		FString name = FString::FromInt((int)distance);
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("%s" + name));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("%s" + name));
 	}
 }
 
@@ -64,13 +66,16 @@ void AAI_Controller::GetAllWaypoints()
 	for (TActorIterator<AWaypoint> ActorItr(GetWorld()); ActorItr; ++ActorItr)
 	{
 		AWaypoint* Waypoint = *ActorItr;
-		Waypoints.Add(Waypoint);
+		if (Waypoint->WaypointIndex == SpawnPointIndex)
+		{
+			Waypoints.Add(Waypoint);
+		}
 	}
 }
 
 void AAI_Controller::SetWaypoint()
 {
-	
+
 	//get all Waypointsdistances
 	if (BlackboardComp)
 	{
@@ -86,26 +91,53 @@ void AAI_Controller::SetWaypoint()
 	//get closest Waypoint through index
 	for (size_t i = 0; i < Waypointdistance.Num(); i++)
 	{
-		if (IteratorSaver>Waypointdistance[i])
+		if (IteratorSaver > Waypointdistance[i])
 		{
 			IteratorSaver = Waypointdistance[i];
-			WaypointIndex = i;
+			WaypointArrayIndex = i;
 		}
 	}
 	//set closest Waypoint in Blackboard
-	BlackboardComp->SetValueAsObject(WaypointKey,Waypoints[WaypointIndex]);
+	BlackboardComp->SetValueAsObject(WaypointKey, Waypoints[WaypointArrayIndex]);
 }
 
 void AAI_Controller::SetNextWaypoint()
 {
-	if (WaypointIndex<Waypoints.Num()-1)
+	if (WaypointArrayIndex < Waypoints.Num() - 1)
 	{
-		WaypointIndex++;
+		WaypointArrayIndex++;
 	}
 	else
 	{
-		WaypointIndex=0;
+		WaypointArrayIndex = 0;
 	}
-	BlackboardComp->SetValueAsObject(WaypointKey, Waypoints[WaypointIndex]);
+	BlackboardComp->SetValueAsObject(WaypointKey, Waypoints[WaypointArrayIndex]);
+}
+
+int32 AAI_Controller::GetSpawnPointIndex()
+{
+	for (TActorIterator<ASpawnPoint> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+	{
+		ASpawnPoint* SpawnPoint = *ActorItr;
+		SpawnPoints_Array.Add(SpawnPoint);
+	}
+
+
+	for (size_t i = 0; i < SpawnPoints_Array.Num(); i++)
+	{
+		SpawnPointdistance.Add(GetPawn()->GetDistanceTo(SpawnPoints_Array[i]));
+	}
+
+
+	for (size_t i = 0; i < SpawnPointdistance.Num(); i++)
+	{
+		if (SpawnIteratorSaver > SpawnPointdistance[i])
+		{
+			SpawnIteratorSaver = SpawnPointdistance[i];
+			SpawnPointArrayIndex = i;
+		}
+	}
+
+	return SpawnPoints_Array.Num() > 0 ? SpawnPoints_Array[SpawnPointArrayIndex]->SpawnpointIndex : 0;
 }
 

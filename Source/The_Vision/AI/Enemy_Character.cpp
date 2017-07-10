@@ -101,8 +101,8 @@ void AEnemy_Character::OnSeePawn(APawn * PawnInstigator)
 		DrawDebugLine(GetWorld(), Start,player, FColor::Green, true, 10, 0, 2.f);
 		if (hitout.Actor != Char)
 		{
-			//FString name = hitout.Actor->GetDebugName(hitout.GetActor());
-			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("%s"+name));
+			FString name = hitout.Actor->GetDebugName(hitout.GetActor());
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("%s"+name));
 			Con->SetDistanceToPlayer(PawnInstigator);
 		}
 	}
