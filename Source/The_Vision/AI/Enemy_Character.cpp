@@ -56,6 +56,9 @@ void AEnemy_Character::Tick(float DeltaTime)
 	{
 		Con->SetNextWaypoint();
 	}
+	AThe_VisionCharacter* character = dynamic_cast<AThe_VisionCharacter*>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	Con->SetDistanceToPlayer(character);
+
 }
 
 // Called to bind functionality to input
@@ -84,6 +87,7 @@ void AEnemy_Character::OnSeePawn(APawn * PawnInstigator)
 	const FVector Start = EnemyCamera->GetComponentLocation();
 	Char = dynamic_cast<AThe_VisionCharacter*>(PawnInstigator);
 	FVector player = Char->FirstPersonCamera->GetComponentLocation();
+	const FVector End = Start + (EnemyCamera->GetForwardVector() * LineTraceLenght);
 	
 
 
@@ -97,13 +101,12 @@ void AEnemy_Character::OnSeePawn(APawn * PawnInstigator)
 	}
 	if (PawnInstigator)
 	{
-		UStatic_Libary::UStatic_Libary::LineTrace(GetWorld(), Start, player, hitout, collision_channel, false);
+		UStatic_Libary::UStatic_Libary::LineTrace(GetWorld(), Start, End, hitout, collision_channel, false);
 		DrawDebugLine(GetWorld(), Start,player, FColor::Green, true, 10, 0, 2.f);
 		if (hitout.Actor != Char)
 		{
-			//FString name = hitout.Actor->GetDebugName(hitout.GetActor());
-			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("%s"+name));
-			Con->SetDistanceToPlayer(PawnInstigator);
+			FString name = hitout.Actor->GetDebugName(hitout.GetActor());
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("%s"+name));
 		}
 	}
 }
