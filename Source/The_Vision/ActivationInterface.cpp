@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+	// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "The_Vision.h"
 #include "ActivationInterface.h"
@@ -11,3 +11,8 @@ UActivationInterface::UActivationInterface(const class FObjectInitializer& Objec
 }
 
 // Add default functionality here for any IActivationInterface functions that are not pure virtual.
+
+void IActivationInterface::Activate()
+{
+	BPEvent_Activate();
+}
