@@ -18,7 +18,7 @@
 // Sets default values
 AEnemy_Character::AEnemy_Character()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	BehaviorTree = CreateDefaultSubobject<UBehaviorTree>(TEXT("BehaviorTreeReference"));
 	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensingComp"));
@@ -36,6 +36,12 @@ void AEnemy_Character::BeginPlay()
 	Super::BeginPlay();
 	Con = Cast<AAI_Controller>(GetController());
 	Con->GetAllWaypoints();
+	Char = dynamic_cast<AThe_VisionCharacter*>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	Player_Vector = Char->FirstPersonCamera->GetComponentLocation();
+	Enemy_Camera_Vector = EnemyCamera->GetComponentLocation();
+	Enemy_Camera_ForwardVector = Enemy_Camera_Vector + (EnemyCamera->GetForwardVector() * LineTraceLenght);
+	Con->BlackboardComp->SetValueAsBool(Con->ArrivedToLastSeenPlayerPosition, false);
+	Con->BlackboardComp->SetValueAsFloat(Con->DistanceToLastSeenPlayerPosition, 99999999999999999.9f);
 }
 
 // Called every frame
@@ -52,13 +58,43 @@ void AEnemy_Character::Tick(float DeltaTime)
 		Con->GetDistanceToWaypoint();
 	}
 
-	if (Con->BlackboardComp->GetValueAsFloat(Con->DistanceToWaypointKey)<150.0f)
+	if (Con->BlackboardComp->GetValueAsFloat(Con->DistanceToWaypointKey) < 150.0f)
 	{
 		Con->SetNextWaypoint();
 	}
-	AThe_VisionCharacter* character = dynamic_cast<AThe_VisionCharacter*>(GetWorld()->GetFirstPlayerController()->GetPawn());
-	Con->SetDistanceToPlayer(character);
 
+	if (Con && Con->BlackboardComp->GetValueAsObject(Con->TargetKey) != nullptr)
+	{
+		UStatic_Libary::UStatic_Libary::LineTrace(GetWorld(), Enemy_Camera_Vector, Enemy_Camera_ForwardVector, hitout2, collision_channel, false);
+		DrawDebugLine(GetWorld(), Enemy_Camera_Vector, Enemy_Camera_ForwardVector, FColor::Green, true, 10, 0, 2.f);
+
+		if (hitout2.Actor == Char)
+		{
+			Con->BlackboardComp->SetValueAsBool(Con->PawnInSight, true);
+		}
+		else
+		{
+			Con->BlackboardComp->SetValueAsBool(Con->PawnInSight, false);
+		}
+	}
+
+	if (Con && Con->BlackboardComp->GetValueAsBool(Con->PawnInSight) == false)
+	{
+		if (Con && Con->BlackboardComp->GetValueAsObject(Con->SensedPawn_Last_Location) != nullptr)
+		{
+			Con->BlackboardComp->SetValueAsFloat(Con->DistanceToLastSeenPlayerPosition, GetDistanceTo(dynamic_cast<AActor*>(Con->BlackboardComp->GetValueAsObject(Con->SensedPawn_Last_Location))));
+		}
+	}
+
+	if (Con && Con->BlackboardComp->GetValueAsFloat(Con->DistanceToLastSeenPlayerPosition) < 50)
+	{
+		Con->BlackboardComp->SetValueAsBool(Con->ArrivedToLastSeenPlayerPosition, true);
+	}
+
+	if (Con && Con->BlackboardComp->GetValueAsBool(Con->PawnInSight) == false && Con->BlackboardComp->GetValueAsBool(Con->ArrivedToLastSeenPlayerPosition) == true)
+	{
+		Con->SetSensedTarget(NULL);
+	}
 }
 
 // Called to bind functionality to input
@@ -74,7 +110,7 @@ void AEnemy_Character::OnHearNoise(APawn * PawnInstigator, const FVector & Locat
 	{
 		Con->SetSensedTarget(PawnInstigator);
 	}
-	if (GetDistanceTo(PawnInstigator)>1100)
+	if (GetDistanceTo(PawnInstigator) > 1100)
 	{
 		Con->SetSensedTarget(NULL);
 	}
@@ -82,31 +118,30 @@ void AEnemy_Character::OnHearNoise(APawn * PawnInstigator, const FVector & Locat
 
 void AEnemy_Character::OnSeePawn(APawn * PawnInstigator)
 {
-	FHitResult hitout;
-	ECollisionChannel collision_channel = ECollisionChannel::ECC_Vehicle;
-	const FVector Start = EnemyCamera->GetComponentLocation();
-	Char = dynamic_cast<AThe_VisionCharacter*>(PawnInstigator);
-	FVector player = Char->FirstPersonCamera->GetComponentLocation();
-	const FVector End = Start + (EnemyCamera->GetForwardVector() * LineTraceLenght);
-	
-
 
 	if (Con && PawnInstigator != this)
 	{
 		Con->SetSensedTarget(PawnInstigator);
 	}
-	if (GetDistanceTo(PawnInstigator)>1500)
+	if (GetDistanceTo(PawnInstigator) > 1500)
 	{
 		Con->SetSensedTarget(NULL);
 	}
 	if (PawnInstigator)
 	{
-		UStatic_Libary::UStatic_Libary::LineTrace(GetWorld(), Start, End, hitout, collision_channel, false);
-		DrawDebugLine(GetWorld(), Start,player, FColor::Green, true, 10, 0, 2.f);
-		if (hitout.Actor != Char)
+		Con->BlackboardComp->SetValueAsObject(Con->SensedPawn_Last_Location, PawnInstigator);
+		//Foward RayCast
+		UStatic_Libary::UStatic_Libary::LineTrace(GetWorld(), Enemy_Camera_Vector, Enemy_Camera_ForwardVector, hitout, collision_channel, false);
+		DrawDebugLine(GetWorld(), Enemy_Camera_Vector, Enemy_Camera_ForwardVector, FColor::Green, true, 10, 0, 2.f);
+		if (hitout.Actor != Char && Con->BlackboardComp->GetValueAsFloat(Con->DistanceToPlayerKey) > 500)
 		{
-			FString name = hitout.Actor->GetDebugName(hitout.GetActor());
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("%s"+name));
+			//FString name = hitout.Actor->GetDebugName(hitout.GetActor());
+			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("%s"+name));
+			Con->SetDistanceToPlayer(PawnInstigator);
+		}
+		if (hitout.Actor == Char && Con->BlackboardComp->GetValueAsFloat(Con->DistanceToPlayerKey) > 500)
+		{
+			Con->SetDistanceToPlayer(PawnInstigator);
 		}
 	}
 }

@@ -30,19 +30,13 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	// Functions
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-
-	// Functions
-
-public:
-
-	
 
 	UFUNCTION()
 		void OnHearNoise(APawn* PawnInstigator, const FVector& Location, float Volume);
@@ -53,11 +47,11 @@ public:
 	UFUNCTION()
 		void SetLife();
 
-	
-
 	//Variable
 
 public:
+	UPROPERTY(EditAnyWhere)
+		class UCameraComponent* EnemyCamera;
 
 	UPROPERTY(VisibleAnyWhere)
  		UPawnSensingComponent* PawnSensingComp;
@@ -75,11 +69,21 @@ public:
 		float LineTraceLenght = 1500.0f;
 
 	UPROPERTY(EditAnyWhere)
-		class UCameraComponent* EnemyCamera;
-
-	UPROPERTY(EditAnyWhere)
 		class AThe_VisionCharacter* Char;
 
 	UPROPERTY(EditAnyWhere)
 		class AAI_Controller* Con;
+
+	UPROPERTY(EditAnyWhere)
+		FVector Player_Vector;
+
+	UPROPERTY(EditAnyWhere)
+		FVector Enemy_Camera_Vector;
+
+	UPROPERTY(EditAnyWhere)
+		FVector Enemy_Camera_ForwardVector;
+
+	FHitResult hitout;
+	FHitResult hitout2;
+	ECollisionChannel collision_channel = ECollisionChannel::ECC_Vehicle;
 };

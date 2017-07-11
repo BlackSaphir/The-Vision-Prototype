@@ -8,6 +8,9 @@
 #include "EngineUtils.h"
 #include "AI_Controller.h"
 #include "Engine/Engine.h"
+#include "Static_Libary.h"
+#include "DrawDebugHelpers.h"
+#include "Character/The_VisionCharacter.h"
 
 AAI_Controller::AAI_Controller()
 {
@@ -140,4 +143,5 @@ int32 AAI_Controller::GetSpawnPointIndex()
 
 	return SpawnPoints_Array.Num() > 0 ? SpawnPoints_Array[SpawnPointArrayIndex]->SpawnpointIndex : 0;
 }
+
 
