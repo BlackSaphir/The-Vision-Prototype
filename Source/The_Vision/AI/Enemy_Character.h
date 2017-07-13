@@ -73,17 +73,4 @@ public:
 
 	UPROPERTY(EditAnyWhere)
 		class AAI_Controller* Con;
-
-	UPROPERTY(EditAnyWhere)
-		FVector Player_Vector;
-
-	UPROPERTY(EditAnyWhere)
-		FVector Enemy_Camera_Vector;
-
-	UPROPERTY(EditAnyWhere)
-		FVector Enemy_Camera_ForwardVector;
-
-	FHitResult hitout;
-	FHitResult hitout2;
-	ECollisionChannel collision_channel = ECollisionChannel::ECC_Vehicle;
 };

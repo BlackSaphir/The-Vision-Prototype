@@ -37,9 +37,7 @@ void AEnemy_Character::BeginPlay()
 	Con = Cast<AAI_Controller>(GetController());
 	Con->GetAllWaypoints();
 	Char = dynamic_cast<AThe_VisionCharacter*>(GetWorld()->GetFirstPlayerController()->GetPawn());
-	Player_Vector = Char->FirstPersonCamera->GetComponentLocation();
-	Enemy_Camera_Vector = EnemyCamera->GetComponentLocation();
-	Enemy_Camera_ForwardVector = Enemy_Camera_Vector + (EnemyCamera->GetForwardVector() * LineTraceLenght);
+
 	Con->BlackboardComp->SetValueAsBool(Con->ArrivedToLastSeenPlayerPosition, false);
 	Con->BlackboardComp->SetValueAsFloat(Con->DistanceToLastSeenPlayerPosition, 99999999999999999.9f);
 }
@@ -65,6 +63,12 @@ void AEnemy_Character::Tick(float DeltaTime)
 
 	if (Con && Con->BlackboardComp->GetValueAsObject(Con->TargetKey) != nullptr)
 	{
+		const FVector Player_Vector = Char->FirstPersonCamera->GetComponentLocation();
+		const FVector Enemy_Camera_Vector = EnemyCamera->GetComponentLocation();
+		const FVector Enemy_Camera_ForwardVector = Enemy_Camera_Vector + (EnemyCamera->GetForwardVector() * LineTraceLenght);
+		FHitResult hitout2;
+		ECollisionChannel collision_channel = ECC_Vehicle;
+
 		UStatic_Libary::UStatic_Libary::LineTrace(GetWorld(), Enemy_Camera_Vector, Enemy_Camera_ForwardVector, hitout2, collision_channel, false);
 		DrawDebugLine(GetWorld(), Enemy_Camera_Vector, Enemy_Camera_ForwardVector, FColor::Green, true, 10, 0, 2.f);
 
@@ -131,6 +135,12 @@ void AEnemy_Character::OnSeePawn(APawn * PawnInstigator)
 	{
 		Con->BlackboardComp->SetValueAsObject(Con->SensedPawn_Last_Location, PawnInstigator);
 		//Foward RayCast
+		const FVector Player_Vector = Char->FirstPersonCamera->GetComponentLocation();
+		const FVector Enemy_Camera_Vector = EnemyCamera->GetComponentLocation();
+		const FVector Enemy_Camera_ForwardVector = Enemy_Camera_Vector + (EnemyCamera->GetForwardVector() * LineTraceLenght);
+		FHitResult hitout;
+		ECollisionChannel collision_channel = ECC_Vehicle;
+
 		UStatic_Libary::UStatic_Libary::LineTrace(GetWorld(), Enemy_Camera_Vector, Enemy_Camera_ForwardVector, hitout, collision_channel, false);
 		DrawDebugLine(GetWorld(), Enemy_Camera_Vector, Enemy_Camera_ForwardVector, FColor::Green, true, 10, 0, 2.f);
 		if (hitout.Actor != Char && Con->BlackboardComp->GetValueAsFloat(Con->DistanceToPlayerKey) > 500)
