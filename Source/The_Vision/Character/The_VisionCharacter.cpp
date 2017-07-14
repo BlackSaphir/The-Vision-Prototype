@@ -35,7 +35,7 @@ DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
 AThe_VisionCharacter::AThe_VisionCharacter()
 {
-
+	//The Dicks are real faggot
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
 
@@ -506,9 +506,14 @@ void AThe_VisionCharacter::Interact()
 		{
 			if (Item_HitOut.Actor->GetClass()->ImplementsInterface(UActivationInterface::StaticClass()))
 			{
-				IActivationInterface* ActivationObject = dynamic_cast<IActivationInterface*, AActor>(&*Item_HitOut.Actor);
-
-				ActivationObject->Activate();
+				if (IActivationInterface* ActivationObject = dynamic_cast<IActivationInterface*, AActor>(&*Item_HitOut.Actor))
+				{
+					ActivationObject->Activate();
+				}
+				else
+				{
+					IActivationInterface::Execute_BPEvent_Activate(&*Item_HitOut.Actor);
+				}
 			}
 		}
 		if (UStatic_Libary::LineTrace(world, Start, End, Item_HitOut, CollisionChannel, ReturnPhysMat))
