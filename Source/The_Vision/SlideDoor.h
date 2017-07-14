@@ -31,7 +31,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void ActivateInternal() override;
+	virtual void Activate() override;
 
 
 protected:

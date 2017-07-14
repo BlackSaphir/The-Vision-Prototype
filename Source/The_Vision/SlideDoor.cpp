@@ -27,7 +27,7 @@ void ASlideDoor::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void ASlideDoor::ActivateInternal()
+void ASlideDoor::Activate()
 {	
 	if (!b_Open)
 	{		

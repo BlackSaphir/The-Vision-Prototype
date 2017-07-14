@@ -24,6 +24,6 @@ public:
 	UFUNCTION()
 		virtual	void Activate();
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Penis")
+	UFUNCTION(BlueprintImplementableEvent, Category = "Penis", meta = (DisplayName = "Activate"))
 		void BPEvent_Activate();
 };
