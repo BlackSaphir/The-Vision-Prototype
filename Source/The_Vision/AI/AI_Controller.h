@@ -38,14 +38,25 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 		FName DistanceToWaypointKey = "DistanceToWaypointKey";
 
-protected:
-
+	UPROPERTY(EditDefaultsOnly)
+		FName DistanceToPlayerKey = "DistanceToPlayerKey";
 
 	UPROPERTY(EditDefaultsOnly)
 		FName TargetKey = "SensedPawn";
 
 	UPROPERTY(EditDefaultsOnly)
-		FName DistanceToPlayerKey = "DistanceToPlayerKey";
+		FName SensedPawn_Last_Location = "SensedPawn_Last_Location";
+
+	UPROPERTY(EditDefaultsOnly)
+		FName PawnInSight = "PawnInSight";
+
+	UPROPERTY(EditDefaultsOnly)
+		FName DistanceToLastSeenPlayerPosition = "DistanceToLastSeenPlayerPosition";
+
+	UPROPERTY(EditDefaultsOnly)
+		FName ArrivedToLastSeenPlayerPosition = "ArrivedToLastSeenPlayerPosition";
+
+protected:
 
 	UPROPERTY(EditDefaultsOnly)
 		TArray<AActor*> Waypoints;
