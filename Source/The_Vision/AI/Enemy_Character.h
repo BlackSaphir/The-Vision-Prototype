@@ -31,7 +31,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	// Functions
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -54,8 +54,8 @@ public:
 		class UCameraComponent* EnemyCamera;
 
 	UPROPERTY(VisibleAnyWhere)
- 		UPawnSensingComponent* PawnSensingComp;
-	
+		UPawnSensingComponent* PawnSensingComp;
+
 	UPROPERTY(EditDefaultsOnly)
 		UBehaviorTree* BehaviorTree;
 
@@ -73,4 +73,7 @@ public:
 
 	UPROPERTY(EditAnyWhere)
 		class AAI_Controller* Con;
+
+	UPROPERTY(EditAnyWhere)
+		AActor* Last_Player_Position;
 };

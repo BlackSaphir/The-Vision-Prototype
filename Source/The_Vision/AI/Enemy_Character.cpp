@@ -40,6 +40,7 @@ void AEnemy_Character::BeginPlay()
 
 	Con->BlackboardComp->SetValueAsBool(Con->ArrivedToLastSeenPlayerPosition, false);
 	Con->BlackboardComp->SetValueAsFloat(Con->DistanceToLastSeenPlayerPosition, 99999999999999999.9f);
+	AActor* Last_Player_Position= nullptr;
 }
 
 // Called every frame
@@ -98,6 +99,7 @@ void AEnemy_Character::Tick(float DeltaTime)
 	if (Con && Con->BlackboardComp->GetValueAsBool(Con->PawnInSight) == false && Con->BlackboardComp->GetValueAsBool(Con->ArrivedToLastSeenPlayerPosition) == true)
 	{
 		Con->SetSensedTarget(NULL);
+		Last_Player_Position = nullptr;
 	}
 }
 
@@ -133,7 +135,15 @@ void AEnemy_Character::OnSeePawn(APawn * PawnInstigator)
 	}
 	if (PawnInstigator)
 	{
-		Con->BlackboardComp->SetValueAsObject(Con->SensedPawn_Last_Location, PawnInstigator);
+		
+		const FVector Last_PLayer_Location = PawnInstigator->GetTargetLocation();
+		const FRotator Last_PLayer_Rotation = PawnInstigator->GetActorRotation();
+		if (Last_Player_Position == nullptr)
+		{
+			Last_Player_Position = GetWorld()->SpawnActor<AActor>(Last_PLayer_Location, Last_PLayer_Rotation);
+		}
+		Last_Player_Position->SetActorLocation(Last_PLayer_Location);
+		Con->BlackboardComp->SetValueAsObject(Con->SensedPawn_Last_Location, Last_Player_Position);
 		//Foward RayCast
 		const FVector Player_Vector = Char->FirstPersonCamera->GetComponentLocation();
 		const FVector Enemy_Camera_Vector = EnemyCamera->GetComponentLocation();
