@@ -99,7 +99,7 @@ void AEnemy_Character::Tick(float DeltaTime)
 	if (Con && Con->BlackboardComp->GetValueAsBool(Con->PawnInSight) == false && Con->BlackboardComp->GetValueAsBool(Con->ArrivedToLastSeenPlayerPosition) == true)
 	{
 		Con->SetSensedTarget(NULL);
-		Last_Player_Position = nullptr;
+		//Last_Player_Position = nullptr;
 	}
 }
 
@@ -136,14 +136,17 @@ void AEnemy_Character::OnSeePawn(APawn * PawnInstigator)
 	if (PawnInstigator)
 	{
 		
-		const FVector Last_PLayer_Location = PawnInstigator->GetTargetLocation();
-		const FRotator Last_PLayer_Rotation = PawnInstigator->GetActorRotation();
-		if (Last_Player_Position == nullptr)
-		{
-			Last_Player_Position = GetWorld()->SpawnActor<AActor>(Last_PLayer_Location, Last_PLayer_Rotation);
-		}
-		Last_Player_Position->SetActorLocation(Last_PLayer_Location);
-		Con->BlackboardComp->SetValueAsObject(Con->SensedPawn_Last_Location, Last_Player_Position);
+		//const FVector Last_PLayer_Location = PawnInstigator->GetTargetLocation();
+		//const FRotator Last_PLayer_Rotation = PawnInstigator->GetActorRotation();
+		//if (Last_Player_Position == nullptr)
+		//{
+		//	FActorSpawnParameters SpawnParams;
+
+		//	SpawnParams.bNoFail = true;
+		//	Last_Player_Position = GetWorld()->SpawnActor<AActor>(Last_PLayer_Location, Last_PLayer_Rotation, SpawnParams);
+		//}
+		//Last_Player_Position->SetActorTransform(PawnInstigator->GetActorTransform());
+		Con->BlackboardComp->SetValueAsObject(Con->SensedPawn_Last_Location, PawnInstigator);
 		//Foward RayCast
 		const FVector Player_Vector = Char->FirstPersonCamera->GetComponentLocation();
 		const FVector Enemy_Camera_Vector = EnemyCamera->GetComponentLocation();
@@ -155,8 +158,8 @@ void AEnemy_Character::OnSeePawn(APawn * PawnInstigator)
 		DrawDebugLine(GetWorld(), Enemy_Camera_Vector, Enemy_Camera_ForwardVector, FColor::Green, true, 10, 0, 2.f);
 		if (hitout.Actor != Char && Con->BlackboardComp->GetValueAsFloat(Con->DistanceToPlayerKey) > 500)
 		{
-			//FString name = hitout.Actor->GetDebugName(hitout.GetActor());
-			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("%s"+name));
+			FString name = hitout.Actor->GetDebugName(hitout.GetActor());
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("%s"+name));
 			Con->SetDistanceToPlayer(PawnInstigator);
 		}
 		if (hitout.Actor == Char && Con->BlackboardComp->GetValueAsFloat(Con->DistanceToPlayerKey) > 500)
