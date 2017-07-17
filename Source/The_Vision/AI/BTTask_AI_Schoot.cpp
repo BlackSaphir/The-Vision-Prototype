@@ -44,11 +44,11 @@ void UBTTask_AI_Schoot::DoDamage(FHitResult const& HitOut)
 			UGameplayStatics::ApplyRadialDamage(GetWorld(), 30.0f, HitOut.Location, 15.0f, UDestructible_DamageType::StaticClass(), TArray<AActor*>(), AIController->GetPawn());
 		}
 	}
-	AThe_VisionCharacter* character = dynamic_cast<AThe_VisionCharacter*>(GetWorld()->GetFirstPlayerController()->GetPawn());
-	if (HitOut.GetActor()==character)
-	{
-		Hit_Component->AddImpulse(Force_Vector * Normal_Force);
-	}
+	//AThe_VisionCharacter* character = dynamic_cast<AThe_VisionCharacter*>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	//if (HitOut.GetActor()==character)
+	//{
+	//	Hit_Component->AddImpulse(Force_Vector * Normal_Force);
+	//}
 }
 //
 void UBTTask_AI_Schoot::Fire(float LineTraceLenght, ECollisionChannel CollisionChannel)

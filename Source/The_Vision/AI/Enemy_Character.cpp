@@ -70,11 +70,14 @@ void AEnemy_Character::Tick(float DeltaTime)
 		FHitResult hitout2;
 		ECollisionChannel collision_channel = ECC_Vehicle;
 
-		UStatic_Libary::UStatic_Libary::LineTrace(GetWorld(), Enemy_Camera_Vector, Enemy_Camera_ForwardVector, hitout2, collision_channel, false);
-		DrawDebugLine(GetWorld(), Enemy_Camera_Vector, Enemy_Camera_ForwardVector, FColor::Green, true, 10, 0, 2.f);
+		UStatic_Libary::LineTrace(GetWorld(), Enemy_Camera_Vector, Enemy_Camera_ForwardVector, hitout2, collision_channel, false);
+		//DrawDebugLine(GetWorld(), Enemy_Camera_Vector, Enemy_Camera_ForwardVector, FColor::Green, true, 10, 0, 2.f);
+		//FString name = hitout2.Actor->GetDebugName(hitout2.GetActor());
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("%s" + name));
 
-		if (hitout2.Actor == Char)
+		if (hitout2.GetActor() == Char)
 		{
+
 			Con->BlackboardComp->SetValueAsBool(Con->PawnInSight, true);
 		}
 		else
@@ -154,15 +157,15 @@ void AEnemy_Character::OnSeePawn(APawn * PawnInstigator)
 		FHitResult hitout;
 		ECollisionChannel collision_channel = ECC_Vehicle;
 
-		UStatic_Libary::UStatic_Libary::LineTrace(GetWorld(), Enemy_Camera_Vector, Enemy_Camera_ForwardVector, hitout, collision_channel, false);
-		DrawDebugLine(GetWorld(), Enemy_Camera_Vector, Enemy_Camera_ForwardVector, FColor::Green, true, 10, 0, 2.f);
-		if (hitout.Actor != Char && Con->BlackboardComp->GetValueAsFloat(Con->DistanceToPlayerKey) > 500)
+		UStatic_Libary::LineTrace(GetWorld(), Enemy_Camera_Vector, Enemy_Camera_ForwardVector, hitout, collision_channel, false);
+		//DrawDebugLine(GetWorld(), Enemy_Camera_Vector, Enemy_Camera_ForwardVector, FColor::Green, true, 10, 0, 2.f);
+		if (hitout.Actor != Char)
 		{
-			FString name = hitout.Actor->GetDebugName(hitout.GetActor());
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("%s"+name));
+			//FString name = hitout.Actor->GetDebugName(hitout.GetActor());
+			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("%s"+name));
 			Con->SetDistanceToPlayer(PawnInstigator);
 		}
-		if (hitout.Actor == Char && Con->BlackboardComp->GetValueAsFloat(Con->DistanceToPlayerKey) > 500)
+		if (hitout.Actor == Char)
 		{
 			Con->SetDistanceToPlayer(PawnInstigator);
 		}
