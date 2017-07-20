@@ -26,8 +26,6 @@ FInputAxisKeyMapping FVisionInputAxisKeyMapping::ConvertAxisMapping(FVisionInput
 	return AxisMapping;
 }
 
-
-
 bool USettings_Widget::RemapActionKey(const FVisionInputActionKeyMapping& newActionMapping)
 {
 	if (UInputSettings* InputSettings = const_cast<UInputSettings*>(GetDefault<UInputSettings>()))
@@ -36,7 +34,7 @@ bool USettings_Widget::RemapActionKey(const FVisionInputActionKeyMapping& newAct
 
 		bool bFound = false;
 		for (auto& Action : Actions)
-		{ 
+		{
 			if (Action.ActionName == newActionMapping.ActionName)
 			{
 				Action = FVisionInputActionKeyMapping::ConvertActionMapping(newActionMapping);
@@ -64,7 +62,6 @@ bool USettings_Widget::RemapActionKey(const FVisionInputActionKeyMapping& newAct
 		return false;
 	}
 }
-
 
 bool USettings_Widget::RemapAxisKey(const FVisionInputAxisKeyMapping & newAxisMapping)
 {
@@ -171,7 +168,16 @@ FText USettings_Widget::GetActionKeyName(FName const& ActionName)
 		{
 			if (Action.ActionName == ActionName)
 			{
-				return Action.Key.GetDisplayName();
+				if (Action.Key.GetDisplayName().ToString() == "Left Mouse Button")
+				{
+					return FText::FromString("LMB");
+				}
+				else if (Action.Key.GetDisplayName().ToString() == "Right Mouse Button")
+				{
+					return FText::FromString("RMB");
+				}
+				else
+					return Action.Key.GetDisplayName();
 			}
 		}
 	}
