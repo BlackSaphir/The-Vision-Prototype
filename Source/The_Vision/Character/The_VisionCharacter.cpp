@@ -58,7 +58,7 @@ AThe_VisionCharacter::AThe_VisionCharacter()
 	Mesh1P->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);
 
 	// Create a gun mesh component
-	FP_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun"));
+	FP_Gun = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FP_Gun"));
 	FP_Gun->SetOnlyOwnerSee(true);			// only the owning player will see this mesh
 	FP_Gun->bCastDynamicShadow = false;
 	FP_Gun->CastShadow = false;
@@ -503,7 +503,7 @@ void AThe_VisionCharacter::Interact()
 		DrawDebugLine(world, Start, End, FColor::Green, true, 10, 0, 2.f);
 		if (UStatic_Libary::LineTrace(world, Start, End, Item_HitOut, CollisionChannel, ReturnPhysMat))
 		{
-d			if (Item_HitOut.Actor->GetClass()->ImplementsInterface(UActivationInterface::StaticClass()))
+			if (Item_HitOut.Actor->GetClass()->ImplementsInterface(UActivationInterface::StaticClass()))
 			{
 				if (IActivationInterface* ActivationObject = dynamic_cast<IActivationInterface*, AActor>(&*Item_HitOut.Actor))
 				{

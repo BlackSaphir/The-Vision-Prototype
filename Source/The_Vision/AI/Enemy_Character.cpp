@@ -138,17 +138,7 @@ void AEnemy_Character::OnSeePawn(APawn * PawnInstigator)
 	}
 	if (PawnInstigator)
 	{
-		
-		//const FVector Last_PLayer_Location = PawnInstigator->GetTargetLocation();
-		//const FRotator Last_PLayer_Rotation = PawnInstigator->GetActorRotation();
-		//if (Last_Player_Position == nullptr)
-		//{
-		//	FActorSpawnParameters SpawnParams;
 
-		//	SpawnParams.bNoFail = true;
-		//	Last_Player_Position = GetWorld()->SpawnActor<AActor>(Last_PLayer_Location, Last_PLayer_Rotation, SpawnParams);
-		//}
-		//Last_Player_Position->SetActorTransform(PawnInstigator->GetActorTransform());
 		Con->BlackboardComp->SetValueAsObject(Con->SensedPawn_Last_Location, PawnInstigator);
 		//Foward RayCast
 		const FVector Player_Vector = Char->FirstPersonCamera->GetComponentLocation();
