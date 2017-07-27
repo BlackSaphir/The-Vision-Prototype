@@ -37,7 +37,7 @@ public:
 		class USoundBase* FireSound;
 
 	UPROPERTY(EditAnywhere, Category = Projectile)
-		float Fire_Delay = 0.1f;
+		float Fire_Delay = 0.465f;
 
 	float delayTimer = 0;
 
