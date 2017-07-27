@@ -46,8 +46,8 @@ void AAI_Controller::SetDistanceToPlayer(APawn *Player)
 	{
 		float distance = GetPawn()->GetDistanceTo(Player);
 		BlackboardComp->SetValueAsFloat(DistanceToPlayerKey, distance);
-		FString name = FString::FromInt((int)distance);
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("%s" + name));
+		//FString name = FString::FromInt((int)distance);
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("%s" + name));
 	}
 }
 
