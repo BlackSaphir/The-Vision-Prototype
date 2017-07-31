@@ -33,6 +33,13 @@ float UPlayer_Widget::GetHealth()
 	return Widget_CharacterHealth;
 }
 
+int UPlayer_Widget::GetGefaehrlichkeitsstufe()
+{
+	return character->Gefaehrlichkeitsstufe;
+		
+
+}
+
 //void UPlayer_Widget::FindPlayer()
 //{
 //	if (UWorld* world = GetWorld())
