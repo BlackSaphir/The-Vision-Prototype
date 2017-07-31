@@ -443,11 +443,14 @@ void AThe_VisionCharacter::Fire(float LineTraceLenght, ECollisionChannel Collisi
 					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Penis"));
 				}
 
-				DoDamage(HitOut);
-				SpawnBulletHole(HitOut);
+				if (HitOut.GetActor() != NULL)
+				{
+					DoDamage(HitOut);
+					SpawnBulletHole(HitOut);
+				}
+				UGameplayStatics::PlaySoundAtLocation(World, FireSound, HitOut.TraceStart);
+				Rifle_Ammo--;
 			}
-			UGameplayStatics::PlaySoundAtLocation(World, FireSound, HitOut.TraceStart);
-			Rifle_Ammo--;
 		}
 
 
@@ -471,7 +474,7 @@ void AThe_VisionCharacter::SpawnBulletHole(FHitResult const& HitOut)
 	UWorld* TempWorld = GetWorld();
 	AActor* Spawned_Decal = TempWorld->SpawnActor<AActor>(Bullet_Hole_Decal, Decal_Location, FRotator(), Decal_Spawn_Params);
 
-	Spawned_Decal->SetActorRotation(Decal_Rotation);
+	//Spawned_Decal->SetActorRotation(Decal_Rotation);
 }
 
 void AThe_VisionCharacter::DoDamage(FHitResult const& HitOut)
