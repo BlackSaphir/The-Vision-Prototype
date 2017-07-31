@@ -45,7 +45,7 @@ public:
 		void OnSeePawn(APawn *PawnInstigator);
 
 	UFUNCTION()
-		void SetLife();
+		void SetLife(int CharDmg);
 
 	//Variable
 
@@ -63,7 +63,7 @@ public:
 		AActor* CurrentTarget;
 
 	UPROPERTY(EditAnyWhere)
-		int Life = 100;
+		int Health = 100;
 
 	UPROPERTY(EditAnyWhere)
 		float LineTraceLenght = 1500.0f;

@@ -31,6 +31,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UCameraComponent* FirstPersonCamera;
 
+	UFUNCTION()
+		void SetGefaehrlichkeitsstufe();
 
 	// Variable
 
@@ -101,8 +103,15 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		UPawnNoiseEmitterComponent* PawnNoiseEmitterComp;
-	
 
+	UPROPERTY(VisibleAnywhere)
+		int Kills = 0;
+
+	UPROPERTY(VisibleAnywhere)
+		int KillsBefore = 0;
+
+	UPROPERTY(EditAnywhere, Category = Gefaehrlichkeitsstufe)
+		int Gefaehrlichkeitsstufe = 0;
 
 private:
 
@@ -133,7 +142,7 @@ public:
 		void Fire(float LineTraceLenght = 3000, ECollisionChannel CollisionChannel = ECC_WorldDynamic);
 
 	UFUNCTION()
-		void SetLife();	
+		void SetLife(int AIDmg);	
 
 	UFUNCTION(BlueprintCallable, Category = AI)
 		void ReportNoise(USoundBase* SoundToPlay, float Volume);

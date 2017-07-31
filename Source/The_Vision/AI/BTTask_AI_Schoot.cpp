@@ -25,6 +25,11 @@ EBTNodeResult::Type UBTTask_AI_Schoot::ExecuteTask(UBehaviorTreeComponent& Owner
 
 void UBTTask_AI_Schoot::DoDamage(FHitResult const& HitOut)
 {
+	AThe_VisionCharacter* character = dynamic_cast<AThe_VisionCharacter*>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	if (HitOut.GetActor() == character)
+	{
+		character->SetLife(10);
+	}
 
 	FVector Force_Vector = HitOut.TraceEnd - HitOut.TraceStart;
 	Force_Vector.Normalize();
@@ -35,7 +40,7 @@ void UBTTask_AI_Schoot::DoDamage(FHitResult const& HitOut)
 	}
 
 	UPrimitiveComponent* Hit_Component = HitOut.GetComponent();
-	Hit_Component->AddImpulse(Force_Vector * Normal_Force, NAME_None, true);
+	/*Hit_Component->AddImpulse(Force_Vector * Normal_Force, NAME_None, true);*/
 
 	if (ADestructibleActor* HitActor = Cast<ADestructibleActor>(HitOut.GetActor()))
 	{
