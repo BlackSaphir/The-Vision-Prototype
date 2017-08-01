@@ -162,17 +162,14 @@ void AEnemy_Character::OnSeePawn(APawn * PawnInstigator)
 	}
 }
 
-void AEnemy_Character::SetLife()
+void AEnemy_Character::SetLife(int CharDmg)
 {
-	if (Life < 50)
+	Health -= CharDmg;
+	if (Health <= 0)
 	{
-		Life = 100;
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Life set to 100"));
-	}
-	else
-	{
-		Life = 49;
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Life set to 49"));
+		Char->Kills ++;
+		Char->SetGefaehrlichkeitsstufe();
+		Destroy(true);
 	}
 }
 

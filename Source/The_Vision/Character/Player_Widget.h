@@ -28,6 +28,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Character)
 		float GetHealth();
+
+	UFUNCTION(BlueprintCallable, Category = Character)
+		int GetGefaehrlichkeitsstufe();
 	
 private:
 	void FindPlayer();

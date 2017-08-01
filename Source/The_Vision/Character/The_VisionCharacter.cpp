@@ -27,11 +27,31 @@
 #include "Blueprint/UserWidget.h"
 #include "DamageTypes/Destructible_DamageType.h"
 #include "Runtime/Engine/Classes/Components/PawnNoiseEmitterComponent.h"
+#include "AIBlueprintHelperLibrary.generated.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
 //////////////////////////////////////////////////////////////////////////
 // AThe_VisionCharacter
+
+void AThe_VisionCharacter::SetLife(int AIDmg)
+{
+	Character_Health -= AIDmg;
+	if (Character_Health <= 0)
+	{
+		Destroy(true);
+	}
+}
+
+void AThe_VisionCharacter::SetGefaehrlichkeitsstufe()
+{
+	if (Kills == KillsBefore + 2)
+	{
+		Gefaehrlichkeitsstufe++;
+		KillsBefore = Kills;
+	}
+
+}
 
 AThe_VisionCharacter::AThe_VisionCharacter()
 {
@@ -150,8 +170,6 @@ void AThe_VisionCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AThe_VisionCharacter::Stop_Sprint);
 
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AThe_VisionCharacter::Reload_Pressed);
-
-	PlayerInputComponent->BindAction("SetLife", IE_Pressed, this, &AThe_VisionCharacter::SetLife);
 
 	PlayerInputComponent->BindAction("Move_Forwards", IE_Pressed, this, &AThe_VisionCharacter::Move_ForwardPressed);
 	PlayerInputComponent->BindAction("Move_Forwards", IE_Released, this, &AThe_VisionCharacter::Move_ForwardReleased);
@@ -383,18 +401,6 @@ void AThe_VisionCharacter::Close_Inventory()
 	inventory_widget->RemoveFromParent();
 }
 
-void AThe_VisionCharacter::SetLife()
-{
-	if (UWorld* World = GetWorld())
-	{
-		for (TActorIterator<AEnemy_Character> ActorItr(World); ActorItr; ++ActorItr)
-		{
-			AEnemy_Character *Pawn = *ActorItr;
-			Pawn->SetLife();
-			break;
-		}
-	}
-}
 
 void AThe_VisionCharacter::ReportNoise(USoundBase * SoundToPlay, float Volume)
 {
@@ -420,14 +426,28 @@ void AThe_VisionCharacter::Fire(float LineTraceLenght, ECollisionChannel Collisi
 		//The trace data is stored here
 		FHitResult HitOut;
 
+
 		bool ReturnPhysMat = false;
+		AEnemy_Character* Enemy;
+
 
 		if (UWorld* World = GetWorld())
 		{
 			if (UStatic_Libary::LineTrace(World, Start, End, HitOut, CollisionChannel, ReturnPhysMat))
 			{
-				DoDamage(HitOut);
-				SpawnBulletHole(HitOut);
+				if (HitOut.GetActor()->ActorHasTag("Enemy"))
+				{
+
+					Enemy = Cast<AEnemy_Character>(HitOut.GetActor());
+					Enemy->SetLife(30);
+					//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Getroffen"));
+				}
+
+				if (HitOut.GetActor() != NULL)
+				{
+					DoDamage(HitOut);
+					//SpawnBulletHole(HitOut);
+				}
 			}
 			UGameplayStatics::PlaySoundAtLocation(World, FireSound, HitOut.TraceStart);
 			Rifle_Ammo--;
@@ -461,22 +481,25 @@ void AThe_VisionCharacter::DoDamage(FHitResult const& HitOut)
 {
 	FVector Force_Vector = HitOut.TraceEnd - HitOut.TraceStart;
 	Force_Vector.Normalize();
-
-	if (HitOut.GetActor()->ActorHasTag("Monitor"))
+	if (HitOut.GetActor() != NULL)
 	{
-		UGameplayStatics::PlaySoundAtLocation(GetWorld(), Monitor_BreakGlass_Sound, HitOut.Location);
-	}
 
-	UPrimitiveComponent* Hit_Component = HitOut.GetComponent();
-	Hit_Component->AddImpulse(Force_Vector * Normal_Force, NAME_None, true);
-
-	if (ADestructibleActor* HitActor = Cast<ADestructibleActor>(HitOut.GetActor()))
-	{
-		if (HitActor->ActorHasTag("Cube"))
+		if (HitOut.GetActor()->ActorHasTag("Monitor"))
 		{
-			//HitActor->GetDestructibleComponent()->AddImpulse(Force_Vector * Destructible_Force, NAME_None, false);
-			UGameplayStatics::ApplyRadialDamage(GetWorld(), 30.0f, HitOut.Location, 15.0f, UDestructible_DamageType::StaticClass(), TArray<AActor*>(), this);
-			//HitActor->GetDestructibleComponent()->ApplyDamage(10.0f, HitOut.Location, HitOut.Location, 50.0f);
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), Monitor_BreakGlass_Sound, HitOut.Location);
+		}
+
+		UPrimitiveComponent* Hit_Component = HitOut.GetComponent();
+		//Hit_Component->AddImpulse(Force_Vector * Normal_Force, NAME_None, true);
+
+		if (ADestructibleActor* HitActor = Cast<ADestructibleActor>(HitOut.GetActor()))
+		{
+			if (HitActor->ActorHasTag("Cube"))
+			{
+				//HitActor->GetDestructibleComponent()->AddImpulse(Force_Vector * Destructible_Force, NAME_None, false);
+				UGameplayStatics::ApplyRadialDamage(GetWorld(), 30.0f, HitOut.Location, 15.0f, UDestructible_DamageType::StaticClass(), TArray<AActor*>(), this);
+				//HitActor->GetDestructibleComponent()->ApplyDamage(10.0f, HitOut.Location, HitOut.Location, 50.0f);
+			}
 		}
 	}
 }
@@ -500,7 +523,7 @@ void AThe_VisionCharacter::Interact()
 	bool ReturnPhysMat = false;
 	if (UWorld* world = GetWorld())
 	{
-		DrawDebugLine(world, Start, End, FColor::Green, true, 10, 0, 2.f);
+		//DrawDebugLine(world, Start, End, FColor::Green, true, 10, 0, 2.f);
 		if (UStatic_Libary::LineTrace(world, Start, End, Item_HitOut, CollisionChannel, ReturnPhysMat))
 		{
 			if (Item_HitOut.Actor->GetClass()->ImplementsInterface(UActivationInterface::StaticClass()))
