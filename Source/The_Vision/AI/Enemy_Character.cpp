@@ -168,6 +168,7 @@ void AEnemy_Character::SetLife(int CharDmg)
 	if (Health <= 0)
 	{
 		Char->Kills ++;
+		Char->SetGefaehrlichkeitsstufe();
 		Destroy(true);
 	}
 }

@@ -39,7 +39,7 @@ void AThe_VisionCharacter::SetLife(int AIDmg)
 	Character_Health -= AIDmg;
 	if (Character_Health <= 0)
 	{
-		Destroy(true);
+		Death();
 	}
 }
 
@@ -48,10 +48,11 @@ void AThe_VisionCharacter::SetGefaehrlichkeitsstufe()
 	if (Kills == KillsBefore + 2)
 	{
 		Gefaehrlichkeitsstufe++;
+		KillsBefore = Kills;
 	}
 
-	KillsBefore = Kills;
 }
+
 
 AThe_VisionCharacter::AThe_VisionCharacter()
 {
@@ -440,17 +441,17 @@ void AThe_VisionCharacter::Fire(float LineTraceLenght, ECollisionChannel Collisi
 
 					Enemy = Cast<AEnemy_Character>(HitOut.GetActor());
 					Enemy->SetLife(30);
-					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Penis"));
+					//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Getroffen"));
 				}
 
 				if (HitOut.GetActor() != NULL)
 				{
 					DoDamage(HitOut);
-					SpawnBulletHole(HitOut);
+					//SpawnBulletHole(HitOut);
 				}
-				UGameplayStatics::PlaySoundAtLocation(World, FireSound, HitOut.TraceStart);
-				Rifle_Ammo--;
 			}
+			UGameplayStatics::PlaySoundAtLocation(World, FireSound, HitOut.TraceStart);
+			Rifle_Ammo--;
 		}
 
 
@@ -474,7 +475,7 @@ void AThe_VisionCharacter::SpawnBulletHole(FHitResult const& HitOut)
 	UWorld* TempWorld = GetWorld();
 	AActor* Spawned_Decal = TempWorld->SpawnActor<AActor>(Bullet_Hole_Decal, Decal_Location, FRotator(), Decal_Spawn_Params);
 
-	//Spawned_Decal->SetActorRotation(Decal_Rotation);
+	Spawned_Decal->SetActorRotation(Decal_Rotation);
 }
 
 void AThe_VisionCharacter::DoDamage(FHitResult const& HitOut)
@@ -523,7 +524,7 @@ void AThe_VisionCharacter::Interact()
 	bool ReturnPhysMat = false;
 	if (UWorld* world = GetWorld())
 	{
-		DrawDebugLine(world, Start, End, FColor::Green, true, 10, 0, 2.f);
+		//DrawDebugLine(world, Start, End, FColor::Green, true, 10, 0, 2.f);
 		if (UStatic_Libary::LineTrace(world, Start, End, Item_HitOut, CollisionChannel, ReturnPhysMat))
 		{
 			if (Item_HitOut.Actor->GetClass()->ImplementsInterface(UActivationInterface::StaticClass()))
