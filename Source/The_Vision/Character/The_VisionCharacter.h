@@ -31,8 +31,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UCameraComponent* FirstPersonCamera;
 
-	UFUNCTION()
-		void SetGefaehrlichkeitsstufe();
+	
 
 	// Variable
 
@@ -146,6 +145,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = AI)
 		void ReportNoise(USoundBase* SoundToPlay, float Volume);
+
+	UFUNCTION()
+		void SetGefaehrlichkeitsstufe();
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void Death();
 
 
 protected:

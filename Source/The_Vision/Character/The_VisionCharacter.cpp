@@ -39,7 +39,7 @@ void AThe_VisionCharacter::SetLife(int AIDmg)
 	Character_Health -= AIDmg;
 	if (Character_Health <= 0)
 	{
-		Destroy(true);
+		Death();
 	}
 }
 
@@ -52,6 +52,7 @@ void AThe_VisionCharacter::SetGefaehrlichkeitsstufe()
 	}
 
 }
+
 
 AThe_VisionCharacter::AThe_VisionCharacter()
 {
