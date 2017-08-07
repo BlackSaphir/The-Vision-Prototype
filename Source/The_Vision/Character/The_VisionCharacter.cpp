@@ -36,10 +36,15 @@ DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
 void AThe_VisionCharacter::SetLife(int AIDmg)
 {
-	Character_Health -= AIDmg;
 	if (Character_Health <= 0)
 	{
+		Character_Health = 0;
 		Death();
+	}
+
+	if (Character_Health >= 0)
+	{
+		Character_Health -= AIDmg;
 	}
 }
 

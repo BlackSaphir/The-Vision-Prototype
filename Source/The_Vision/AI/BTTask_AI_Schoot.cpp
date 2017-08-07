@@ -12,6 +12,7 @@
 
 EBTNodeResult::Type UBTTask_AI_Schoot::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
+	AThe_VisionCharacter* character = dynamic_cast<AThe_VisionCharacter*>(GetWorld()->GetFirstPlayerController()->GetPawn());
 	AIController = Cast<AAI_Controller>(OwnerComp.GetAIOwner());
 	AI_Pawn = Cast<AEnemy_Character>(AIController->GetPawn());
 	delayTimer += GetWorld()->DeltaTimeSeconds;
