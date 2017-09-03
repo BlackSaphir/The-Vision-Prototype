@@ -109,7 +109,7 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		int KillsBefore = 0;
 
-	UPROPERTY(EditAnywhere, Category = Gefaehrlichkeitsstufe)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gefaehrlichkeitsstufe)
 		int Gefaehrlichkeitsstufe = 0;
 
 private:

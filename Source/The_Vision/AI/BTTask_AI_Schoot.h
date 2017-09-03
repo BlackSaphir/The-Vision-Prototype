@@ -39,6 +39,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = Projectile)
 		float Fire_Delay = 0.465f;
 
+	UPROPERTY(EditAnywhere, Category = Projectile)
+		float Damage = 10.0f;
+
 	float delayTimer = 0;
 
 	UFUNCTION()

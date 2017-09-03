@@ -29,7 +29,15 @@ void UBTTask_AI_Schoot::DoDamage(FHitResult const& HitOut)
 	AThe_VisionCharacter* character = dynamic_cast<AThe_VisionCharacter*>(GetWorld()->GetFirstPlayerController()->GetPawn());
 	if (HitOut.GetActor() == character)
 	{
-		character->SetLife(10);
+		if (character->Character_Health <= Damage)
+		{
+			character->Character_Health = 0;
+			character->SetLife(0);
+		}
+		else
+		{
+			character->SetLife(Damage);
+		}
 	}
 
 	FVector Force_Vector = HitOut.TraceEnd - HitOut.TraceStart;
@@ -59,6 +67,7 @@ void UBTTask_AI_Schoot::DoDamage(FHitResult const& HitOut)
 //
 void UBTTask_AI_Schoot::Fire(float LineTraceLenght, ECollisionChannel CollisionChannel)
 {
+	AThe_VisionCharacter* character = dynamic_cast<AThe_VisionCharacter*>(GetWorld()->GetFirstPlayerController()->GetPawn());
 	//		//location the PC is focused on
 	const FVector Start = AI_Pawn->EnemyCamera->GetComponentLocation();
 
@@ -69,14 +78,16 @@ void UBTTask_AI_Schoot::Fire(float LineTraceLenght, ECollisionChannel CollisionC
 	FHitResult HitOut;
 
 	bool ReturnPhysMat = false;
-
-	if (UWorld* World = GetWorld())
+	if (character->Character_Health > 0)
 	{
-		if (UStatic_Libary::LineTrace(World, Start, End, HitOut, CollisionChannel, ReturnPhysMat))
+		if (UWorld* World = GetWorld())
 		{
-			DoDamage(HitOut);
+			if (UStatic_Libary::LineTrace(World, Start, End, HitOut, CollisionChannel, ReturnPhysMat))
+			{
+				DoDamage(HitOut);
+			}
+			UGameplayStatics::PlaySoundAtLocation(World, FireSound, HitOut.TraceStart);
 		}
-		UGameplayStatics::PlaySoundAtLocation(World, FireSound, HitOut.TraceStart);
 	}
 }
 
