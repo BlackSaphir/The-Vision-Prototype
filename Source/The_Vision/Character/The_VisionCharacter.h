@@ -138,7 +138,7 @@ public:
 	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCamera; }
 
 	UFUNCTION()
-		void Fire(float LineTraceLenght = 3000, ECollisionChannel CollisionChannel = ECC_WorldDynamic);
+		void Fire(float LineTraceLenght = 3000, ECollisionChannel CollisionChannel = ECC_GameTraceChannel2);
 
 	UFUNCTION()
 		void SetLife(int AIDmg);	
