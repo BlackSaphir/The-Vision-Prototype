@@ -8,6 +8,7 @@
 #include "Enemy_Character.h"
 #include "PhysicsEngine/DestructibleActor.h"
 #include "DamageTypes/Destructible_DamageType.h"
+#include "Kismet/KismetMathLibrary.h"
 
 
 EBTNodeResult::Type UBTTask_AI_Schoot::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
@@ -16,6 +17,28 @@ EBTNodeResult::Type UBTTask_AI_Schoot::ExecuteTask(UBehaviorTreeComponent& Owner
 	AIController = Cast<AAI_Controller>(OwnerComp.GetAIOwner());
 	AI_Pawn = Cast<AEnemy_Character>(AIController->GetPawn());
 	delayTimer += GetWorld()->DeltaTimeSeconds;
+
+	//Rotation to player 
+	FVector instigatorlocation =character->GetActorLocation();
+	FRotator selfRotation = AI_Pawn->GetActorRotation();
+	FVector pawnlocation = AI_Pawn->GetActorLocation();
+	FRotator lookAtRotation = UKismetMathLibrary::FindLookAtRotation(pawnlocation, instigatorlocation);
+
+	float AimAtAngle = FMath::RadiansToDegrees(acosf(FVector::DotProduct(AI_Pawn->GetActorForwardVector(), lookAtRotation.Vector())));
+	float RoatationSpeed = 300;
+
+	if (AimAtAngle > 10)
+	{
+		if (selfRotation.Yaw - lookAtRotation.Yaw <= 0)
+		{
+			AI_Pawn->AddActorWorldRotation(FRotator(0, RoatationSpeed*GetWorld()->DeltaTimeSeconds, 0));
+		}
+		else if (selfRotation.Yaw - lookAtRotation.Yaw > 0)
+		{
+			AI_Pawn->AddActorWorldRotation(FRotator(0, -(RoatationSpeed*GetWorld()->DeltaTimeSeconds), 0));
+		}
+	}
+
 	if (delayTimer > Fire_Delay)
 	{
 		Fire();
