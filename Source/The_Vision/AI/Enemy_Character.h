@@ -76,4 +76,10 @@ public:
 
 	UPROPERTY(EditAnyWhere)
 		AActor* Last_Player_Position;
+
+	UPROPERTY(EditDefaultsOnly)
+		APawn* character;
+
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<class AActor> last_position_actor;
 };

@@ -2,6 +2,7 @@
 
 #include "The_Vision.h"
 #include "AI_Controller.h"
+#include "The_Vision/Character/The_VisionCharacter.h"
 
 #include "Perception/PawnSensingComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
@@ -9,10 +10,10 @@
 #include "DrawDebugHelpers.h"
 
 #include <Runtime/Engine/Classes/Engine/Engine.h>
-#include "The_Vision/Character/The_VisionCharacter.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Static_Libary.h"
 #include "Enemy_Character.h"
+#include <string>
 
 
 // Sets default values
@@ -28,6 +29,9 @@ AEnemy_Character::AEnemy_Character()
 	EnemyCamera->SetupAttachment(GetCapsuleComponent());
 	EnemyCamera->RelativeLocation = FVector(0, 0, 70.0f); // Position the camera
 	EnemyCamera->bUsePawnControlRotation = true;
+	//Last_Player_Position = CreateDefaultSubobject<AActor>(TEXT("Last_Player_Position"));
+
+
 }
 
 // Called when the game starts or when spawned
@@ -40,7 +44,12 @@ void AEnemy_Character::BeginPlay()
 
 	Con->BlackboardComp->SetValueAsBool(Con->ArrivedToLastSeenPlayerPosition, false);
 	Con->BlackboardComp->SetValueAsFloat(Con->DistanceToLastSeenPlayerPosition, 99999999999999999.9f);
-	AActor* Last_Player_Position= nullptr;
+	FVector Location(0.0f, 0.0f, 0.0f);
+	FRotator Rotation(0.0f, 0.0f, 0.0f);
+
+	FActorSpawnParameters SpawnInfo;
+	UWorld* TempWorld = GetWorld();
+	Last_Player_Position = TempWorld->SpawnActor<AActor>(last_position_actor, Location, Rotation, SpawnInfo);
 }
 
 // Called every frame
@@ -78,11 +87,11 @@ void AEnemy_Character::Tick(float DeltaTime)
 		if (hitout2.GetActor() == Char)
 		{
 
-			Con->BlackboardComp->SetValueAsBool(Con->PawnInSight, true);
+			//Con->BlackboardComp->SetValueAsBool(Con->PawnInSight, true);
 		}
 		else
 		{
-			Con->BlackboardComp->SetValueAsBool(Con->PawnInSight, false);
+			//Con->BlackboardComp->SetValueAsBool(Con->PawnInSight, false);
 		}
 	}
 
@@ -115,6 +124,8 @@ void AEnemy_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void AEnemy_Character::OnHearNoise(APawn * PawnInstigator, const FVector & Location, float Volume)
 {
+	character = PawnInstigator;
+	Last_Player_Position->SetActorLocation(PawnInstigator->GetActorLocation());
 	if (Con && PawnInstigator != this)
 	{
 		Con->SetSensedTarget(PawnInstigator);
@@ -123,14 +134,28 @@ void AEnemy_Character::OnHearNoise(APawn * PawnInstigator, const FVector & Locat
 	{
 		Con->SetSensedTarget(NULL);
 	}
+	if (PawnInstigator)
+	{
+		Con->BlackboardComp->SetValueAsObject(Con->SensedPawn_Last_Location, Last_Player_Position);
+	}
 }
 
 void AEnemy_Character::OnSeePawn(APawn * PawnInstigator)
 {
+	character = PawnInstigator;
+
+	if (PawnInstigator)
+	{
+		Last_Player_Position->SetActorLocation(PawnInstigator->GetActorLocation());
+		//GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Red, TEXT("Last player called"));
+		//UE_LOG(LogTemp, Warning, TEXT("Last player called"));
+	}
 
 	if (Con && PawnInstigator != this)
 	{
 		Con->SetSensedTarget(PawnInstigator);
+		//FString lastposition = FVector(Last_Player_Position->GetActorLocation().X, Last_Player_Position->GetActorLocation().Y, Last_Player_Position->GetActorLocation().Z).ToString();
+		//GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Red, TEXT("SeePawn" + lastposition));
 	}
 	if (GetDistanceTo(PawnInstigator) > 1500)
 	{
@@ -139,7 +164,7 @@ void AEnemy_Character::OnSeePawn(APawn * PawnInstigator)
 	if (PawnInstigator)
 	{
 
-		Con->BlackboardComp->SetValueAsObject(Con->SensedPawn_Last_Location, PawnInstigator);
+		Con->BlackboardComp->SetValueAsObject(Con->SensedPawn_Last_Location, Last_Player_Position);
 		//Foward RayCast
 		const FVector Player_Vector = Char->FirstPersonCamera->GetComponentLocation();
 		const FVector Enemy_Camera_Vector = EnemyCamera->GetComponentLocation();
@@ -167,9 +192,10 @@ void AEnemy_Character::SetLife(int CharDmg)
 	Health -= CharDmg;
 	if (Health <= 0)
 	{
-		Char->Kills ++;
+		Char->Kills++;
 		Char->SetGefaehrlichkeitsstufe();
 		Destroy(true);
+		Last_Player_Position->Destroy(true);
 	}
 }
 
