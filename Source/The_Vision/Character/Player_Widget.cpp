@@ -23,18 +23,30 @@ void UPlayer_Widget::NativeTick(const FGeometry& MyGeometry, float DeltaTime)
 
 float UPlayer_Widget::GetAmmo()
 {
+	if (!character)
+	{
+		return 0.0f;
+	}
 	Widget_AmmoRifle = character->Rifle_Ammo;
 	return Widget_AmmoRifle;
 }
 
 float UPlayer_Widget::GetHealth()
 {
+	if (!character)
+	{
+		return 0.0f;
+	}
 	Widget_CharacterHealth = character->Character_Health;
 	return Widget_CharacterHealth;
 }
 
 int UPlayer_Widget::GetGefaehrlichkeitsstufe()
 {
+	if (!character)
+	{
+		return 0.0f;
+	}
 	return character->Gefaehrlichkeitsstufe;
 		
 
