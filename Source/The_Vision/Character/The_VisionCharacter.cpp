@@ -524,7 +524,7 @@ void AThe_VisionCharacter::Interact()
 	//The trace data is stored here
 	FHitResult Item_HitOut;
 
-	ECollisionChannel CollisionChannel = ECC_WorldDynamic;
+	ECollisionChannel CollisionChannel = ECC_GameTraceChannel2;
 
 	bool ReturnPhysMat = false;
 	if (UWorld* world = GetWorld())
