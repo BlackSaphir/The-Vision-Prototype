@@ -111,6 +111,15 @@ AThe_VisionCharacter::AThe_VisionCharacter()
 	PawnNoiseEmitterComp = CreateDefaultSubobject<UPawnNoiseEmitterComponent>(TEXT("PawnNoiseEmitter_Component"));
 }
 
+void AThe_VisionCharacter::ResetInputs()
+{
+	bMoveForwardPressed = false;
+	bMoveBackwardPressed = false;
+	bMoveRightPressed = false;
+	bMoveLeftPressed = false;
+	bLeftMousePressed = false;
+}
+
 void AThe_VisionCharacter::BeginPlay()
 {
 	// Call the base class  
@@ -126,36 +135,36 @@ void AThe_VisionCharacter::BeginPlay()
 
 void AThe_VisionCharacter::Tick(float deltaTime)
 {
-	Super::Tick(deltaTime);
-	if (bLeftMousePressed)
-	{
-		delayTimer += deltaTime;
-		if (delayTimer > Fire_Delay)
+		Super::Tick(deltaTime);
+		if (bLeftMousePressed)
 		{
-			Fire();
-			delayTimer = 0;
+			delayTimer += deltaTime;
+			if (delayTimer > Fire_Delay)
+			{
+				Fire();
+				delayTimer = 0;
+			}
 		}
-	}
 
-	if (bMoveForwardPressed)
-	{
-		Move_Forward();
-	}
+		if (bMoveForwardPressed)
+		{
+			Move_Forward();
+		}
 
-	if (bMoveBackwardPressed)
-	{
-		Move_Backward();
-	}
+		if (bMoveBackwardPressed)
+		{
+			Move_Backward();
+		}
 
-	if (bMoveRightPressed)
-	{
-		Move_Right();
-	}
+		if (bMoveRightPressed)
+		{
+			Move_Right();
+		}
 
-	if (bMoveLeftPressed)
-	{
-		Move_Left();
-	}
+		if (bMoveLeftPressed)
+		{
+			Move_Left();
+		}	
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -236,23 +245,23 @@ void AThe_VisionCharacter::EndTouch(const ETouchIndex::Type FingerIndex, const F
 	TouchItem.bIsPressed = false;
 }
 
-void AThe_VisionCharacter::MoveForward(float Value)
-{
-	if (Value != 0.0f)
-	{
-		// add movement in that direction
-		AddMovementInput(GetActorForwardVector(), Value);
-	}
-}
+//void AThe_VisionCharacter::MoveForward(float Value)
+//{
+//	if (Value != 0.0f)
+//	{
+//		// add movement in that direction
+//		AddMovementInput(GetActorForwardVector(), Value);
+//	}
+//}
 
-void AThe_VisionCharacter::MoveRight(float Value)
-{
-	if (Value != 0.0f)
-	{
-		// add movement in that direction
-		AddMovementInput(GetActorRightVector(), Value);
-	}
-}
+//void AThe_VisionCharacter::MoveRight(float Value)
+//{
+//	if (Value != 0.0f)
+//	{
+//		// add movement in that direction
+//		AddMovementInput(GetActorRightVector(), Value);
+//	}
+//}
 
 void AThe_VisionCharacter::TurnAtRate(float Rate)
 {

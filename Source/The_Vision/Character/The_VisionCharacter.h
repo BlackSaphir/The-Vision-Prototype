@@ -111,10 +111,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gefaehrlichkeitsstufe)
 		int Gefaehrlichkeitsstufe = 0;
-
+	
 private:
 
-	bool bLeftMousePressed;
 	UUserWidget* inventory_widget;
 	float camera_zoom;
 	float run_speed = 1200;
@@ -124,6 +123,7 @@ private:
 	bool bMoveBackwardPressed;
 	bool bMoveRightPressed;
 	bool bMoveLeftPressed;
+	bool bLeftMousePressed;
 	
 
 
@@ -152,6 +152,8 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 		void Death();
 
+	UFUNCTION(BlueprintCallable, Category = Input)
+		void ResetInputs();
 
 protected:
 	virtual void BeginPlay();
