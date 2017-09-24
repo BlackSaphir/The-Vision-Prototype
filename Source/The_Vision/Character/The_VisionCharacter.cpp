@@ -73,35 +73,19 @@ AThe_VisionCharacter::AThe_VisionCharacter()
 	//FirstPersonCamera->SetupAttachment(GetCapsuleComponent());
 	FName CameraSocket = TEXT("bad_guy_char_Head");
 	FirstPersonCamera->SetupAttachment(GetMesh(), CameraSocket);
-	FirstPersonCamera->RelativeLocation = FVector(0, 0, 0); // Position the camera
-	FQuat Rotation(0, 0, -90, 0);
+	FirstPersonCamera->RelativeLocation = FVector(20, 0, 56); // Position the camera
+	FQuat Rotation(0, 90, 0, 0);
 	FirstPersonCamera->SetRelativeRotation(Rotation);
 	FirstPersonCamera->AttachTo(RootComponent);
 	FirstPersonCamera->bUsePawnControlRotation = true;
 
-	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
-	//Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
-	//Mesh1P->SetOnlyOwnerSee(true);
-	//Mesh1P->SetupAttachment(FirstPersonCamera);
-	//Mesh1P->bCastDynamicShadow = false;
-	//Mesh1P->CastShadow = false;
-	//Mesh1P->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
-	//Mesh1P->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);
-
-	// Create a gun mesh component
-	//FP_Gun = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FP_Gun"));
-	//FP_Gun->SetOnlyOwnerSee(true);			// only the owning player will see this mesh
-	//FP_Gun->bCastDynamicShadow = false;
-	//FP_Gun->CastShadow = false;
-	// FP_Gun->SetupAttachment(Mesh1P, TEXT("GripPoint"));
-	//FP_Gun->SetupAttachment(RootComponent);
-
-	FP_MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
+	/*FP_MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
 	FP_MuzzleLocation->SetupAttachment(FP_Gun);
-	FP_MuzzleLocation->SetRelativeLocation(FVector(0.2f, 48.4f, -10.6f));
+	FP_MuzzleLocation->SetRelativeLocation(FVector(0.2f, 48.4f, -10.6f));*/
 
 	// Default offset from the character location for projectiles to spawn
 	GunOffset = FVector(100.0f, 0.0f, 10.0f);
+
 
 
 	// Note: The ProjectileClass and the skeletal mesh/anim blueprints for Mesh1P, FP_Gun, and VR_Gun 
@@ -135,36 +119,48 @@ void AThe_VisionCharacter::BeginPlay()
 
 void AThe_VisionCharacter::Tick(float deltaTime)
 {
-		Super::Tick(deltaTime);
-		if (bLeftMousePressed)
-		{
-			delayTimer += deltaTime;
-			if (delayTimer > Fire_Delay)
-			{
-				Fire();
-				delayTimer = 0;
-			}
-		}
+	Super::Tick(deltaTime);
 
-		if (bMoveForwardPressed)
+	/*if (bLeftMousePressed)
+	{
+		delayTimer += deltaTime;
+		if (delayTimer > Fire_Delay)
 		{
-			Move_Forward();
+			Fire();
+			delayTimer = 0;
 		}
+	}*/
 
-		if (bMoveBackwardPressed)
-		{
-			Move_Backward();
-		}
 
-		if (bMoveRightPressed)
-		{
-			Move_Right();
-		}
+	if (bStartTimer)
+	{
+		delayTimer += deltaTime;
+	}
 
-		if (bMoveLeftPressed)
-		{
-			Move_Left();
-		}	
+	if (delayTimer >= 0.5 && bLeftMousePressed)
+	{
+		Fire();
+	}
+
+	if (bMoveForwardPressed)
+	{
+		Move_Forward();
+	}
+
+	if (bMoveBackwardPressed)
+	{
+		Move_Backward();
+	}
+
+	if (bMoveRightPressed)
+	{
+		Move_Right();
+	}
+
+	if (bMoveLeftPressed)
+	{
+		Move_Left();
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -292,7 +288,9 @@ bool AThe_VisionCharacter::EnableTouchscreenMovement(class UInputComponent* Play
 
 void AThe_VisionCharacter::OnFirePressed()
 {
-	bLeftMousePressed = true;
+	//bLeftMousePressed = true;
+
+	Fire();
 }
 
 void AThe_VisionCharacter::OnFireReleased()
@@ -437,6 +435,8 @@ void AThe_VisionCharacter::Fire(float LineTraceLenght, ECollisionChannel Collisi
 {
 	if (Rifle_Ammo > 0)
 	{
+		bStartTimer = true;
+
 		//location the PC is focused on
 		const FVector Start = FirstPersonCamera->GetComponentLocation();
 

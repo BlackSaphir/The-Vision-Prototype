@@ -124,6 +124,8 @@ private:
 	bool bMoveRightPressed;
 	bool bMoveLeftPressed;
 	bool bLeftMousePressed;
+
+	bool bStartTimer;
 	
 
 
