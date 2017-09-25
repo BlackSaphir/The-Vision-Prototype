@@ -19,7 +19,7 @@ class THE_VISION_API UBTTask_AI_Schoot : public UBTTask_BlackboardBase
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 public:
 
-	void DoDamage(FHitResult const&);
+	void DoDamage(/*FHitResult const&*/);
 
 	UPROPERTY(EditAnyWhere)
 		class AAI_Controller* AIController;

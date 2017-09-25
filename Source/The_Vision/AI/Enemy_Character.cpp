@@ -44,9 +44,10 @@ void AEnemy_Character::BeginPlay()
 
 	Con->BlackboardComp->SetValueAsBool(Con->ArrivedToLastSeenPlayerPosition, false);
 	Con->BlackboardComp->SetValueAsFloat(Con->DistanceToLastSeenPlayerPosition, 99999999999999999.9f);
+
+	//spawning actor for tracing purposes of player
 	FVector Location(0.0f, 0.0f, 0.0f);
 	FRotator Rotation(0.0f, 0.0f, 0.0f);
-
 	FActorSpawnParameters SpawnInfo;
 	UWorld* TempWorld = GetWorld();
 	Last_Player_Position = TempWorld->SpawnActor<AActor>(last_position_actor, Location, Rotation, SpawnInfo);
@@ -56,6 +57,8 @@ void AEnemy_Character::BeginPlay()
 void AEnemy_Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	//setting a few blackboard keys for the ai
 	if (Con && Con->BlackboardComp->GetValueAsObject(Con->WaypointKey) == nullptr)
 	{
 		Con->SetWaypoint();
@@ -80,19 +83,11 @@ void AEnemy_Character::Tick(float DeltaTime)
 		ECollisionChannel collision_channel = ECC_Vehicle;
 
 		UStatic_Libary::LineTrace(GetWorld(), Enemy_Camera_Vector, Enemy_Camera_ForwardVector, hitout2, collision_channel, false);
+
+		///left for debugging purposes
 		//DrawDebugLine(GetWorld(), Enemy_Camera_Vector, Enemy_Camera_ForwardVector, FColor::Green, true, 10, 0, 2.f);
 		//FString name = hitout2.Actor->GetDebugName(hitout2.GetActor());
 		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("%s" + name));
-
-		if (hitout2.GetActor() == Char)
-		{
-
-			//Con->BlackboardComp->SetValueAsBool(Con->PawnInSight, true);
-		}
-		else
-		{
-			//Con->BlackboardComp->SetValueAsBool(Con->PawnInSight, false);
-		}
 	}
 
 	if (Con && Con->BlackboardComp->GetValueAsBool(Con->PawnInSight) == false)
@@ -111,7 +106,6 @@ void AEnemy_Character::Tick(float DeltaTime)
 	if (Con && Con->BlackboardComp->GetValueAsBool(Con->PawnInSight) == false && Con->BlackboardComp->GetValueAsBool(Con->ArrivedToLastSeenPlayerPosition) == true)
 	{
 		Con->SetSensedTarget(NULL);
-		//Last_Player_Position = nullptr;
 	}
 }
 
@@ -147,15 +141,11 @@ void AEnemy_Character::OnSeePawn(APawn * PawnInstigator)
 	if (PawnInstigator)
 	{
 		Last_Player_Position->SetActorLocation(PawnInstigator->GetActorLocation());
-		//GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Red, TEXT("Last player called"));
-		//UE_LOG(LogTemp, Warning, TEXT("Last player called"));
 	}
 
 	if (Con && PawnInstigator != this)
 	{
 		Con->SetSensedTarget(PawnInstigator);
-		//FString lastposition = FVector(Last_Player_Position->GetActorLocation().X, Last_Player_Position->GetActorLocation().Y, Last_Player_Position->GetActorLocation().Z).ToString();
-		//GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Red, TEXT("SeePawn" + lastposition));
 	}
 	if (GetDistanceTo(PawnInstigator) > 1500)
 	{
@@ -172,12 +162,11 @@ void AEnemy_Character::OnSeePawn(APawn * PawnInstigator)
 		FHitResult hitout;
 		ECollisionChannel collision_channel = ECC_Vehicle;
 
+		///not relevant now but in later construction of AI
 		UStatic_Libary::LineTrace(GetWorld(), Enemy_Camera_Vector, Enemy_Camera_ForwardVector, hitout, collision_channel, false);
 		//DrawDebugLine(GetWorld(), Enemy_Camera_Vector, Enemy_Camera_ForwardVector, FColor::Green, true, 10, 0, 2.f);
 		if (hitout.Actor != Char)
 		{
-			//FString name = hitout.Actor->GetDebugName(hitout.GetActor());
-			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("%s"+name));
 			Con->SetDistanceToPlayer(PawnInstigator);
 		}
 		if (hitout.Actor == Char)
