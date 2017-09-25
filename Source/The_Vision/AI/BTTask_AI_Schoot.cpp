@@ -106,7 +106,7 @@ void UBTTask_AI_Schoot::Fire(float LineTraceLenght, ECollisionChannel CollisionC
 		{
 			if (UStatic_Libary::LineTrace(World, Start, End, HitOut, CollisionChannel, ReturnPhysMat))
 			{
-				DoDamage(HitOut);
+				DoDamage();
 			}
 			UGameplayStatics::PlaySoundAtLocation(World, FireSound, HitOut.TraceStart);
 		}
