@@ -139,7 +139,7 @@ public:
 	/** Returns FirstPersonCameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCamera; }
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		void Fire(float LineTraceLenght = 3000, ECollisionChannel CollisionChannel = ECC_GameTraceChannel2);
 
 	UFUNCTION()
@@ -251,6 +251,12 @@ protected:
 
 
 private:
+	bool ResetFirstShootTimer(float deltatime);
+	bool Tapping(float deltatime);
+	float TapTimer = 4.97f;
+	float Shootingdelay = 0.5f;
+	float TapDelay = 0;
+	bool StartTimer = false;
 
 };
 
