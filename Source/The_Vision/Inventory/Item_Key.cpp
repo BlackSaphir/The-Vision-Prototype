@@ -26,3 +26,8 @@ void AItem_Key::Tick(float DeltaTime)
 
 }
 
+void AItem_Key::Activate()
+{
+	Destroy(true);
+}
+

@@ -3,10 +3,11 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
+#include "ActivationInterface.h"
 #include "Item_Key.generated.h"
 
 UCLASS()
-class THE_VISION_API AItem_Key : public AActor
+class THE_VISION_API AItem_Key : public AActor, public IActivationInterface
 {
 	GENERATED_BODY()
 	
@@ -22,6 +23,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	
+	virtual void Activate() override;
 	
 };
