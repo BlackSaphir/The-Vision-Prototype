@@ -131,40 +131,65 @@ void AThe_VisionCharacter::BeginPlay()
 	FindInventoryManager();
 
 	camera_zoom = FirstPersonCamera->FieldOfView;
+
+	StartTimer = true;
 }
 
 void AThe_VisionCharacter::Tick(float deltaTime)
 {
-		Super::Tick(deltaTime);
-		if (bLeftMousePressed)
-		{
-			delayTimer += deltaTime;
-			if (delayTimer > Fire_Delay)
-			{
-				Fire();
-				delayTimer = 0;
-			}
-		}
+	Super::Tick(deltaTime);
 
-		if (bMoveForwardPressed)
-		{
-			Move_Forward();
-		}
+	///*if (bLeftMousePressed)
+	//{
+	//	GLog->Log(FString(TEXT("Hallo Bool: %s"), bLeftMousePressed ? TEXT("True") : TEXT("False")));
+	//	Fire();
+	//}*/
 
-		if (bMoveBackwardPressed)
-		{
-			Move_Backward();
-		}
+	//if (bLeftMousePressed)
+	//{
+	//	StartTimer = true;
+	//	if (StartTimer)
+	//	{
+	//		Fire();
+	//	}
 
-		if (bMoveRightPressed)
-		{
-			Move_Right();
-		}
+	//	/*if (Tapping(deltaTime))
+	//	{
+	//		Fire();
+	//		GLog->Log(FString(TEXT("Fired by Tapping")));
+	//	}*/
+	//}
 
-		if (bMoveLeftPressed)
-		{
-			Move_Left();
-		}	
+	////rapidfire
+	///*if (bLeftMousePressed)
+	//{
+	//	delayTimer += deltaTime;
+	//	if (delayTimer > Shootingdelay)
+	//	{
+	//		Fire();
+	//		delayTimer = 0;
+	//	}
+	//}*/
+
+	if (bMoveForwardPressed)
+	{
+		Move_Forward();
+	}
+
+	if (bMoveBackwardPressed)
+	{
+		Move_Backward();
+	}
+
+	if (bMoveRightPressed)
+	{
+		Move_Right();
+	}
+
+	if (bMoveLeftPressed)
+	{
+		Move_Left();
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -298,6 +323,7 @@ void AThe_VisionCharacter::OnFirePressed()
 void AThe_VisionCharacter::OnFireReleased()
 {
 	bLeftMousePressed = false;
+	StartTimer = false;
 }
 
 void AThe_VisionCharacter::Start_Zooming()
@@ -480,6 +506,8 @@ void AThe_VisionCharacter::Fire(float LineTraceLenght, ECollisionChannel Collisi
 		UE_LOG(LogTemp, Warning, TEXT("LEER"));
 	}
 
+
+	StartTimer = false;
 }
 
 
@@ -576,3 +604,47 @@ void AThe_VisionCharacter::FindInventoryManager()
 		Inventory_Manager = *ActorIt;
 	}
 }
+
+//bool AThe_VisionCharacter::ResetFirstShootTimer(float deltatime)
+//{
+//	TapDelay += deltatime * 1000;
+//	GLog->Log(FString::SanitizeFloat(deltatime));
+//	if (TapDelay > TapTimer)
+//	{
+//		TapDelay = 0;
+//		return true;
+//	}
+//	else
+//	{
+//		return false;
+//	}
+//
+//}
+//
+//bool AThe_VisionCharacter::Tapping(float deltatime)
+//{
+//	TapDelay += deltatime;
+//	GLog->Log(FString::SanitizeFloat(TapDelay));
+//	if (TapDelay >= .08f && TapDelay <= .75f)
+//	{
+//		float OutValue = FMath::Lerp(.1f, .75f, TapDelay / .75f);
+//
+//		if (OutValue <= 1.0f)
+//		{
+//			TapDelay = 0;
+//			return true;
+//		}
+//		else
+//		{
+//			//TapDelay = 0;
+//
+//			return false;
+//		}
+//	}
+//	else
+//	{
+//
+//		return false;
+//	}
+//
+//}
