@@ -18,30 +18,9 @@ EBTNodeResult::Type UBTTask_AI_Schoot::ExecuteTask(UBehaviorTreeComponent& Owner
 	AI_Pawn = Cast<AEnemy_Character>(AIController->GetPawn());
 	delayTimer += GetWorld()->DeltaTimeSeconds;
 
-	//Rotation to player 
-	FVector instigatorlocation =character->GetActorLocation();
-	FRotator selfRotation = AI_Pawn->GetActorRotation();
-	FVector pawnlocation = AI_Pawn->GetActorLocation();
-	FRotator lookAtRotation = UKismetMathLibrary::FindLookAtRotation(pawnlocation, instigatorlocation);
-
-	float AimAtAngle = FMath::RadiansToDegrees(acosf(FVector::DotProduct(AI_Pawn->GetActorForwardVector(), lookAtRotation.Vector())));
-	float RoatationSpeed = 300;
-
-	if (AimAtAngle > 10)
-	{
-		if (selfRotation.Yaw - lookAtRotation.Yaw <= 0)
-		{
-			AI_Pawn->AddActorWorldRotation(FRotator(0, RoatationSpeed*GetWorld()->DeltaTimeSeconds, 0));
-		}
-		else if (selfRotation.Yaw - lookAtRotation.Yaw > 0)
-		{
-			AI_Pawn->AddActorWorldRotation(FRotator(0, -(RoatationSpeed*GetWorld()->DeltaTimeSeconds), 0));
-		}
-	}
-
 	if (delayTimer > Fire_Delay)
 	{
-		DoDamage();
+		Fire();
 		delayTimer = 0;
 	}
 	return EBTNodeResult::Succeeded;
@@ -104,10 +83,8 @@ void UBTTask_AI_Schoot::Fire(float LineTraceLenght, ECollisionChannel CollisionC
 	{
 		if (UWorld* World = GetWorld())
 		{
-			if (UStatic_Libary::LineTrace(World, Start, End, HitOut, CollisionChannel, ReturnPhysMat))
-			{
-				DoDamage();
-			}
+			UStatic_Libary::LineTrace(World, Start, End, HitOut, CollisionChannel, ReturnPhysMat);			
+			DoDamage();			
 			UGameplayStatics::PlaySoundAtLocation(World, FireSound, HitOut.TraceStart);
 		}
 	}
