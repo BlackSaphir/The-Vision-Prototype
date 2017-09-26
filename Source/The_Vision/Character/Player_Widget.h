@@ -7,7 +7,7 @@
 #include "Player_Widget.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class THE_VISION_API UPlayer_Widget : public UUserWidget
@@ -17,27 +17,33 @@ class THE_VISION_API UPlayer_Widget : public UUserWidget
 
 
 public:
-	UPROPERTY(EditAnywhere,Category = Bullet)
-	float Widget_AmmoRifle;
-	
+	UPROPERTY(EditAnywhere, Category = Bullet)
+		int Widget_AmmoRifle;
+
+	UPROPERTY(EditAnywhere, Category = Bullet)
+		int Widget_ReserveAmmo;
+
 	UPROPERTY(EditAnywhere, Category = Character)
-	float Widget_CharacterHealth;
+		float Widget_CharacterHealth;
 
 	UFUNCTION(BlueprintCallable, Category = Bullet)
-		float GetAmmo();
+		int GetAmmo();
+
+	UFUNCTION(BlueprintCallable, Category = Bullet)
+		int GetReserveAmmo();
 
 	UFUNCTION(BlueprintCallable, Category = Character)
 		float GetHealth();
 
 	UFUNCTION(BlueprintCallable, Category = Character)
 		int GetGefaehrlichkeitsstufe();
-	
+
 private:
 	void FindPlayer();
 	AThe_VisionCharacter* character;
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float DeltaTime) override;
-	
-	
+
+
 };

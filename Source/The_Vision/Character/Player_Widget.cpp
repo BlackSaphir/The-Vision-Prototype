@@ -10,18 +10,19 @@ void UPlayer_Widget::NativeConstruct()
 	Super::NativeConstruct();
 
 	//FindPlayer();
-	
+
 	character = Cast<AThe_VisionCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
-	
+
 }
 
 void UPlayer_Widget::NativeTick(const FGeometry& MyGeometry, float DeltaTime)
 {
 	Super::NativeTick(MyGeometry, DeltaTime);
 	GetAmmo();
+	GetReserveAmmo();
 }
 
-float UPlayer_Widget::GetAmmo()
+int UPlayer_Widget::GetAmmo()
 {
 	if (!character)
 	{
@@ -30,6 +31,17 @@ float UPlayer_Widget::GetAmmo()
 	Widget_AmmoRifle = character->Rifle_Ammo;
 	return Widget_AmmoRifle;
 }
+
+int UPlayer_Widget::GetReserveAmmo()
+{
+	if (!character)
+	{
+		return 0.0f;
+	}
+	Widget_ReserveAmmo = character->Reserve_Ammo;
+	return Widget_ReserveAmmo;
+}
+
 
 float UPlayer_Widget::GetHealth()
 {
@@ -48,7 +60,7 @@ int UPlayer_Widget::GetGefaehrlichkeitsstufe()
 		return 0.0f;
 	}
 	return character->Gefaehrlichkeitsstufe;
-		
+
 
 }
 
