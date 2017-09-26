@@ -82,7 +82,10 @@ public:
 		float Normal_Force = 1000;
 
 	UPROPERTY(EditAnywhere, Category = Projectile)
-		float Rifle_Ammo = 30;
+		int Rifle_Ammo = 9;
+
+	UPROPERTY(EditAnywhere, Category = Projectile)
+		int Reserve_Ammo = 0;
 
 	UPROPERTY(EditAnywhere)
 		float Character_Health = 100;
@@ -156,6 +159,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Input)
 		void ResetInputs();
+
+		void AddReserveAmmo(int value);
 
 protected:
 	virtual void BeginPlay();
