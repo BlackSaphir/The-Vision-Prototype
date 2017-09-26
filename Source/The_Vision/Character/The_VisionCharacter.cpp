@@ -104,6 +104,11 @@ void AThe_VisionCharacter::ResetInputs()
 	bLeftMousePressed = false;
 }
 
+void AThe_VisionCharacter::AddReserveAmmo(int value)
+{
+	Reserve_Ammo += value;
+}
+
 void AThe_VisionCharacter::BeginPlay()
 {
 	// Call the base class  
@@ -115,6 +120,7 @@ void AThe_VisionCharacter::BeginPlay()
 	FindInventoryManager();
 
 	camera_zoom = FirstPersonCamera->FieldOfView;
+
 }
 
 void AThe_VisionCharacter::Tick(float deltaTime)
@@ -330,8 +336,18 @@ void AThe_VisionCharacter::Reload_Pressed()
 
 void AThe_VisionCharacter::Reload()
 {
-	Rifle_Ammo = 30;
-
+	int maxMag = 9;
+	if (Reserve_Ammo > 0 && Rifle_Ammo < maxMag)
+	{
+		for (int i = Rifle_Ammo; i < maxMag; i++)
+		{
+			if (Reserve_Ammo > 0)
+			{
+				Rifle_Ammo++;
+				Reserve_Ammo--;
+			}
+		}
+	}
 }
 
 void AThe_VisionCharacter::Move_Forward()
@@ -558,14 +574,14 @@ void AThe_VisionCharacter::Interact()
 				}
 			}
 		}
-		if (UStatic_Libary::LineTrace(world, Start, End, Item_HitOut, CollisionChannel, ReturnPhysMat))
+		/*if (UStatic_Libary::LineTrace(world, Start, End, Item_HitOut, CollisionChannel, ReturnPhysMat))
 		{
 			if (Item_HitOut.GetActor()->ActorHasTag("Item"))
 			{
 				Inventory_Manager->AddItemtoList(Item_HitOut.GetActor());
 				Item_HitOut.GetActor()->Destroy();
 			}
-		}
+		}*/
 	}
 }
 
