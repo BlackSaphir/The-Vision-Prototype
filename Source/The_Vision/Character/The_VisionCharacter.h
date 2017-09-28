@@ -82,7 +82,7 @@ public:
 		float Normal_Force = 1000;
 
 	UPROPERTY(EditAnywhere, Category = Projectile)
-		int Rifle_Ammo = 9;
+		int Rifle_Ammo = 0;
 
 	UPROPERTY(EditAnywhere, Category = Projectile)
 		int Reserve_Ammo = 0;
@@ -119,8 +119,8 @@ private:
 
 	UUserWidget* inventory_widget;
 	float camera_zoom;
-	float run_speed = 1200;
-	float walk_speed = 600;
+	float run_speed = 600;
+	float walk_speed = 200;
 	float delayTimer = 0;
 	bool bMoveForwardPressed;
 	bool bMoveBackwardPressed;
