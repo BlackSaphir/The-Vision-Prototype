@@ -7,7 +7,7 @@
 // Sets default values
 ANightmare_In_Trigger::ANightmare_In_Trigger()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	Box = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Trigger"));
 	Box->OnComponentBeginOverlap.AddDynamic(this, &ANightmare_In_Trigger::OnOverlapBegin);
@@ -18,7 +18,7 @@ ANightmare_In_Trigger::ANightmare_In_Trigger()
 void ANightmare_In_Trigger::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 // Called every frame
@@ -33,12 +33,15 @@ void ANightmare_In_Trigger::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, 
 {
 	if ((OtherActor != nullptr) && (OtherComp != nullptr) && (OtherActor != this))
 	{
-		if (GetWorld() != nullptr)
-		{
+		auto World = GetWorld();
+		//if (World != nullptr)
+
+		UE_LOG(LogTemp, Warning, TEXT("PENIS"));
 		APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-		AActor::DisableInput(PlayerController);
-			
-		}
+		//AActor::DisableInput(PlayerController);
+		DisableInput(PlayerController);
+
+
 	}
 }
 
