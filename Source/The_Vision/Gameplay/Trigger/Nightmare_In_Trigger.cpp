@@ -2,6 +2,11 @@
 
 #include "The_Vision.h"
 #include "Nightmare_In_Trigger.h"
+#include "WidgetLayoutLibrary.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "UserWidget.h"
+
 
 
 // Sets default values
@@ -28,20 +33,30 @@ void ANightmare_In_Trigger::Tick(float DeltaTime)
 
 }
 
+
 void ANightmare_In_Trigger::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	UWorld* World = GetWorld();
+	Character = Cast<AThe_VisionCharacter>(World->GetFirstPlayerController()->GetPawn());
+
 	if ((OtherActor != nullptr) && (OtherComp != nullptr) && (OtherActor != this))
 	{
-		auto World = GetWorld();
-		//if (World != nullptr)
-
-		UE_LOG(LogTemp, Warning, TEXT("PENIS"));
-		APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-		//AActor::DisableInput(PlayerController);
-		DisableInput(PlayerController);
-
+		if (World != nullptr)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("PENIS"));
+			APlayerController* PlayerController = World->GetFirstPlayerController();
+			PlayerController->GetPawn()->DisableInput(PlayerController);
+			Character->ResetInputs();
+			UWidgetLayoutLibrary::RemoveAllWidgets(World);
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), Vision_Sound, GetActorLocation());
+			UGameplayStatics::SpawnEmitterAttached(Vision_Blur, Character->FirstPersonCamera);
+			UKismetSystemLibrary::Delay(World, 4.0f, FLatentActionInfo());
+			Character->SetActorLocationAndRotation(FVector(NewLocation_X, NewLocation_Y, NewLocation_Z), FRotator(NewRotation_X, NewRotation_Y, NewRotation_Z));
+			Vision_Blur->bAutoDeactivate = true;
+			PlayerController->GetPawn()->EnableInput(PlayerController);		
+			BBC();
+		}
 
 	}
 }
-
