@@ -12,17 +12,21 @@ class THE_VISION_API ANightmare_In_Trigger : public AActor
 {
 	GENERATED_BODY()
 
-public:
 	// Sets default values for this actor's properties
 	ANightmare_In_Trigger();
 
 	// Variables
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "The Vision")
-		class USoundBase* Vision_Sound;
+public:
 
-	UPROPERTY(EditAnywhere, Category = "The Vision")
-		class UParticleSystem* Vision_Blur;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "The Vision")
+		class USoundBase* Nightmare_Sound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "The Vision")
+		class UParticleSystem* Nightmare_Blur;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "The Vision")
+		class UParticleSystem* Nightmare_Blur_Back;
 
 	UPROPERTY(EditAnywhere, Category = "Transform")
 		float NewLocation_X;
@@ -42,10 +46,19 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Transform")
 		float NewRotation_Z;
 
+	APlayerController* PlayerController;
 
+	UPROPERTY(EditAnywhere, Category = "Widget")
+		TSubclassOf<UUserWidget> W_Interface;
 
 	AThe_VisionCharacter* Character;
 
+	bool DoOnce = false;
+
+private:
+
+	UUserWidget* player_Interface;
+	APawn * Player_Pawn;
 
 
 	//Component
@@ -56,6 +69,11 @@ public:
 
 	// Function
 
+private:
+
+	void Relocate_Player();
+	void Add_Interface();
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
@@ -65,7 +83,4 @@ public:
 
 	UFUNCTION()
 		void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	
-	UFUNCTION(BlueprintImplementableEvent, Category = "In_Trigger")
-		void BBC();
 };

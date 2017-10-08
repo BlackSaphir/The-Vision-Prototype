@@ -4,7 +4,6 @@
 #include "Nightmare_In_Trigger.h"
 #include "WidgetLayoutLibrary.h"
 #include "Kismet/GameplayStatics.h"
-#include "Kismet/KismetSystemLibrary.h"
 #include "UserWidget.h"
 
 
@@ -38,25 +37,49 @@ void ANightmare_In_Trigger::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, 
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	UWorld* World = GetWorld();
-	Character = Cast<AThe_VisionCharacter>(World->GetFirstPlayerController()->GetPawn());
+
+
 
 	if ((OtherActor != nullptr) && (OtherComp != nullptr) && (OtherActor != this))
 	{
-		if (World != nullptr)
+		if (World != nullptr && !DoOnce)
 		{
+			DoOnce = true;
+			Character = Cast<AThe_VisionCharacter>(World->GetFirstPlayerController()->GetPawn());
+			FTimerHandle TimeHandle;
+			PlayerController = World->GetFirstPlayerController();
+			Player_Pawn = PlayerController->GetPawn();
 			UE_LOG(LogTemp, Warning, TEXT("PENIS"));
-			APlayerController* PlayerController = World->GetFirstPlayerController();
-			PlayerController->GetPawn()->DisableInput(PlayerController);
+			Player_Pawn->DisableInput(PlayerController);
 			Character->ResetInputs();
 			UWidgetLayoutLibrary::RemoveAllWidgets(World);
-			UGameplayStatics::PlaySoundAtLocation(GetWorld(), Vision_Sound, GetActorLocation());
-			UGameplayStatics::SpawnEmitterAttached(Vision_Blur, Character->FirstPersonCamera);
-			UKismetSystemLibrary::Delay(World, 4.0f, FLatentActionInfo());
-			Character->SetActorLocationAndRotation(FVector(NewLocation_X, NewLocation_Y, NewLocation_Z), FRotator(NewRotation_X, NewRotation_Y, NewRotation_Z));
-			Vision_Blur->bAutoDeactivate = true;
-			PlayerController->GetPawn()->EnableInput(PlayerController);		
-			BBC();
+			UGameplayStatics::PlaySoundAtLocation(World, Nightmare_Sound, GetActorLocation());
+			UGameplayStatics::SpawnEmitterAttached(Nightmare_Blur, Character->FirstPersonCamera);
+			GetWorldTimerManager().SetTimer(TimeHandle, this, &ANightmare_In_Trigger::Relocate_Player, 4.0f);
 		}
 
 	}
+}
+
+void ANightmare_In_Trigger::Relocate_Player()
+{
+	FTimerHandle TimeHandle;
+
+	Character->SetActorLocation(FVector(NewLocation_X, NewLocation_Y, NewLocation_Z));
+	PlayerController->SetControlRotation(FRotator(NewRotation_X, NewRotation_Z, NewRotation_Y));
+	UGameplayStatics::SpawnEmitterAttached(Nightmare_Blur_Back, Character->FirstPersonCamera);
+	Nightmare_Blur->bAutoDeactivate = true;
+	GetWorldTimerManager().SetTimer(TimeHandle, this, &ANightmare_In_Trigger::Add_Interface, 4.0f);
+
+}
+
+void ANightmare_In_Trigger::Add_Interface()
+{
+	Player_Pawn->EnableInput(PlayerController);
+	player_Interface = CreateWidget<UUserWidget>(GetWorld(), W_Interface);
+	if (player_Interface)
+	{
+		player_Interface->AddToViewport();
+	}
+	Nightmare_Blur_Back->bAutoDeactivate = true;
 }
