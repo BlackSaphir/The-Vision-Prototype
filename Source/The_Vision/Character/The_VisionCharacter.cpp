@@ -9,19 +9,14 @@
 #include "Static_Libary.h"
 #include "DrawDebugHelpers.h"
 #include "Color.h"
-
 #include "The_Vision/AI/Enemy_Character.h"
-
-//#include <EngineGlobals.h>
 #include <Runtime/Engine/Classes/Engine/Engine.h>
-//#include "Engine/CollisionProfile.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/DecalComponent.h"
 #include "ActivationInterface.h"
 #include "Coreminimal.h"
 #include "PhysicsEngine/DestructibleActor.h"
 #include "Kismet/KismetMathLibrary.h"
-//#include "Components/PrimitiveComponent.h"
 #include "Inventory/Inventory_Manager.h"
 #include "EngineUtils.h"
 #include "Blueprint/UserWidget.h"
@@ -77,6 +72,7 @@ AThe_VisionCharacter::AThe_VisionCharacter()
 	FQuat Rotation(0, 90, 0, 0);
 	FirstPersonCamera->SetRelativeRotation(Rotation);
 	FirstPersonCamera->AttachTo(RootComponent);
+	//FirstPersonCamera->AttachToComponent(RootComponent);
 	FirstPersonCamera->bUsePawnControlRotation = true;
 
 	/*FP_MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
