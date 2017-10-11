@@ -59,7 +59,6 @@ void ANightmare_Out_Trigger::Relocate_Player()
 {
 	Character->SetActorLocation(FVector(NewLocation_X, NewLocation_Y, NewLocation_Z));
 	PlayerController->SetControlRotation(FRotator(NewRotation_X, NewRotation_Z, NewRotation_Y));
-	Nightmare_Blur_Back->bAutoDeactivate = true;
 	PlayerController->GetPawn()->EnableInput(PlayerController);
 	player_Interface = CreateWidget<UUserWidget>(GetWorld(), W_Interface);
 	if (player_Interface)

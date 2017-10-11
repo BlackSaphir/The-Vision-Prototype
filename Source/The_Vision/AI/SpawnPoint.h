@@ -25,6 +25,10 @@ public:
 
 	UPROPERTY(EditAnyWhere)
 		int SpawnpointIndex;
+
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void SetSpawnBoolTrue();
 	
 	
 };

@@ -50,6 +50,7 @@ void ANightmare_In_Trigger::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, 
 			PlayerController = World->GetFirstPlayerController();
 			Player_Pawn = PlayerController->GetPawn();
 			UE_LOG(LogTemp, Warning, TEXT("PENIS"));
+			PlayerController->GetPawn()->DisableInput(PlayerController);
 			Player_Pawn->DisableInput(PlayerController);
 			Character->ResetInputs();
 			UWidgetLayoutLibrary::RemoveAllWidgets(World);
