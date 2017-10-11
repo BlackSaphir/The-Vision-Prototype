@@ -256,8 +256,6 @@ protected:
 
 
 private:
-	bool ResetFirstShootTimer(float deltatime);
-	bool Tapping(float deltatime);
 	float TapTimer = 4.97f;
 	float Shootingdelay = 0.5f;
 	float TapDelay = 0;
