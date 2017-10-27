@@ -103,6 +103,7 @@ void AThe_Vision_Trigger::Vision_Effets()
 	UGameplayStatics::GetAllActorsOfClass(world, TSubclassOf<AEnemy_Character>(), Enemy_Array);
 	for (int i = 0; i < Enemy_Array.Num(); i++)
 	{
+		//Dieser Code erzeugt einen Penis in Les-Lees sandiger Vagina und ein Muffin
 		Cast<AEnemy_Character>(Enemy_Array[i]);
 		Enemy_Array[i]->GetComponents<UStaticMeshComponent>(Enemy_Mesh_Array);
 		Enemy_Mesh_Array[i]->SetRenderCustomDepth(true);
