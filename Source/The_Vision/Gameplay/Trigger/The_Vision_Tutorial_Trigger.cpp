@@ -111,7 +111,7 @@ void AThe_Vision_Tutorial_Trigger::Backwards_Effets()
 	FTimerHandle TimerHandle;
 	vision_Camera->Play_ChangeOut_Sound();
 	vision_Camera->InCamBack();
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &AThe_Vision_Tutorial_Trigger::Change_Camera_Back, 2.0f);
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &AThe_Vision_Tutorial_Trigger::Change_Camera_Back, 0.5f);
 }
 
 void AThe_Vision_Tutorial_Trigger::Change_Camera_Back()
