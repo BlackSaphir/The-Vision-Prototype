@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Character/The_VisionCharacter.h"
 #include "Gameplay/Vision_Camera_Tutorial.h"
+#include "Gameplay/Vision_Post_Process.h"
 #include "The_Vision_Tutorial_Trigger.generated.h"
 
 UCLASS()
@@ -22,7 +23,6 @@ private:
 	void ChangePostProcess();
 	void ChangeCamera();
 	void Vision_Effets();
-	void Backwards_Effets();
 	void Change_Camera_Back();
 	void AddInterface();
 
@@ -42,10 +42,10 @@ public:
 private:
 	AThe_VisionCharacter* character;
 	APlayerController* playerController;
-	AVision_Camera_Tutorial* vision_Camera;
+	AVision_Post_Process* Cameleon;
 	UWorld* world;
+	TSubclassOf<class UVision_Post_Process>cameleon_Array;
 	TArray<AActor*>spawnPoint_Array;
-	TArray<AActor*>Camera_Array;
 	TArray<AActor*> Enemy_Array;
 	TArray<UStaticMeshComponent*> Enemy_Mesh_Array;
 
@@ -63,7 +63,7 @@ public:
 		class UParticleSystem* Vision_Particle_Back;
 
 	UPROPERTY(EditAnywhere, Category = "The Vision")
-		FName CameraTag;
+		 FName Cameleon_Tag;
 
 	UPROPERTY(EditAnywhere, Category = "Widget")
 		TSubclassOf<UUserWidget> W_Interface;

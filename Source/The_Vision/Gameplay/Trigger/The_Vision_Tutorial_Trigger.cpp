@@ -64,9 +64,9 @@ void AThe_Vision_Tutorial_Trigger::ChangePostProcess()
 	TSubclassOf<ASpawnPoint_Tutorial> SpawnPoint_tofind;
 	SpawnPoint_tofind = ASpawnPoint_Tutorial::StaticClass();
 
-	UGameplayStatics::GetAllActorsWithTag(world, CameraTag, Camera_Array);
-	vision_Camera = Cast<AVision_Camera_Tutorial>(Camera_Array[0]);
-	vision_Camera->The_Vision();
+	GetComponentsByTag(cameleon_Array->StaticClass(), Cameleon_Tag);
+	Cameleon = Cast<AVision_Post_Process>(cameleon_Array[0]);
+
 	UGameplayStatics::GetAllActorsOfClass(world, SpawnPoint_tofind, spawnPoint_Array);
 	GetWorldTimerManager().SetTimer(TimerHandle, this, &AThe_Vision_Tutorial_Trigger::ChangeCamera, 1.0f);
 }
@@ -85,15 +85,11 @@ void AThe_Vision_Tutorial_Trigger::ChangeCamera()
 		}
 	}
 
-	playerController->SetViewTargetWithBlend(Camera_Array[0]);
-
 	GetWorldTimerManager().SetTimer(TimerHandle, this, &AThe_Vision_Tutorial_Trigger::Vision_Effets, 1.0f);
 }
 
 void AThe_Vision_Tutorial_Trigger::Vision_Effets()
 {
-	vision_Camera->InCamVision();
-	vision_Camera->Play_Ambience_Camera_ViewChange();
 	UGameplayStatics::GetAllActorsOfClass(world, TSubclassOf<AEnemy_Character>(), Enemy_Array);
 	for (int i = 0; i < Enemy_Array.Num(); i++)
 	{
@@ -103,22 +99,12 @@ void AThe_Vision_Tutorial_Trigger::Vision_Effets()
 		Enemy_Mesh_Array[i]->SetCustomDepthStencilValue(254);
 	}
 	FTimerHandle TimerHandle;
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &AThe_Vision_Tutorial_Trigger::Backwards_Effets, 10.0f);
-}
-
-void AThe_Vision_Tutorial_Trigger::Backwards_Effets()
-{
-	FTimerHandle TimerHandle;
-	vision_Camera->Play_ChangeOut_Sound();
-	vision_Camera->InCamBack();
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &AThe_Vision_Tutorial_Trigger::Change_Camera_Back, 0.5f);
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &AThe_Vision_Tutorial_Trigger::Change_Camera_Back, 10.0f);
 }
 
 void AThe_Vision_Tutorial_Trigger::Change_Camera_Back()
 {
 	FTimerHandle TimerHandle;
-	playerController->SetViewTargetWithBlend(playerController->GetPawn());
-	vision_Camera->The_Vision_Backwards();
 	UGameplayStatics::SpawnEmitterAttached(Vision_Particle_Back, character->GetFirstPersonCameraComponent());
 	for (int i = 0; i < Enemy_Array.Num(); i++)
 	{
