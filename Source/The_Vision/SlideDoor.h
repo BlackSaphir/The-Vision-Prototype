@@ -7,7 +7,7 @@
 #include "SlideDoor.generated.h"
 
 UCLASS()
-class THE_VISION_API ASlideDoor : public AActor, public IActivationInterface
+class THE_VISION_API ASlideDoor : public AActor//, public IActivationInterface
 {
 	GENERATED_BODY()
 
@@ -31,7 +31,13 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void Activate() override;
+	//virtual void Activate() override;
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void Open_Door();
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void Close_Door();
 
 
 protected:

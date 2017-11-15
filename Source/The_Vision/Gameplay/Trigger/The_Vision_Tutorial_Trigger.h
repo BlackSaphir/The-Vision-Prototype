@@ -7,6 +7,7 @@
 #include "Character/The_VisionCharacter.h"
 #include "Gameplay/Vision_Camera_Tutorial.h"
 #include "Gameplay/Vision_Post_Process.h"
+#include "SlideDoor.h"
 #include "The_Vision_Tutorial_Trigger.generated.h"
 
 UCLASS()
@@ -21,10 +22,10 @@ class THE_VISION_API AThe_Vision_Tutorial_Trigger : public AActor
 
 private:
 	void ChangePostProcess();
-	void ChangeCamera();
+	void Spawn_Enemy();
 	void Vision_Effets();
 	void Change_Camera_Back();
-	void AddInterface();
+	void Relocated_Player();
 
 
 protected:
@@ -42,12 +43,17 @@ public:
 private:
 	AThe_VisionCharacter* character;
 	APlayerController* playerController;
-	AVision_Post_Process* Cameleon;
+	AVision_Post_Process* Chameleon;
 	UWorld* world;
-	TSubclassOf<class UVision_Post_Process>cameleon_Array;
+	TArray<AActor*>chameleon_Array;
 	TArray<AActor*>spawnPoint_Array;
 	TArray<AActor*> Enemy_Array;
+	TArray<AActor*> to_be_closed_Array;
+	TArray<AActor*> to_be_opened_Array;
 	TArray<UStaticMeshComponent*> Enemy_Mesh_Array;
+	ASlideDoor* to_be_opened_Door;
+	ASlideDoor* to_be_closed_Door;
+	bool DoOnce;
 
 
 
@@ -62,13 +68,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "The Vision")
 		class UParticleSystem* Vision_Particle_Back;
 
-	UPROPERTY(EditAnywhere, Category = "The Vision")
-		 FName Cameleon_Tag;
-
 	UPROPERTY(EditAnywhere, Category = "Widget")
 		TSubclassOf<UUserWidget> W_Interface;
 
-	bool DoOnce;
+	UPROPERTY(EditAnywhere, Category = "Transform")
+		float NewRotation_X;
+
+	UPROPERTY(EditAnywhere, Category = "Transform")
+		float NewRotation_Y;
+
+	UPROPERTY(EditAnywhere, Category = "Transform")
+		float NewRotation_Z;
+
 
 
 	// Components

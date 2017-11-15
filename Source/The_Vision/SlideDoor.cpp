@@ -27,21 +27,21 @@ void ASlideDoor::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void ASlideDoor::Activate()
-{	
-	if (!b_Open)
-	{		
-		//UGameplayStatics::PlaySoundAtLocation(GetWorld(), Door_Open_Sound, ASlideDoor.GetLocation());
-		SM_SlideDoor->SetPlayRate(1);
-		SM_SlideDoor->Play(false);		
-		b_Open = true;
-	}
-	else
-	{	
-		SM_SlideDoor->SetPlayRate(-1);
-		SM_SlideDoor->Play(false);
-		b_Open = false;
-		
-	}
-}
+//void ASlideDoor::Activate()
+//{	
+//	if (!b_Open)
+//	{		
+//		//UGameplayStatics::PlaySoundAtLocation(GetWorld(), Door_Open_Sound, ASlideDoor.GetLocation());
+//		SM_SlideDoor->SetPlayRate(1);
+//		SM_SlideDoor->Play(false);		
+//		b_Open = true;
+//	}
+//	else
+//	{	
+//		SM_SlideDoor->SetPlayRate(-1);
+//		SM_SlideDoor->Play(false);
+//		b_Open = false;
+//		
+//	}
+//}
 

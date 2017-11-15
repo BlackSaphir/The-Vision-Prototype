@@ -46,13 +46,13 @@ void AThe_Vision_Tutorial_Trigger::OnOverlapBegin(UPrimitiveComponent * Overlapp
 			DoOnce = true;
 			playerController = world->GetFirstPlayerController();
 			character = Cast<AThe_VisionCharacter>(playerController->GetPawn());
+
 			character->DisableInput(playerController);
 			character->ResetInputs();
 			UWidgetLayoutLibrary::RemoveAllWidgets(world);
 			UGameplayStatics::PlaySoundAtLocation(world, Vision_Sound, GetActorLocation());
-			UGameplayStatics::SpawnEmitterAttached(Vision_Particle, character->GetFirstPersonCameraComponent());
-			FTimerHandle TimerHandle;
-			GetWorldTimerManager().SetTimer(TimerHandle, this, &AThe_Vision_Tutorial_Trigger::ChangePostProcess, 1.5f);
+			//UGameplayStatics::SpawnEmitterAttached(Vision_Particle, character->GetFirstPersonCameraComponent());
+			ChangePostProcess();
 		}
 	}
 }
@@ -60,20 +60,24 @@ void AThe_Vision_Tutorial_Trigger::OnOverlapBegin(UPrimitiveComponent * Overlapp
 
 void AThe_Vision_Tutorial_Trigger::ChangePostProcess()
 {
-	FTimerHandle TimerHandle;
 	TSubclassOf<ASpawnPoint_Tutorial> SpawnPoint_tofind;
 	SpawnPoint_tofind = ASpawnPoint_Tutorial::StaticClass();
 
-	GetComponentsByTag(cameleon_Array->StaticClass(), Cameleon_Tag);
-	Cameleon = Cast<AVision_Post_Process>(cameleon_Array[0]);
+	UGameplayStatics::GetAllActorsWithTag(world, FName("Tutorial_Slide_Door_Close"), to_be_closed_Array);
+	to_be_closed_Door = Cast<ASlideDoor>(to_be_closed_Array[0]);
+	UGameplayStatics::GetAllActorsWithTag(world, FName("Tutorial_Slide_Door_Open"), to_be_opened_Array);
+	to_be_opened_Door = Cast<ASlideDoor>(to_be_opened_Array[0]);
 
+	UGameplayStatics::SpawnEmitterAttached(Vision_Particle, character->GetFirstPersonCameraComponent());
+	to_be_closed_Door->Close_Door();
+	to_be_opened_Door->Open_Door();
+	character->EnableInput(playerController);
 	UGameplayStatics::GetAllActorsOfClass(world, SpawnPoint_tofind, spawnPoint_Array);
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &AThe_Vision_Tutorial_Trigger::ChangeCamera, 1.0f);
+	Spawn_Enemy();
 }
 
-void AThe_Vision_Tutorial_Trigger::ChangeCamera()
+void AThe_Vision_Tutorial_Trigger::Spawn_Enemy()
 {
-	FTimerHandle TimerHandle;
 	if (spawnPoint_Array[0]->IsA(ASpawnPoint_Tutorial::StaticClass()))
 	{
 		for (int i = 0; i < spawnPoint_Array.Num(); i++)
@@ -84,12 +88,20 @@ void AThe_Vision_Tutorial_Trigger::ChangeCamera()
 			}
 		}
 	}
-
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &AThe_Vision_Tutorial_Trigger::Vision_Effets, 1.0f);
+	FTimerHandle TimeHandle;
+	GetWorldTimerManager().SetTimer(TimeHandle, this, &AThe_Vision_Tutorial_Trigger::Relocated_Player, 11.0f);
+	Vision_Effets();
 }
 
 void AThe_Vision_Tutorial_Trigger::Vision_Effets()
 {
+	TSubclassOf<AVision_Post_Process> Chameleon_tofind;
+	Chameleon_tofind = AVision_Post_Process::StaticClass();
+	UGameplayStatics::GetAllActorsOfClass(world, Chameleon_tofind, chameleon_Array);
+	Chameleon = Cast<AVision_Post_Process>(chameleon_Array[0]);
+	Chameleon->Start_Vision();
+
+
 	UGameplayStatics::GetAllActorsOfClass(world, TSubclassOf<AEnemy_Character>(), Enemy_Array);
 	for (int i = 0; i < Enemy_Array.Num(); i++)
 	{
@@ -98,28 +110,28 @@ void AThe_Vision_Tutorial_Trigger::Vision_Effets()
 		Enemy_Mesh_Array[i]->SetRenderCustomDepth(true);
 		Enemy_Mesh_Array[i]->SetCustomDepthStencilValue(254);
 	}
-	FTimerHandle TimerHandle;
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &AThe_Vision_Tutorial_Trigger::Change_Camera_Back, 10.0f);
 }
 
-void AThe_Vision_Tutorial_Trigger::Change_Camera_Back()
+void AThe_Vision_Tutorial_Trigger::Relocated_Player()
 {
-	FTimerHandle TimerHandle;
 	UGameplayStatics::SpawnEmitterAttached(Vision_Particle_Back, character->GetFirstPersonCameraComponent());
 	for (int i = 0; i < Enemy_Array.Num(); i++)
 	{
 		Enemy_Mesh_Array[i]->SetRenderCustomDepth(false);
 	}
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &AThe_Vision_Tutorial_Trigger::AddInterface, 4.0f);
-}
 
-void AThe_Vision_Tutorial_Trigger::AddInterface()
-{
-	playerController->GetPawn()->EnableInput(playerController);
+	character->DisableInput(playerController);
+	character->ResetInputs();
+	to_be_closed_Door->Open_Door();
+	to_be_opened_Door->Close_Door();
+	character->SetActorLocation(this->GetActorLocation());
+	playerController->SetControlRotation(FRotator(NewRotation_X, NewRotation_Z, NewRotation_Y));
+	Chameleon->End_Vision();
 	UUserWidget* Interface = CreateWidget<UUserWidget>(world, W_Interface);
 	if (Interface)
 	{
 		Interface->AddToViewport();
 	}
+	playerController->GetPawn()->EnableInput(playerController);
 }
 
