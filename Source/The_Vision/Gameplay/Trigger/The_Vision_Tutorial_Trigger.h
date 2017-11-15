@@ -57,7 +57,6 @@ private:
 
 
 
-
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "The Vision")
 		class USoundBase* Vision_Sound;
@@ -79,6 +78,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Transform")
 		float NewRotation_Z;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool bInVision;
 
 
 
