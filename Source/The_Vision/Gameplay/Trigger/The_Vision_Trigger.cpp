@@ -5,7 +5,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "WidgetLayoutLibrary.h"
 #include "AI/SpawnPoint.h"
-#include "AI/Enemy_Character.h"
 #include "UserWidget.h"
 
 
@@ -39,8 +38,6 @@ void AThe_Vision_Trigger::Tick(float DeltaTime)
 void AThe_Vision_Trigger::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
 	world = GetWorld();
-	FTimerHandle TimeHandle;
-
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
 		if (world != nullptr && !DoOnce)
@@ -48,13 +45,13 @@ void AThe_Vision_Trigger::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, A
 			DoOnce = true;
 			playerController = GetWorld()->GetFirstPlayerController();
 			character = Cast<AThe_VisionCharacter>(playerController->GetPawn());
+
 			playerController->GetPawn()->DisableInput(world->GetFirstPlayerController());
 			character->ResetInputs();
 			UWidgetLayoutLibrary::RemoveAllWidgets(world);
 			UGameplayStatics::PlaySoundAtLocation(world, Vision_Sound, GetActorLocation());
-			UGameplayStatics::SpawnEmitterAttached(Vision_Particle, character->GetFirstPersonCameraComponent());
-			GetWorldTimerManager().SetTimer(TimeHandle, this, &AThe_Vision_Trigger::ChangePostProcess, 1.5f);
-
+			//UGameplayStatics::SpawnEmitterAttached(Vision_Particle, character->GetFirstPersonCameraComponent());
+			ChangePostProcess();
 		}
 	}
 }
@@ -62,22 +59,27 @@ void AThe_Vision_Trigger::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, A
 // Set Camera
 void AThe_Vision_Trigger::ChangePostProcess()
 {
-	FTimerHandle TimeHandle;
 	TSubclassOf<ASpawnPoint> SpawnPoint_tofind;
 	SpawnPoint_tofind = ASpawnPoint::StaticClass();
 
-	UGameplayStatics::GetAllActorsWithTag(world, CameraTag, Camera_Array);
-	vision_Camera = Cast<AVision_Camera>(Camera_Array[0]);
-	vision_Camera->The_Vision();
+	UGameplayStatics::GetAllActorsWithTag(world, FName("Vision_Glas_Door_Close"), to_be_closed_Array);
+	to_be_closed_Door = Cast<AGlasDoor_Doppel>(to_be_closed_Array[0]);
+	UGameplayStatics::GetAllActorsWithTag(world, FName("Vision_Glas_Door_Open"), to_be_opened_Array);
+	to_be_opened_Door = Cast<AGlasDoor_Doppel>(to_be_opened_Array[0]);
+
+	UGameplayStatics::SpawnEmitterAttached(Vision_Particle, character->GetFirstPersonCameraComponent());
+	to_be_closed_Door->Close_Door();
+	to_be_opened_Door->Open_Door();
+	character->EnableInput(playerController);
+
 	UGameplayStatics::GetAllActorsOfClass(world, SpawnPoint_tofind, spawnPoint_Array);
-	GetWorldTimerManager().SetTimer(TimeHandle, this, &AThe_Vision_Trigger::ChangeCamera, 1.0f);
+	spawn_Enemy();
 }
 
 
 // Spawn AI
-void AThe_Vision_Trigger::ChangeCamera()
+void AThe_Vision_Trigger::spawn_Enemy()
 {
-	FTimerHandle TimeHandle;
 	if (spawnPoint_Array[0]->IsA(ASpawnPoint::StaticClass()))
 	{
 		for (int i = 0; i < spawnPoint_Array.Num(); i++)
@@ -88,61 +90,60 @@ void AThe_Vision_Trigger::ChangeCamera()
 			}
 		}
 	}
-	playerController->SetViewTargetWithBlend(Camera_Array[0]);
 
-	GetWorldTimerManager().SetTimer(TimeHandle, this, &AThe_Vision_Trigger::Vision_Effets, 1.0f);
+	FTimerHandle TimeHandle;
+	FTimerHandle TimeHandle_2;
+	GetWorldTimerManager().SetTimer(TimeHandle, this, &AThe_Vision_Trigger::relocated_Player, 11.0f);
+	GetWorldTimerManager().SetTimer(TimeHandle_2, this, &AThe_Vision_Trigger::GetEnemy, 0.3f);
+	Vision_Effets();
 }
 
 
 
 void AThe_Vision_Trigger::Vision_Effets()
 {
-	FTimerHandle TimeHandle;
-	vision_Camera->InCamVision();
-	vision_Camera->Play_Ambience_Camera_ViewChange();
-	UGameplayStatics::GetAllActorsOfClass(world, TSubclassOf<AEnemy_Character>(), Enemy_Array);
+	TSubclassOf<AVision_Post_Process> Chameleon_tofind;
+	Chameleon_tofind = AVision_Post_Process::StaticClass();
+	UGameplayStatics::GetAllActorsOfClass(world, Chameleon_tofind, chameleon_Array);
+	Chameleon = Cast <AVision_Post_Process>(chameleon_Array[0]);
+	Chameleon->Start_Vision();
+}
+
+void AThe_Vision_Trigger::GetEnemy()
+{
+	UGameplayStatics::GetAllActorsWithTag(world, FName("Enemy"), Enemy_Array);
 	for (int i = 0; i < Enemy_Array.Num(); i++)
 	{
 		//Dieser Code erzeugt einen Penis in Les-Lees sandiger Vagina und ein Muffin
-		Cast<AEnemy_Character>(Enemy_Array[i]);
+		enemy_Character = Cast<AEnemy_Character>(Enemy_Array[i]);
+		enemy_Character->InVision = true;
 		Enemy_Array[i]->GetComponents<UStaticMeshComponent>(Enemy_Mesh_Array);
 		Enemy_Mesh_Array[i]->SetRenderCustomDepth(true);
 		Enemy_Mesh_Array[i]->SetCustomDepthStencilValue(254);
 	}
-
-	GetWorldTimerManager().SetTimer(TimeHandle, this, &AThe_Vision_Trigger::Backwards_Effets, 10.0f);
 }
 
-void AThe_Vision_Trigger::Backwards_Effets()
+void AThe_Vision_Trigger::relocated_Player()
 {
-	FTimerHandle TimeHandle;
-	vision_Camera->Play_ChangeOut_Sound();
-	vision_Camera->InCamBack();
-
-	GetWorldTimerManager().SetTimer(TimeHandle, this, &AThe_Vision_Trigger::Change_Camera_Back, 2.0f);
-}
-
-void AThe_Vision_Trigger::Change_Camera_Back()
-{
-	FTimerHandle TimeHandle;
-	playerController->SetViewTargetWithBlend(playerController->GetPawn());
-	vision_Camera->The_Vision_Backwards();
 	UGameplayStatics::SpawnEmitterAttached(Vision_Particle_Back, character->FirstPersonCamera);
 	for (int i = 0; i < Enemy_Array.Num(); i++)
 	{
 		Enemy_Mesh_Array[i]->SetRenderCustomDepth(false);
 	}
 
-	GetWorldTimerManager().SetTimer(TimeHandle, this, &AThe_Vision_Trigger::AddInterface, 4.0f);
-}
+	character->DisableInput(playerController);
+	character->ResetInputs();
+	to_be_closed_Door->Open_Door();
+	to_be_opened_Door->Close_Door();
+	character->SetActorLocation(this->GetActorLocation());
+	playerController->SetControlRotation(FRotator(NewRotation_X, NewRotation_Z, NewRotation_Y));
+	Chameleon->End_Vision();
 
-void AThe_Vision_Trigger::AddInterface()
-{
-	playerController->GetPawn()->EnableInput(playerController);
 	UUserWidget* Interface = CreateWidget<UUserWidget>(world, W_Interface);
 	if (Interface)
 	{
 		Interface->AddToViewport();
 	}
+	playerController->GetPawn()->EnableInput(playerController);
 
 }

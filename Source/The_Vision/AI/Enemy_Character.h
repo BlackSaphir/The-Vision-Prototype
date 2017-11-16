@@ -82,4 +82,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<class AActor> last_position_actor;
+
+	UPROPERTY(EditAnywhere)
+		bool InVision;
 };

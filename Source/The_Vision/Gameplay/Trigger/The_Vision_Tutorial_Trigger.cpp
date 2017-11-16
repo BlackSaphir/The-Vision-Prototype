@@ -5,7 +5,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "WidgetLayoutLibrary.h"
 #include "AI/SpawnPoint_Tutorial.h"
-#include "AI/Enemy_Character.h"
 #include "UserWidget.h"
 
 
@@ -88,9 +87,25 @@ void AThe_Vision_Tutorial_Trigger::Spawn_Enemy()
 			}
 		}
 	}
-	FTimerHandle TimeHandle;
-	GetWorldTimerManager().SetTimer(TimeHandle, this, &AThe_Vision_Tutorial_Trigger::Relocated_Player, 11.0f);
+	
+	FTimerHandle TimeHandle_1;
+	FTimerHandle TimeHandle_2;
+	GetWorldTimerManager().SetTimer(TimeHandle_1, this, &AThe_Vision_Tutorial_Trigger::Relocated_Player, 11.0f);
+	GetWorldTimerManager().SetTimer(TimeHandle_2, this, &AThe_Vision_Tutorial_Trigger::Get_Enemy, 0.3f);
 	Vision_Effets();
+}
+
+void AThe_Vision_Tutorial_Trigger::Get_Enemy()
+{
+	UGameplayStatics::GetAllActorsWithTag(world, FName("Enemy"), Enemy_Array);
+	for (int i = 0; i < Enemy_Array.Num(); i++)
+	{
+		enemy_Character = Cast<AEnemy_Character>(Enemy_Array[i]);
+		enemy_Character->InVision = true;
+		Enemy_Array[i]->GetComponents<UStaticMeshComponent>(Enemy_Mesh_Array);
+		Enemy_Mesh_Array[i]->SetRenderCustomDepth(true);
+		Enemy_Mesh_Array[i]->SetCustomDepthStencilValue(254);
+	}
 }
 
 void AThe_Vision_Tutorial_Trigger::Vision_Effets()
@@ -100,16 +115,6 @@ void AThe_Vision_Tutorial_Trigger::Vision_Effets()
 	UGameplayStatics::GetAllActorsOfClass(world, Chameleon_tofind, chameleon_Array);
 	Chameleon = Cast<AVision_Post_Process>(chameleon_Array[0]);
 	Chameleon->Start_Vision();
-
-
-	UGameplayStatics::GetAllActorsOfClass(world, TSubclassOf<AEnemy_Character>(), Enemy_Array);
-	for (int i = 0; i < Enemy_Array.Num(); i++)
-	{
-		Cast<AEnemy_Character>(Enemy_Array[i]);
-		Enemy_Array[i]->GetComponents<UStaticMeshComponent>(Enemy_Mesh_Array);
-		Enemy_Mesh_Array[i]->SetRenderCustomDepth(true);
-		Enemy_Mesh_Array[i]->SetCustomDepthStencilValue(254);
-	}
 }
 
 void AThe_Vision_Tutorial_Trigger::Relocated_Player()
@@ -117,6 +122,7 @@ void AThe_Vision_Tutorial_Trigger::Relocated_Player()
 	UGameplayStatics::SpawnEmitterAttached(Vision_Particle_Back, character->GetFirstPersonCameraComponent());
 	for (int i = 0; i < Enemy_Array.Num(); i++)
 	{
+		enemy_Character->InVision = false;
 		Enemy_Mesh_Array[i]->SetRenderCustomDepth(false);
 	}
 
