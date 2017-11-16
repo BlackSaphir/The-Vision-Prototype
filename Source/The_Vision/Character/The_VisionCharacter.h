@@ -114,6 +114,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gefaehrlichkeitsstufe)
 		int Gefaehrlichkeitsstufe = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
+		bool InVision;
 	
 private:
 
