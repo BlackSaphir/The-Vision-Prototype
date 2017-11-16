@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Character/The_VisionCharacter.h"
-#include "Gameplay/Vision_Camera_Tutorial.h"
 #include "Gameplay/Vision_Post_Process.h"
 #include "SlideDoor.h"
 #include "The_Vision_Tutorial_Trigger.generated.h"
@@ -24,7 +23,6 @@ private:
 	void ChangePostProcess();
 	void Spawn_Enemy();
 	void Vision_Effets();
-	void Change_Camera_Back();
 	void Relocated_Player();
 
 
@@ -43,8 +41,8 @@ public:
 private:
 	AThe_VisionCharacter* character;
 	APlayerController* playerController;
-	AVision_Post_Process* Chameleon;
 	UWorld* world;
+	AVision_Post_Process* Chameleon;
 	TArray<AActor*>chameleon_Array;
 	TArray<AActor*>spawnPoint_Array;
 	TArray<AActor*> Enemy_Array;
