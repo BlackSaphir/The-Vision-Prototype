@@ -9,7 +9,7 @@
 UINTERFACE(Blueprintable, MinimalAPI)
 class UBeginLevel_Interface : public UInterface
 {
-	GENERATED_BODY()
+	GENERATED_UINTERFACE_BODY()
 };
 
 /**
@@ -17,7 +17,7 @@ class UBeginLevel_Interface : public UInterface
  */
 class THE_VISION_API IBeginLevel_Interface
 {
-	GENERATED_BODY()
+	GENERATED_IINTERFACE_BODY()
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:

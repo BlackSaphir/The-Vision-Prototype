@@ -27,9 +27,12 @@ void AItem_Key::Tick(float DeltaTime)
 }
 
 void AItem_Key::Activate()
-{	
+{
 	character = dynamic_cast<AThe_VisionCharacter*>(GetWorld()->GetFirstPlayerController()->GetPawn());
-	character->AddReserveAmmo(MagSize);
-	Destroy();
+	if (character->InVision == false)
+	{
+		character->AddReserveAmmo(MagSize);
+		Destroy();
+	}
 }
 

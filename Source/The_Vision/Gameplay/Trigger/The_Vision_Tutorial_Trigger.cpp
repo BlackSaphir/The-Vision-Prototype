@@ -46,6 +46,7 @@ void AThe_Vision_Tutorial_Trigger::OnOverlapBegin(UPrimitiveComponent * Overlapp
 			playerController = world->GetFirstPlayerController();
 			character = Cast<AThe_VisionCharacter>(playerController->GetPawn());
 
+			character->InVision = true;
 			character->DisableInput(playerController);
 			character->ResetInputs();
 			UWidgetLayoutLibrary::RemoveAllWidgets(world);
@@ -138,6 +139,7 @@ void AThe_Vision_Tutorial_Trigger::Relocated_Player()
 	{
 		Interface->AddToViewport();
 	}
+	character->InVision = false;
 	playerController->GetPawn()->EnableInput(playerController);
 }
 
