@@ -118,60 +118,67 @@ void AEnemy_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void AEnemy_Character::OnHearNoise(APawn * PawnInstigator, const FVector & Location, float Volume)
 {
-	character = PawnInstigator;
-	Last_Player_Position->SetActorLocation(PawnInstigator->GetActorLocation());
-	if (Con && PawnInstigator != this)
+	if (InVision != true)
 	{
-		Con->SetSensedTarget(PawnInstigator);
-	}
-	if (GetDistanceTo(PawnInstigator) > 1100)
-	{
-		Con->SetSensedTarget(NULL);
-	}
-	if (PawnInstigator)
-	{
-		Con->BlackboardComp->SetValueAsObject(Con->SensedPawn_Last_Location, Last_Player_Position);
+		character = PawnInstigator;
+		Last_Player_Position->SetActorLocation(PawnInstigator->GetActorLocation());
+		if (Con && PawnInstigator != this)
+		{
+			Con->SetSensedTarget(PawnInstigator);
+		}
+		if (GetDistanceTo(PawnInstigator) > 1100)
+		{
+			Con->SetSensedTarget(NULL);
+		}
+		if (PawnInstigator)
+		{
+			Con->BlackboardComp->SetValueAsObject(Con->SensedPawn_Last_Location, Last_Player_Position);
+		}
 	}
 }
 
 void AEnemy_Character::OnSeePawn(APawn * PawnInstigator)
 {
-	character = PawnInstigator;
-
-	if (PawnInstigator)
-	{
-		Last_Player_Position->SetActorLocation(PawnInstigator->GetActorLocation());
-	}
-
-	if (Con && PawnInstigator != this)
-	{
-		Con->SetSensedTarget(PawnInstigator);
-	}
-	if (GetDistanceTo(PawnInstigator) > 1500)
-	{
-		Con->SetSensedTarget(NULL);
-	}
-	if (PawnInstigator)
+	if (InVision != true)
 	{
 
-		Con->BlackboardComp->SetValueAsObject(Con->SensedPawn_Last_Location, Last_Player_Position);
-		//Foward RayCast
-		const FVector Player_Vector = Char->FirstPersonCamera->GetComponentLocation();
-		const FVector Enemy_Camera_Vector = EnemyCamera->GetComponentLocation();
-		const FVector Enemy_Camera_ForwardVector = Enemy_Camera_Vector + (EnemyCamera->GetForwardVector() * LineTraceLenght);
-		FHitResult hitout;
-		ECollisionChannel collision_channel = ECC_Vehicle;
+		character = PawnInstigator;
 
-		///not relevant now but in later construction of AI
-		UStatic_Libary::LineTrace(GetWorld(), Enemy_Camera_Vector, Enemy_Camera_ForwardVector, hitout, collision_channel, false);
-		//DrawDebugLine(GetWorld(), Enemy_Camera_Vector, Enemy_Camera_ForwardVector, FColor::Green, true, 10, 0, 2.f);
-		if (hitout.Actor != Char)
+		if (PawnInstigator)
 		{
-			Con->SetDistanceToPlayer(PawnInstigator);
+			Last_Player_Position->SetActorLocation(PawnInstigator->GetActorLocation());
 		}
-		if (hitout.Actor == Char)
+
+		if (Con && PawnInstigator != this)
 		{
-			Con->SetDistanceToPlayer(PawnInstigator);
+			Con->SetSensedTarget(PawnInstigator);
+		}
+		if (GetDistanceTo(PawnInstigator) > 1500)
+		{
+			Con->SetSensedTarget(NULL);
+		}
+		if (PawnInstigator)
+		{
+
+			Con->BlackboardComp->SetValueAsObject(Con->SensedPawn_Last_Location, Last_Player_Position);
+			//Foward RayCast
+			const FVector Player_Vector = Char->FirstPersonCamera->GetComponentLocation();
+			const FVector Enemy_Camera_Vector = EnemyCamera->GetComponentLocation();
+			const FVector Enemy_Camera_ForwardVector = Enemy_Camera_Vector + (EnemyCamera->GetForwardVector() * LineTraceLenght);
+			FHitResult hitout;
+			ECollisionChannel collision_channel = ECC_Vehicle;
+
+			///not relevant now but in later construction of AI
+			UStatic_Libary::LineTrace(GetWorld(), Enemy_Camera_Vector, Enemy_Camera_ForwardVector, hitout, collision_channel, false);
+			//DrawDebugLine(GetWorld(), Enemy_Camera_Vector, Enemy_Camera_ForwardVector, FColor::Green, true, 10, 0, 2.f);
+			if (hitout.Actor != Char)
+			{
+				Con->SetDistanceToPlayer(PawnInstigator);
+			}
+			if (hitout.Actor == Char)
+			{
+				Con->SetDistanceToPlayer(PawnInstigator);
+			}
 		}
 	}
 }

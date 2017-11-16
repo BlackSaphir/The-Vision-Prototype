@@ -7,6 +7,7 @@
 #include "Character/The_VisionCharacter.h"
 #include "Gameplay/Vision_Post_Process.h"
 #include "SlideDoor.h"
+#include "AI/Enemy_Character.h"
 #include "The_Vision_Tutorial_Trigger.generated.h"
 
 UCLASS()
@@ -22,6 +23,7 @@ class THE_VISION_API AThe_Vision_Tutorial_Trigger : public AActor
 private:
 	void ChangePostProcess();
 	void Spawn_Enemy();
+	void Get_Enemy();
 	void Vision_Effets();
 	void Relocated_Player();
 
@@ -41,6 +43,7 @@ public:
 private:
 	AThe_VisionCharacter* character;
 	APlayerController* playerController;
+	AEnemy_Character* enemy_Character;
 	UWorld* world;
 	AVision_Post_Process* Chameleon;
 	TArray<AActor*>chameleon_Array;

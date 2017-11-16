@@ -7,6 +7,7 @@
 #include "Character/The_VisionCharacter.h"
 #include "GlasDoor_Doppel.h"
 #include "Gameplay/Vision_Post_Process.h"
+#include "AI/Enemy_Character.h"
 #include "The_Vision_Trigger.generated.h"
 
 UCLASS()
@@ -22,6 +23,7 @@ private:
 	void ChangePostProcess();
 	void spawn_Enemy();
 	void Vision_Effets();
+	void GetEnemy();
 	void relocated_Player();
 
 
@@ -40,6 +42,7 @@ public:
 private:
 	AThe_VisionCharacter* character;
 	APlayerController* playerController;
+	AEnemy_Character* enemy_Character;
 	UWorld* world;
 	AVision_Post_Process* Chameleon;
 	TArray<AActor*>chameleon_Array;
