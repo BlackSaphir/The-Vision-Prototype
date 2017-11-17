@@ -48,7 +48,8 @@ private:
 	TArray<AActor*>chameleon_Array;
 	TArray<AActor*>spawnPoint_Array;
 	TArray<AActor*> Enemy_Array;
-	TArray<UStaticMeshComponent*> Enemy_Mesh_Array;
+	TArray<USkinnedMeshComponent*> Enemy_Mesh_Array;
+	TArray<USkinnedMeshComponent*> TempMesh;
 	TArray<AActor*> to_be_closed_Array;
 	TArray<AActor*> to_be_opened_Array;
 	AGlasDoor_Doppel* to_be_opened_Door;

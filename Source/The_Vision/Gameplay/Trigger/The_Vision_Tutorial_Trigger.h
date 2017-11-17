@@ -26,6 +26,7 @@ private:
 	void Get_Enemy();
 	void Vision_Effets();
 	void Relocated_Player();
+	void AddWidget();
 
 
 protected:
@@ -49,9 +50,10 @@ private:
 	TArray<AActor*>chameleon_Array;
 	TArray<AActor*>spawnPoint_Array;
 	TArray<AActor*> Enemy_Array;
+	TArray<USkinnedMeshComponent*> tempMesh;
 	TArray<AActor*> to_be_closed_Array;
 	TArray<AActor*> to_be_opened_Array;
-	TArray<UStaticMeshComponent*> Enemy_Mesh_Array;
+	TArray<USkinnedMeshComponent*> Enemy_Mesh_Array;
 	ASlideDoor* to_be_opened_Door;
 	ASlideDoor* to_be_closed_Door;
 	bool DoOnce;
@@ -90,6 +92,9 @@ public:
 private:
 	UPROPERTY(EditAnywhere)
 		class UBoxComponent* Box;
+
+	UPROPERTY(EditAnywhere)
+		class USceneComponent* Root_Scene;
 
 	
 };

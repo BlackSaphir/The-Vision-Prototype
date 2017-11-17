@@ -117,7 +117,8 @@ void AThe_Vision_Trigger::GetEnemy()
 		//Dieser Code erzeugt einen Penis in Les-Lees sandiger Vagina und ein Muffin
 		enemy_Character = Cast<AEnemy_Character>(Enemy_Array[i]);
 		enemy_Character->InVision = true;
-		Enemy_Array[i]->GetComponents<UStaticMeshComponent>(Enemy_Mesh_Array);
+		Enemy_Array[i]->GetComponents<USkinnedMeshComponent>(TempMesh);
+		Enemy_Mesh_Array.Add(TempMesh[0]);
 		Enemy_Mesh_Array[i]->SetRenderCustomDepth(true);
 		Enemy_Mesh_Array[i]->SetCustomDepthStencilValue(254);
 	}
@@ -126,7 +127,7 @@ void AThe_Vision_Trigger::GetEnemy()
 void AThe_Vision_Trigger::relocated_Player()
 {
 	UGameplayStatics::SpawnEmitterAttached(Vision_Particle_Back, character->FirstPersonCamera);
-	for (int i = 0; i < Enemy_Array.Num(); i++)
+	for (int i = 0; i < Enemy_Array.Num() - 1; i++)
 	{
 		Enemy_Mesh_Array[i]->SetRenderCustomDepth(false);
 	}

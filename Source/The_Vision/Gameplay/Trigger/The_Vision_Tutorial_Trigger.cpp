@@ -14,6 +14,8 @@ AThe_Vision_Tutorial_Trigger::AThe_Vision_Tutorial_Trigger()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	Box = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Trigger"));
+	Root_Scene = CreateDefaultSubobject<USceneComponent>(TEXT("ROOT"));
+	RootComponent = Root_Scene;
 	Box->OnComponentBeginOverlap.AddDynamic(this, &AThe_Vision_Tutorial_Trigger::OnOverlapBegin);
 
 }
@@ -103,7 +105,8 @@ void AThe_Vision_Tutorial_Trigger::Get_Enemy()
 	{
 		enemy_Character = Cast<AEnemy_Character>(Enemy_Array[i]);
 		enemy_Character->InVision = true;
-		Enemy_Array[i]->GetComponents<UStaticMeshComponent>(Enemy_Mesh_Array);
+		Enemy_Array[i]->GetComponents<USkinnedMeshComponent>(tempMesh);
+		Enemy_Mesh_Array.Add(tempMesh[0]);
 		Enemy_Mesh_Array[i]->SetRenderCustomDepth(true);
 		Enemy_Mesh_Array[i]->SetCustomDepthStencilValue(254);
 	}
@@ -120,6 +123,7 @@ void AThe_Vision_Tutorial_Trigger::Vision_Effets()
 
 void AThe_Vision_Tutorial_Trigger::Relocated_Player()
 {
+	FTimerHandle TimeHandle;
 	UGameplayStatics::SpawnEmitterAttached(Vision_Particle_Back, character->GetFirstPersonCameraComponent());
 	for (int i = 0; i < Enemy_Array.Num(); i++)
 	{
@@ -134,6 +138,12 @@ void AThe_Vision_Tutorial_Trigger::Relocated_Player()
 	character->SetActorLocation(this->GetActorLocation());
 	playerController->SetControlRotation(FRotator(NewRotation_X, NewRotation_Z, NewRotation_Y));
 	Chameleon->End_Vision();
+	
+	GetWorldTimerManager().SetTimer(TimeHandle, this, &AThe_Vision_Tutorial_Trigger::AddWidget, 1.0f);
+}
+
+void AThe_Vision_Tutorial_Trigger::AddWidget()
+{
 	UUserWidget* Interface = CreateWidget<UUserWidget>(world, W_Interface);
 	if (Interface)
 	{
