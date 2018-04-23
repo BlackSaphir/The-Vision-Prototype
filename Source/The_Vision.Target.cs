@@ -5,21 +5,24 @@ using System.Collections.Generic;
 
 public class The_VisionTarget : TargetRules
 {
-	public The_VisionTarget(TargetInfo Target)
+	public The_VisionTarget(TargetInfo Target) : base (Target)
 	{
+
 		Type = TargetType.Game;
+
+        ExtraModuleNames.Add("The_Vision");
 	}
 
 	//
 	// TargetRules interface.
 	//
 
-	public override void SetupBinaries(
-		TargetInfo Target,
-		ref List<UEBuildBinaryConfiguration> OutBuildBinaryConfigurations,
-		ref List<string> OutExtraModuleNames
-		)
-	{
-		OutExtraModuleNames.Add("The_Vision");
-	}
+	//public override void SetupBinaries(
+	//	TargetInfo Target,
+	//	ref List<UEBuildBinaryConfiguration> OutBuildBinaryConfigurations,
+	//	ref List<string> OutExtraModuleNames
+	//	)
+	//{
+	//	OutExtraModuleNames.Add("The_Vision");
+	//}
 }

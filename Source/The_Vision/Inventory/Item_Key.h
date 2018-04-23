@@ -25,7 +25,8 @@ public:
 
 	virtual void Activate() override;
 
-	int MagSize = 9;
+	UPROPERTY(EditAnyWhere)
+	int MagSize = 18;
 
 	UPROPERTY(EditAnyWhere)
 		class AThe_VisionCharacter* character;

@@ -15,7 +15,7 @@
 #include "Components/DecalComponent.h"
 #include "ActivationInterface.h"
 #include "Coreminimal.h"
-#include "PhysicsEngine/DestructibleActor.h"
+//#include "PhysicsEngine/DestructibleActor.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Inventory/Inventory_Manager.h"
 #include "EngineUtils.h"
@@ -524,7 +524,7 @@ void AThe_VisionCharacter::DoDamage(FHitResult const& HitOut)
 		UPrimitiveComponent* Hit_Component = HitOut.GetComponent();
 		//Hit_Component->AddImpulse(Force_Vector * Normal_Force, NAME_None, true);
 
-		if (ADestructibleActor* HitActor = Cast<ADestructibleActor>(HitOut.GetActor()))
+		/*if (ADestructibleActor* HitActor = Cast<ADestructibleActor>(HitOut.GetActor()))
 		{
 			if (HitActor->ActorHasTag("Cube"))
 			{
@@ -532,7 +532,7 @@ void AThe_VisionCharacter::DoDamage(FHitResult const& HitOut)
 				UGameplayStatics::ApplyRadialDamage(GetWorld(), 30.0f, HitOut.Location, 15.0f, UDestructible_DamageType::StaticClass(), TArray<AActor*>(), this);
 				//HitActor->GetDestructibleComponent()->ApplyDamage(10.0f, HitOut.Location, HitOut.Location, 50.0f);
 			}
-		}
+		}*/
 	}
 }
 

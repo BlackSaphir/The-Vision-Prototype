@@ -10,7 +10,7 @@ public class The_Vision : ModuleRules
         get { return ModuleDirectory; }
     }
 
-    public The_Vision(ReadOnlyTargetRules Target)
+    public The_Vision(ReadOnlyTargetRules Target) : base (Target)
 	{
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay",  "UMG", "Slate", "SlateCore", "AIModule", "GameplayTasks"});
 	}
