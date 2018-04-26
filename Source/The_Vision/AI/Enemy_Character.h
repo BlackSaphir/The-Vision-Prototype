@@ -47,6 +47,9 @@ public:
 	UFUNCTION()
 		void SetLife(int CharDmg);
 
+	UFUNCTION(BlueprintImplementableEvent)
+		void ChangePostProcess();
+
 	//Variable
 
 public:

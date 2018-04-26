@@ -186,6 +186,7 @@ void AEnemy_Character::OnSeePawn(APawn * PawnInstigator)
 void AEnemy_Character::SetLife(int CharDmg)
 {
 	Health -= CharDmg;
+	ChangePostProcess();
 	if (Health <= 0)
 	{
 		Char->Kills++;
